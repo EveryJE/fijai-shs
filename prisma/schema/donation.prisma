@@ -1,0 +1,36 @@
+model Donation {
+    id        String @id @default(uuid())
+    reference String @unique
+
+    email     String
+    donorName String?
+    phone     String?
+
+    amount   Decimal @db.Decimal(12, 2)
+    currency String  @default("GHS")
+
+    status        String @default("pending") // pending | processing | completed | failed
+    paymentMethod String @default("paystack") // paystack | manual
+
+    categoryId            String?
+    itemId                String?
+    digitalCardHolderCode String?
+
+    userId String? // Supabase auth user id (null for anonymous donors)
+
+    providerReference String? // Paystack transaction id
+    providerResponse  Json? // Full Paystack webhook payload
+    metadata          Json? // Additional data
+
+    verifiedAt DateTime?
+    paidAt     DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([status])
+    @@index([categoryId])
+    @@index([digitalCardHolderCode])
+    @@index([userId])
+    @@map("donations")
+}

@@ -1,75 +1,74 @@
 "use client";
 
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 import PaystackPop from "@paystack/inline-js";
+import { createClient } from "@/utils/supabase/client";
 
-interface TransactionOptions {
-    reference?: string;
+interface DonationPayload {
+    email: string;
+    amount: number;
+    donorName?: string;
+    phone?: string;
     currency?: string;
+    categoryId?: string;
+    itemId?: string;
+    digitalCardHolderCode?: string;
     metadata?: Record<string, unknown>;
-    onSuccess?: (transaction: { reference: string; status: string }) => void;
-    onCancel?: () => void;
 }
 
-interface ResumeOptions {
-    phone?: string;
-    onSuccess?: (transaction: { reference: string; status: string }) => void;
-    onCancel?: () => void;
+interface PaystackResult {
+    reference: string;
+    status: string;
 }
 
 export function usePaystack() {
-    const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+    const [loading, setLoading] = useState(false);
+    const supabase = createClient();
 
-    const startTransaction = useCallback(
-        (email: string, amount: number, options?: TransactionOptions) => {
-            if (!publicKey) {
-                console.error("Paystack public key not configured");
-                return;
+    const initiateDonation = useCallback(
+        async (
+            payload: DonationPayload,
+            callbacks?: {
+                onSuccess?: (tx: PaystackResult) => void;
+                onCancel?: () => void;
             }
+        ) => {
+            setLoading(true);
+            try {
+                // Call edge function to initialise payment & create pending record
+                const { data, error } = await supabase.functions.invoke(
+                    "initiate-payment",
+                    { body: payload }
+                );
 
-            const paystack = new PaystackPop();
-            paystack.newTransaction({
-                key: publicKey,
-                email,
-                amount: amount * 100, // Convert to pesewas/kobo
-                currency: options?.currency ?? "GHS",
-                ref: options?.reference,
-                metadata: options?.metadata,
-                onSuccess: (transaction) => {
-                    options?.onSuccess?.(transaction);
-                },
-                onCancel: () => {
-                    options?.onCancel?.();
-                },
-            });
+                if (error || !data?.accessCode) {
+                    throw new Error(
+                        error?.message ?? data?.error ?? "Failed to initiate payment"
+                    );
+                }
+
+                // Open Paystack popup using the server-generated access code
+                const paystack = new PaystackPop();
+                paystack.newTransaction({
+                    key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY ?? "",
+                    email: payload.email,
+                    amount: 0,
+                    accessCode: data.accessCode,
+                    onSuccess: (tx: PaystackResult) => {
+                        callbacks?.onSuccess?.(tx);
+                    },
+                    onCancel: () => {
+                        callbacks?.onCancel?.();
+                    },
+                });
+
+                return { donationId: data.donationId, reference: data.reference };
+            } finally {
+                setLoading(false);
+            }
         },
-        [publicKey]
+        [supabase]
     );
 
-    const resumeTransaction = useCallback(
-        (accessCode: string, options?: ResumeOptions) => {
-            if (!publicKey) {
-                console.error("Paystack public key not configured");
-                return;
-            }
-
-            const paystack = new PaystackPop();
-            paystack.newTransaction({
-                key: publicKey,
-                email: "",
-                amount: 0,
-                accessCode,
-                phone: options?.phone,
-                onSuccess: (transaction) => {
-                    options?.onSuccess?.(transaction);
-                },
-                onCancel: () => {
-                    options?.onCancel?.();
-                },
-            });
-        },
-        [publicKey]
-    );
-
-    return { startTransaction, resumeTransaction, isConfigured: !!publicKey };
+    return { initiateDonation, loading };
 }

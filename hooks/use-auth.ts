@@ -24,31 +24,19 @@ export function useAuth() {
         }
     };
 
-    const signUp = async (email: string, password: string) => {
+    const signInWithMagicLink = async (email: string) => {
         setLoading(true);
         try {
-            const { error } = await supabase.auth.signUp({
+            const { error } = await supabase.auth.signInWithOtp({
                 email,
-                password,
                 options: {
-                    emailRedirectTo: buildAuthCallbackUrl("signup"),
+                    emailRedirectTo: buildAuthCallbackUrl(),
                 },
             });
             if (error) throw error;
         } finally {
             setLoading(false);
         }
-    };
-
-    const signInWithOAuth = async (provider: "google") => {
-        setLoading(true);
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider,
-            options: {
-                redirectTo: buildAuthCallbackUrl(),
-            },
-        });
-        if (error) setLoading(false);
     };
 
     const sendRecoveryOtp = async (email: string) => {
@@ -101,8 +89,7 @@ export function useAuth() {
     return {
         loading,
         signInWithPassword,
-        signUp,
-        signInWithOAuth,
+        signInWithMagicLink,
         sendRecoveryOtp,
         verifyOtp,
         updatePassword,

@@ -47,7 +47,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Redirect authenticated users away from auth pages
-    const authPages = ["/auth/login", "/auth/register", "/auth/forgot-password"];
+    const authPages = ["/auth/login", "/auth/forgot-password"];
     if (user && authPages.some((page) => pathname.startsWith(page))) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }

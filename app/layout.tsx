@@ -16,8 +16,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "School Alumni Fundraising Platform",
-  description: "Dynamic branded fundraising platform for schools",
+  title: {
+    default: "Fosa96 Fundraising",
+    template: "%s | Fosa96",
+  },
+  description:
+    "Support Fijai Senior High School — donate to fundraising campaigns and help build the future.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
+  openGraph: {
+    title: "Fosa96 Fundraising",
+    description:
+      "Support Fijai Senior High School — donate to fundraising campaigns and help build the future.",
+    images: [{ url: "/logo.png", width: 512, height: 512 }],
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +47,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

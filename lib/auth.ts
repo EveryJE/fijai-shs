@@ -1,4 +1,4 @@
-export type AuthCallbackType = "signup" | "recovery" | undefined;
+export type AuthCallbackType = "recovery" | undefined;
 
 export const AUTH_CALLBACK_PATH = "/auth/callback";
 
