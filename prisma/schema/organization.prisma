@@ -1,0 +1,81 @@
+model Organization {
+    id             String  @id @default(uuid())
+    name           String
+    primaryColor   String  @default("#730303") // hex
+    secondaryColor String  @default("#DAA520") // hex
+    tertiaryColor  String  @default("#1B3A5C") // hex
+    logoUrl        String?
+
+    // Verified bank account (Paystack)
+    bankCode       String? // e.g. "MTN" or "044"
+    bankName       String? // e.g. "MTN Mobile Money" or "Access Bank"
+    accountNumber  String? // e.g. "0240000000"
+    accountName    String? // resolved name from Paystack
+    subaccountCode String? // Paystack subaccount code e.g. "ACCT_xxx"
+    settlementBank String? // Paystack settlement bank slug
+    currency       String  @default("GHS")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("organizations")
+}
+
+model Event {
+    id String @id @default(uuid())
+
+    title       String
+    description String?
+    status      String    @default("draft") // draft | active | closed
+    startDate   DateTime?
+    endDate     DateTime?
+
+    categories     Category[]
+    contactPersons ContactPerson[]
+    digitalCards   DigitalCard[]
+    donations      Donation[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([status])
+    @@map("events")
+}
+
+model Category {
+    id      String @id @default(uuid())
+    eventId String
+
+    name         String
+    color        String // hex — dynamic per category
+    displayOrder Int    @default(0)
+
+    event         Event          @relation(fields: [eventId], references: [id])
+    donationItems DonationItem[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([eventId])
+    @@map("categories")
+}
+
+model DonationItem {
+    id         String @id @default(uuid())
+    categoryId String
+
+    name         String
+    icon         String? // emoji / SVG code / icon-name
+    color        String? // hex — dynamic per item
+    targetAmount Decimal? @db.Decimal(12, 2)
+    displayOrder Int      @default(0)
+
+    category  Category   @relation(fields: [categoryId], references: [id])
+    donations Donation[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([categoryId])
+    @@map("donation_items")
+}

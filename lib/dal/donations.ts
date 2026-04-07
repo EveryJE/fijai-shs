@@ -1,41 +1,80 @@
 import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 
+const donationIncludes = {
+    contactPerson: true,
+    digitalCard: true,
+    donationItem: true,
+    event: true,
+} as const;
+
 export const getDonationsByUser = cache(async (userId: string) => {
     return prisma.donation.findMany({
         where: { userId },
+        include: donationIncludes,
         orderBy: { createdAt: "desc" },
     });
 });
 
 export const getDonationByReference = cache(async (reference: string) => {
-    return prisma.donation.findUnique({ where: { reference } });
+    return prisma.donation.findUnique({
+        where: { reference },
+        include: donationIncludes,
+    });
 });
 
 export const getDonationById = cache(async (id: string) => {
-    return prisma.donation.findUnique({ where: { id } });
+    return prisma.donation.findUnique({
+        where: { id },
+        include: donationIncludes,
+    });
 });
 
-export const getDonationsByCategory = cache(async (categoryId: string) => {
+export const getDonationsByContactPerson = cache(async (contactPersonId: string) => {
     return prisma.donation.findMany({
-        where: { categoryId, status: "completed" },
+        where: { contactPersonId, status: "paid" },
+        include: { donationItem: true, event: true },
+        orderBy: { createdAt: "desc" },
+    });
+});
+
+export const getDonationsByDigitalCard = cache(async (digitalCardId: string) => {
+    return prisma.donation.findMany({
+        where: { digitalCardId, status: "paid" },
+        include: { donationItem: true, event: true },
+        orderBy: { createdAt: "desc" },
+    });
+});
+
+export const getDonationsByItem = cache(async (donationItemId: string) => {
+    return prisma.donation.findMany({
+        where: { donationItemId, status: "paid" },
+        include: { contactPerson: true, digitalCard: true, event: true },
+        orderBy: { createdAt: "desc" },
+    });
+});
+
+export const getDonationsByEvent = cache(async (eventId: string) => {
+    return prisma.donation.findMany({
+        where: { eventId, status: "paid" },
+        include: { contactPerson: true, digitalCard: true, donationItem: true },
         orderBy: { createdAt: "desc" },
     });
 });
 
 export const getDonationStats = cache(async () => {
-    const [total, completed, totalAmount] = await Promise.all([
+    const [total, paid, totalAmount] = await Promise.all([
         prisma.donation.count(),
-        prisma.donation.count({ where: { status: "completed" } }),
+        prisma.donation.count({ where: { status: "paid" } }),
         prisma.donation.aggregate({
-            where: { status: "completed" },
+            where: { status: "paid" },
             _sum: { amount: true },
         }),
     ]);
 
     return {
         total,
-        completed,
+        paid,
         totalAmount: totalAmount._sum.amount ?? 0,
     };
 });

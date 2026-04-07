@@ -1,10 +1,10 @@
 model Profile {
     id        String  @id @default(uuid())
     email     String  @unique
-    username  String? @unique
     fullName  String?
     avatarUrl String?
     phone     String? @unique
+    role      String  @default("admin") // admin | rsvp | cardholder
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

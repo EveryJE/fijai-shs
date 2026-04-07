@@ -39,15 +39,18 @@ serve(async (req) => {
             donorName,
             phone,
             currency = "GHS",
-            categoryId,
-            itemId,
-            digitalCardHolderCode,
+            eventId,
+            contactPersonId,
+            digitalCardId,
+            donationItemId,
+            momentFileUrl,
+            momentCaption,
             metadata = {},
         } = body;
 
-        if (!email || !amount) {
+        if (!email || !amount || !eventId) {
             return new Response(
-                JSON.stringify({ error: "email and amount are required" }),
+                JSON.stringify({ error: "email, amount, and eventId are required" }),
                 { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
         }
@@ -60,16 +63,19 @@ serve(async (req) => {
             .from("donations")
             .insert({
                 reference,
-                email,
+                donor_email: email,
                 donor_name: donorName,
                 phone,
                 amount,
                 currency,
                 status: "pending",
                 payment_method: "paystack",
-                category_id: categoryId,
-                item_id: itemId,
-                digital_card_holder_code: digitalCardHolderCode,
+                event_id: eventId,
+                contact_person_id: contactPersonId || null,
+                digital_card_id: digitalCardId || null,
+                donation_item_id: donationItemId || null,
+                moment_file_url: momentFileUrl || null,
+                moment_caption: momentCaption || null,
                 user_id: userId,
                 metadata: { ...metadata, txn_type: "donation" },
             })
@@ -84,6 +90,40 @@ serve(async (req) => {
             );
         }
 
+        // Fetch the organization's subaccount code for split payment
+        const { data: org } = await supabase
+            .from("organizations")
+            .select("subaccount_code")
+            .limit(1)
+            .single();
+
+        const subaccountCode = org?.subaccount_code;
+
+        // Build Paystack init payload
+        const paystackBody: Record<string, unknown> = {
+            email,
+            amount: toPesewas(amount),
+            currency,
+            reference,
+            metadata: {
+                donation_id: donation.id,
+                donor_name: donorName,
+                event_id: eventId,
+                contact_person_id: contactPersonId,
+                digital_card_id: digitalCardId,
+                donation_item_id: donationItemId,
+                custom_fields: [
+                    { display_name: "Donor", variable_name: "donor_name", value: donorName || "Anonymous" },
+                ],
+            },
+        };
+
+        // If the org has a verified subaccount, route 100% to them
+        if (subaccountCode) {
+            paystackBody.subaccount = subaccountCode;
+            paystackBody.bearer = "subaccount"; // org bears Paystack fees
+        }
+
         // Initialize Paystack transaction
         const paystackRes = await fetch(
             "https://api.paystack.co/transaction/initialize",
@@ -93,22 +133,7 @@ serve(async (req) => {
                     Authorization: `Bearer ${PAYSTACK_SECRET}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    email,
-                    amount: toPesewas(amount),
-                    currency,
-                    reference,
-                    metadata: {
-                        donation_id: donation.id,
-                        donor_name: donorName,
-                        category_id: categoryId,
-                        item_id: itemId,
-                        digital_card_holder_code: digitalCardHolderCode,
-                        custom_fields: [
-                            { display_name: "Donor", variable_name: "donor_name", value: donorName || "Anonymous" },
-                        ],
-                    },
-                }),
+                body: JSON.stringify(paystackBody),
             }
         );
 

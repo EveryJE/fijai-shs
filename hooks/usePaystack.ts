@@ -10,9 +10,12 @@ interface DonationPayload {
     donorName?: string;
     phone?: string;
     currency?: string;
-    categoryId?: string;
-    itemId?: string;
-    digitalCardHolderCode?: string;
+    eventId: string;
+    contactPersonId?: string;
+    digitalCardId?: string;
+    donationItemId?: string;
+    momentFileUrl?: string;
+    momentCaption?: string;
     metadata?: Record<string, unknown>;
 }
 

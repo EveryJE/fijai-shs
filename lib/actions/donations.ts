@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 /**
- * Record a manual/offline donation (Super Admin only).
+ * Record a manual/offline donation (Super Admin or RSVP user).
  */
 export async function createManualDonation(formData: FormData) {
     const supabase = await createClient();
@@ -14,16 +14,20 @@ export async function createManualDonation(formData: FormData) {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");
 
-    const email = formData.get("email") as string;
+    const donorEmail = formData.get("donorEmail") as string;
     const donorName = formData.get("donorName") as string;
     const amount = Number(formData.get("amount"));
     const currency = (formData.get("currency") as string) || "GHS";
-    const categoryId = formData.get("categoryId") as string | null;
-    const itemId = formData.get("itemId") as string | null;
+    const eventId = formData.get("eventId") as string;
+    const contactPersonId = formData.get("contactPersonId") as string | null;
+    const digitalCardId = formData.get("digitalCardId") as string | null;
+    const donationItemId = formData.get("donationItemId") as string | null;
+    const momentFileUrl = formData.get("momentFileUrl") as string | null;
+    const momentCaption = formData.get("momentCaption") as string | null;
     const notes = formData.get("notes") as string | null;
 
-    if (!email || !amount || amount <= 0) {
-        throw new Error("email and a positive amount are required");
+    if (!donorEmail || !eventId || !amount || amount <= 0) {
+        throw new Error("donorEmail, eventId, and a positive amount are required");
     }
 
     const reference = `MANUAL-${crypto.randomUUID().substring(0, 12)}`;
@@ -31,18 +35,23 @@ export async function createManualDonation(formData: FormData) {
     const donation = await prisma.donation.create({
         data: {
             reference,
-            email,
+            donorEmail,
             donorName,
             amount,
             currency,
-            status: "completed",
+            status: "paid",
             paymentMethod: "manual",
-            categoryId: categoryId || undefined,
-            itemId: itemId || undefined,
+            eventId,
+            contactPersonId: contactPersonId || undefined,
+            digitalCardId: digitalCardId || undefined,
+            donationItemId: donationItemId || undefined,
+            momentFileUrl: momentFileUrl || undefined,
+            momentCaption: momentCaption || undefined,
             userId: user.id,
             metadata: notes ? { notes } : undefined,
             verifiedAt: new Date(),
             paidAt: new Date(),
+            donatedAt: new Date(),
         },
     });
 

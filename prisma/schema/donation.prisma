@@ -2,19 +2,20 @@ model Donation {
     id        String @id @default(uuid())
     reference String @unique
 
-    email     String
-    donorName String?
-    phone     String?
+    eventId         String // every donation belongs to an event
+    contactPersonId String? // nullable — if through Contact Person
+    digitalCardId   String? // nullable — if through Digital Card
+    donationItemId  String? // nullable — can be general donation
+
+    donorName  String?
+    donorEmail String
+    phone      String?
 
     amount   Decimal @db.Decimal(12, 2)
     currency String  @default("GHS")
 
-    status        String @default("pending") // pending | processing | completed | failed
+    status        String @default("pending") // pending | paid | failed
     paymentMethod String @default("paystack") // paystack | manual
-
-    categoryId            String?
-    itemId                String?
-    digitalCardHolderCode String?
 
     userId String? // Supabase auth user id (null for anonymous donors)
 
@@ -22,15 +23,27 @@ model Donation {
     providerResponse  Json? // Full Paystack webhook payload
     metadata          Json? // Additional data
 
+    // Moment — optional memory/photo the donor can attach
+    momentFileUrl String? // uploaded file URL (image, etc.)
+    momentCaption String? // description of the moment / memory
+
     verifiedAt DateTime?
     paidAt     DateTime?
+    donatedAt  DateTime?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    event         Event          @relation(fields: [eventId], references: [id])
+    contactPerson ContactPerson? @relation(fields: [contactPersonId], references: [id])
+    digitalCard   DigitalCard?   @relation(fields: [digitalCardId], references: [id])
+    donationItem  DonationItem?  @relation(fields: [donationItemId], references: [id])
+
+    @@index([eventId])
     @@index([status])
-    @@index([categoryId])
-    @@index([digitalCardHolderCode])
+    @@index([contactPersonId])
+    @@index([digitalCardId])
+    @@index([donationItemId])
     @@index([userId])
     @@map("donations")
 }

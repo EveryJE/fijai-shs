@@ -1,0 +1,24 @@
+model DigitalCard {
+    id      String @id @default(uuid())
+    eventId String
+
+    cardCode          String  @unique // unique code for this digital card
+    holderName        String
+    email             String?
+    profilePictureUrl String?
+    classYear         String? // e.g. "Class of 2015"
+    qrCodeUrl         String?
+    isActive          Boolean @default(true)
+
+    issuedAt DateTime @default(now())
+
+    event     Event      @relation(fields: [eventId], references: [id])
+    donations Donation[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([eventId])
+    @@index([isActive])
+    @@map("digital_cards")
+}

@@ -1,0 +1,22 @@
+model ContactPerson {
+    id      String @id @default(uuid())
+    eventId String
+
+    uniqueCode        String  @unique // auto-generated
+    name              String
+    profilePictureUrl String?
+    classYear         String? // e.g. "Class of 2015"
+    email             String?
+    phone             String?
+    metadata          Json? // extra details
+    qrCodeUrl         String? // generated QR link/image
+
+    event     Event      @relation(fields: [eventId], references: [id])
+    donations Donation[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([eventId])
+    @@map("contact_persons")
+}
