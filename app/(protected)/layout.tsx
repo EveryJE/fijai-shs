@@ -4,11 +4,14 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { AppSidebar } from "@/components/dashboard/AppSidebar";
 import { getProfileByEmail } from "@/lib/dal";
 import { Separator } from "@/components/ui/separator";
+import { RouteGuard } from "@/components/RouteGuard";
 
 export default async function ProtectedLayout({
     children,
+    params
 }: {
     children: React.ReactNode;
+    params?: { slug?: string[] }
 }) {
     const supabase = await createClient();
     const {
@@ -17,15 +20,33 @@ export default async function ProtectedLayout({
 
     if (!user) redirect("/auth/login");
 
+
+    // Fetch profile first
     const profile = await getProfileByEmail(user.email!);
+
+    // Grant super admin if email matches a hardcoded value or env variable (for dev/admin override)
+    const isSuperAdmin = [
+        "ama@yopmail.com", // replace with your email
+        process.env.SUPER_ADMIN_EMAIL,
+    ].includes(user.email);
+
 
     const sidebarUser = {
         id: user.id || "",
         name: profile?.fullName || user.user_metadata?.full_name || user.email?.split("@")[0] || "User",
         email: user.email || "",
         avatar: profile?.avatarUrl,
-        roles: profile?.roles || [],
+        roles: isSuperAdmin ? ["admin", "rsvp", "cardholder"] : Array.isArray(profile?.roles) ? profile.roles : [],
+        superAdmin: isSuperAdmin,
     };
+
+    // Route-based permission check (server context)
+    // Dynamically build pathname from params for nested routes
+    let pathname = "/dashboard";
+    if (params?.slug && Array.isArray(params.slug)) {
+        pathname += "/" + params.slug.join("/");
+    }
+    // Remove server-side permission redirect; use client RouteGuard instead
 
     return (
         <SidebarProvider>
@@ -39,7 +60,9 @@ export default async function ProtectedLayout({
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col p-0">
-                    {children}
+                    <RouteGuard user={sidebarUser}>
+                        {children}
+                    </RouteGuard>
                 </div>
             </SidebarInset>
         </SidebarProvider>
