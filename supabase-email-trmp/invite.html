@@ -1,0 +1,143 @@
+<p>
+  You have been invited to create a user on {{ .SiteURL }}. Follow this link to
+  accept the invite:
+</p>
+<p><a href="{{ .ConfirmationURL }}">Accept the invite</a></p>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      font-family:
+        -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
+        &quot;Helvetica Neue&quot;, Arial, sans-serif;
+      background-color: #f6f9fc;
+    "
+  >
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="background-color: #f6f9fc; padding: 40px 0"
+    >
+      <tr>
+        <td align="center">
+          <table
+            width="600"
+            cellpadding="0"
+            cellspacing="0"
+            role="presentation"
+            style="
+              background-color: #fff;
+              border-radius: 12px;
+              overflow: hidden;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+              max-width: 600px;
+            "
+          >
+            <tr>
+              <td style="padding: 0">
+                <table
+                  width="600"
+                  cellpadding="0"
+                  cellspacing="0"
+                  role="presentation"
+                  style="width: 100%"
+                >
+                  <tr>
+                    <td
+                      width="200"
+                      style="
+                        background-color: #730303;
+                        height: 6px;
+                        line-height: 6px;
+                        font-size: 1px;
+                        mso-line-height-rule: exactly;
+                      "
+                    >
+                      &nbsp;
+                    </td>
+                    <td
+                      width="200"
+                      style="
+                        background-color: #daa520;
+                        height: 6px;
+                        line-height: 6px;
+                        font-size: 1px;
+                        mso-line-height-rule: exactly;
+                      "
+                    >
+                      &nbsp;
+                    </td>
+                    <td
+                      width="200"
+                      style="
+                        background-color: #1b3a5c;
+                        height: 6px;
+                        line-height: 6px;
+                        font-size: 1px;
+                        mso-line-height-rule: exactly;
+                      "
+                    >
+                      &nbsp;
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 48px 48px 32px;
+                  text-align: center;
+                  background-color: #fff;
+                "
+              >
+                <img
+                  src="https://wgitknkazyorrhqbpnub.supabase.co/storage/v1/object/public/profile/Fijai_Senior_High_School.png"
+                  alt="Fijai SHS"
+                  width="96"
+                  height="96"
+                  style="border-radius: 50%; margin-bottom: 16px"
+                />
+                <h2 style="margin: 0 0 8px; font-size: 24px; color: #1b3a5c">
+                  You’ve been invited to Fijai SHS Fundraising Portal
+                </h2>
+                <p style="margin: 0 0 8px; color: #333; font-size: 16px">
+                  Role: <strong>{{ .Data.role }}</strong>
+                </p>
+                <p style="margin: 0 0 24px; color: #333; font-size: 16px">
+                  Click below to set your password and get started.
+                </p>
+                <a
+                  href="{{ .ConfirmationURL }}"
+                  style="
+                    display: inline-block;
+                    padding: 12px 32px;
+                    background-color: #730303;
+                    color: #fff;
+                    border-radius: 6px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: 16px;
+                  "
+                  >Accept Invitation</a
+                >
+                <p style="margin-top: 32px; color: #888; font-size: 13px">
+                  If you did not expect this invitation, you can safely ignore
+                  this email.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

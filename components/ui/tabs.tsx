@@ -30,6 +30,7 @@ const tabsListVariants = cva(
       variant: {
         default: "bg-muted",
         line: "gap-1 bg-transparent",
+        institutional: "bg-[radial-gradient(circle_at_top_left,rgba(115,3,3,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(218,165,32,0.1),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(27,58,92,0.06),transparent_26%)] border border-[#DAA520]/20 h-11 space-x-1",
       },
     },
     defaultVariants: {

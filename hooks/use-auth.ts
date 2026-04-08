@@ -24,21 +24,6 @@ export function useAuth() {
         }
     };
 
-    const signInWithMagicLink = async (email: string) => {
-        setLoading(true);
-        try {
-            const { error } = await supabase.auth.signInWithOtp({
-                email,
-                options: {
-                    emailRedirectTo: buildAuthCallbackUrl(),
-                },
-            });
-            if (error) throw error;
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const sendRecoveryOtp = async (email: string) => {
         setLoading(true);
         try {
@@ -89,7 +74,6 @@ export function useAuth() {
     return {
         loading,
         signInWithPassword,
-        signInWithMagicLink,
         sendRecoveryOtp,
         verifyOtp,
         updatePassword,

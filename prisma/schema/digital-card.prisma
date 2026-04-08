@@ -1,6 +1,7 @@
 model DigitalCard {
-    id      String @id @default(uuid())
-    eventId String
+    id        String  @id @default(uuid())
+    eventId   String
+    profileId String?
 
     cardCode          String  @unique // unique code for this digital card
     holderName        String
@@ -13,6 +14,7 @@ model DigitalCard {
     issuedAt DateTime @default(now())
 
     event     Event      @relation(fields: [eventId], references: [id])
+    profile   Profile?   @relation(fields: [profileId], references: [id])
     donations Donation[]
 
     createdAt DateTime @default(now())

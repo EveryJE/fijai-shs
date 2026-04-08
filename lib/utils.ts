@@ -4,3 +4,104 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+// Fijai SHS color palette for backgrounds based on name/initials
+const colorClasses = [
+  'bg-[#730303] text-white', // Maroon
+  'bg-[#DAA520] text-white', // Gold
+  'bg-[#1B3A5C] text-white', // Dark Blue
+  'bg-red-600 text-white',
+  'bg-amber-600 text-white',
+  'bg-blue-600 text-white',
+  'bg-emerald-600 text-white',
+]
+
+/**
+ * Generate a consistent color class based on a name/string
+ * Used for avatar backgrounds to ensure the same name always gets the same color
+ */
+export function getColorClass(name: string): string {
+  if (!name) return 'bg-gray-500 text-white'
+
+  // Generate a simple hash from the name
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = ((hash << 5) - hash) + (name.codePointAt(i) ?? 0)
+    hash = hash & hash // Convert to 32bit integer
+  }
+
+  const index = Math.abs(hash) % colorClasses.length
+  return colorClasses[index]
+}
+
+export function formatDate(date: Date, addTime?: boolean): string {
+  const dateStr = date.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+  if (addTime) {
+    const timeStr = date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
+    return `${dateStr}, ${timeStr}`
+  }
+  return dateStr
+}
+
+export function capitalizeFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+export function trimText(text: string, length: number): string {
+  return text.length > length ? `${text.slice(0, length)}...` : text
+}
+
+type NumberFormatOptions = {
+  locale?: string
+  style?: Intl.NumberFormatOptions['style']
+  currency?: string
+  unit?: Intl.NumberFormatOptions['unit']
+  unitDisplay?: Intl.NumberFormatOptions['unitDisplay']
+  minimumFractionDigits?: number
+  maximumFractionDigits?: number
+  useGrouping?: Intl.NumberFormatOptions['useGrouping']
+}
+
+export function formatNumber(
+  value: number,
+  {
+    locale = 'en-US',
+    style = 'decimal',
+    currency,
+    unit,
+    unitDisplay = 'short',
+    minimumFractionDigits,
+    maximumFractionDigits,
+    useGrouping,
+  }: NumberFormatOptions = {}
+): string {
+  const opts: Intl.NumberFormatOptions = {
+    style,
+    minimumFractionDigits,
+    maximumFractionDigits,
+    useGrouping,
+  }
+  if (style === 'currency' && currency) opts.currency = currency
+  if (style === 'unit' && unit) {
+    opts.unit = unit
+    opts.unitDisplay = unitDisplay
+  }
+  return new Intl.NumberFormat(locale, opts).format(value)
+}
+
+export function formatAmount(value: number, currency = "GHS") {
+  return formatNumber(value, { style: 'currency', currency })
+}
+
+export function generateDeletionCode(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}

@@ -1,0 +1,144 @@
+import { cache } from "react";
+import { prisma } from "@/lib/prisma";
+
+export const getOrgStats = cache(async () => {
+    const [totalUsers, rsvpUsers, cardholders, totalDonations] = await Promise.all([
+        prisma.profile.count(),
+        prisma.profile.count({
+            where: { roles: { has: "rsvp" } }
+        }),
+        prisma.profile.count({
+            where: { roles: { has: "cardholder" } }
+        }),
+        prisma.donation.aggregate({
+            _sum: {
+                amount: true
+            },
+            where: {
+                status: "paid"
+            }
+        })
+    ]);
+
+    return {
+        totalUsers,
+        rsvpUsers,
+        cardholders,
+        totalDonated: Number(totalDonations?._sum?.amount || 0),
+    };
+});
+
+export const getOrganization = cache(async () => {
+    return prisma.organization.findFirst();
+});
+
+export const getRecentTransactions = cache(async (limit = 10) => {
+    return prisma.donation.findMany({
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: {
+            contactPerson: true,
+            digitalCard: true,
+            donationItem: true,
+            event: true
+        }
+    });
+});
+
+export const getMostImpactUser = cache(async () => {
+    // Group donations by userId and find the one with the highest sum
+    const topDonor = await prisma.donation.groupBy({
+        by: ['userId'],
+        _sum: {
+            amount: true
+        },
+        where: {
+            status: "paid",
+            userId: { not: null }
+        },
+        orderBy: {
+            _sum: {
+                amount: "desc"
+            }
+        },
+        take: 1
+    });
+
+    if (!topDonor.length || !topDonor[0].userId) return null;
+
+    return prisma.profile.findUnique({
+        where: { id: topDonor[0].userId }
+    });
+});
+
+export const getMonthlyRevenue = cache(async () => {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const now = new Date();
+    const last6Months = [];
+
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const nextD = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+        
+        const sum = await prisma.donation.aggregate({
+            _sum: { amount: true },
+            where: {
+                status: "paid",
+                createdAt: {
+                    gte: d,
+                    lt: nextD
+                }
+            }
+        });
+
+        last6Months.push({
+            month: months[d.getMonth()],
+            revenue: Number(sum._sum?.amount || 0)
+        });
+    }
+
+    return last6Months;
+});
+
+export const getActiveEvent = cache(async () => {
+    return prisma.event.findFirst({
+        where: { status: "active" },
+        orderBy: { createdAt: "desc" }
+    });
+});
+
+export const getDigitalCardImpact = cache(async (limit = 5) => {
+    const impact = await prisma.donation.groupBy({
+        by: ['digitalCardId'],
+        _sum: {
+            amount: true
+        },
+        where: {
+            status: "paid",
+            digitalCardId: { not: null }
+        },
+        orderBy: {
+            _sum: {
+                amount: "desc"
+            }
+        },
+        take: limit
+    });
+
+    // Fetch card details for these impacts
+    const cardIds = impact.map(i => i.digitalCardId!).filter(Boolean);
+    const cards = await prisma.digitalCard.findMany({
+        where: { id: { in: cardIds } },
+        include: {
+            profile: true
+        }
+    });
+
+    return impact.map(i => {
+        const card = cards.find(c => c.id === i.digitalCardId);
+        return {
+            name: card?.profile?.fullName || card?.cardCode || "Unknown",
+            amount: Number(i._sum?.amount || 0)
+        };
+    });
+});

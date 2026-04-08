@@ -1,6 +1,7 @@
 model ContactPerson {
-    id      String @id @default(uuid())
-    eventId String
+    id        String  @id @default(uuid())
+    eventId   String
+    profileId String?
 
     uniqueCode        String  @unique // auto-generated
     name              String
@@ -12,6 +13,7 @@ model ContactPerson {
     qrCodeUrl         String? // generated QR link/image
 
     event     Event      @relation(fields: [eventId], references: [id])
+    profile   Profile?   @relation(fields: [profileId], references: [id])
     donations Donation[]
 
     createdAt DateTime @default(now())

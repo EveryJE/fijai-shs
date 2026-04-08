@@ -1,10 +1,15 @@
 model Profile {
-    id        String  @id @default(uuid())
-    email     String  @unique
-    fullName  String?
-    avatarUrl String?
-    phone     String? @unique
-    role      String  @default("admin") // admin | rsvp | cardholder
+    id         String   @id @default(uuid())
+    email      String   @unique
+    fullName   String?
+    avatarUrl  String?
+    phone      String?  @unique
+    roles      String[] @default([]) // e.g. ["admin", "rsvp", "cardholder"]
+    aliasName  String?  // school-era nickname or 'aka'
+    uniqueCode String?  @unique // for RSVP/cardholder invite/identification
+
+    contactPersons ContactPerson[]
+    digitalCards   DigitalCard[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

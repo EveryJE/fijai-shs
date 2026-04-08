@@ -6,5 +6,17 @@ export const getProfileById = cache(async (id: string) => {
 });
 
 export const getProfileByEmail = cache(async (email: string) => {
-    return prisma.profile.findUnique({ where: { email } });
+    return prisma.profile.findUnique({
+        where: { email },
+        include: {
+            contactPersons: true,
+            digitalCards: true,
+        },
+    });
+});
+
+export const getAllProfiles = cache(async () => {
+    return prisma.profile.findMany({
+        orderBy: { createdAt: "desc" },
+    });
 });

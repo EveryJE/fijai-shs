@@ -5,6 +5,7 @@ import {
     Heading,
     Hr,
     Html,
+    Img,
     Link,
     Preview,
     Section,
@@ -37,6 +38,13 @@ export default function ContactPersonEmail({
             <Body style={body}>
                 <Container style={container}>
                     <Section style={header}>
+                        <Img
+                            src="https://wgitknkazyorrhqbpnub.supabase.co/storage/v1/object/public/profile/Fijai_Senior_High_School.png"
+                            width="60"
+                            height="60"
+                            alt="Fijai SHS Logo"
+                            style={logo}
+                        />
                         <Heading style={headerTitle}>
                             Fijai SHS Alumni
                         </Heading>
@@ -74,6 +82,13 @@ export default function ContactPersonEmail({
                         </Text>
 
                         <Hr style={hr} />
+
+                        <Text style={paragraph}>
+                            <strong>Login Details:</strong> Your account has been
+                            created. You can log in using your email address.
+                            Your default password is your <strong>email address</strong>.
+                            Please change it after your first login.
+                        </Text>
 
                         <Text style={footerText}>
                             Access your dashboard:{" "}
@@ -121,6 +136,10 @@ const headerSubtitle = {
     color: "#ffffff",
     margin: "4px 0 0",
     fontSize: "14px",
+};
+
+const logo = {
+    margin: "0 auto 12px",
 };
 
 const content = {

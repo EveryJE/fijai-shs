@@ -8,8 +8,9 @@ datasource db {
 }
 
 model DigitalCard {
-  id      String @id @default(uuid())
-  eventId String
+  id        String  @id @default(uuid())
+  eventId   String
+  profileId String?
 
   cardCode          String  @unique // unique code for this digital card
   holderName        String
@@ -22,6 +23,7 @@ model DigitalCard {
   issuedAt DateTime @default(now())
 
   event     Event      @relation(fields: [eventId], references: [id])
+  profile   Profile?   @relation(fields: [profileId], references: [id])
   donations Donation[]
 
   createdAt DateTime @default(now())
@@ -85,12 +87,19 @@ model Donation {
 model Organization {
   id             String  @id @default(uuid())
   name           String
-  primaryColor   String  @default("#8B0000") // hex
+  primaryColor   String  @default("#730303") // hex
   secondaryColor String  @default("#DAA520") // hex
   tertiaryColor  String  @default("#1B3A5C") // hex
   logoUrl        String?
 
-  events Event[]
+  // Verified bank account (Paystack)
+  bankCode       String? // e.g. "MTN" or "044"
+  bankName       String? // e.g. "MTN Mobile Money" or "Access Bank"
+  accountNumber  String? // e.g. "0240000000"
+  accountName    String? // resolved name from Paystack
+  subaccountCode String? // Paystack subaccount code e.g. "ACCT_xxx"
+  settlementBank String? // Paystack settlement bank slug
+  currency       String  @default("GHS")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -99,8 +108,7 @@ model Organization {
 }
 
 model Event {
-  id             String @id @default(uuid())
-  organizationId String
+  id String @id @default(uuid())
 
   title       String
   description String?
@@ -108,7 +116,6 @@ model Event {
   startDate   DateTime?
   endDate     DateTime?
 
-  organization   Organization    @relation(fields: [organizationId], references: [id])
   categories     Category[]
   contactPersons ContactPerson[]
   digitalCards   DigitalCard[]
@@ -117,7 +124,6 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([organizationId])
   @@index([status])
   @@map("events")
 }
@@ -161,8 +167,9 @@ model DonationItem {
 }
 
 model ContactPerson {
-  id      String @id @default(uuid())
-  eventId String
+  id        String  @id @default(uuid())
+  eventId   String
+  profileId String?
 
   uniqueCode        String  @unique // auto-generated
   name              String
@@ -174,6 +181,7 @@ model ContactPerson {
   qrCodeUrl         String? // generated QR link/image
 
   event     Event      @relation(fields: [eventId], references: [id])
+  profile   Profile?   @relation(fields: [profileId], references: [id])
   donations Donation[]
 
   createdAt DateTime @default(now())
@@ -183,13 +191,30 @@ model ContactPerson {
   @@map("contact_persons")
 }
 
+model Staff {
+  id        String   @id @default(uuid())
+  name      String
+  title     String?
+  photoUrl  String?
+  email     String?
+  phone     String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Profile {
-  id        String  @id @default(uuid())
-  email     String  @unique
-  fullName  String?
-  avatarUrl String?
-  phone     String? @unique
-  role      String  @default("admin") // admin | rsvp | cardholder
+  id         String   @id @default(uuid())
+  email      String   @unique
+  fullName   String?
+  avatarUrl  String?
+  phone      String?  @unique
+  roles      String[] @default([]) // e.g. ["admin", "rsvp", "cardholder"]
+  aliasName  String? // school-era nickname or 'aka'
+  uniqueCode String?  @unique // for RSVP/cardholder invite/identification
+
+  contactPersons ContactPerson[]
+  digitalCards   DigitalCard[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

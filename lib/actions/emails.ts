@@ -10,20 +10,23 @@ const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN_URL || "http://localhost:3000";
 /**
  * Send a digital card holder their card details + login link.
  */
-export async function sendDigitalCardEmail(card: {
-    holderName: string;
+export async function sendDigitalCardDetails(card: {
+    name: string;
     email: string;
     cardCode: string;
     eventTitle: string;
+    classYear?: string;
+    loginLink?: string;
 }) {
     const cardLink = `${BASE_URL}/card/${card.cardCode}`;
-    const loginLink = `${BASE_URL}/auth/login`;
+    const loginLink = card.loginLink || `${BASE_URL}/auth/login`;
 
     const html = await render(
         DigitalCardEmail({
-            holderName: card.holderName,
+            holderName: card.name,
             cardCode: card.cardCode,
             eventTitle: card.eventTitle,
+            classYear: card.classYear,
             cardLink,
             loginLink,
         })
@@ -32,6 +35,7 @@ export async function sendDigitalCardEmail(card: {
     await sendMail({
         to: card.email,
         subject: `Your Digital Card for ${card.eventTitle}`,
+        //@ts-ignore
         html,
     });
 }
@@ -39,15 +43,16 @@ export async function sendDigitalCardEmail(card: {
 /**
  * Send a contact person their details + login link.
  */
-export async function sendContactPersonEmail(contact: {
+export async function sendContactPersonDetails(contact: {
     name: string;
     email: string;
     uniqueCode: string;
     eventTitle: string;
-    classYear?: string | null;
+    classYear?: string;
+    loginLink?: string;
 }) {
     const profileLink = `${BASE_URL}/contact/${contact.uniqueCode}`;
-    const loginLink = `${BASE_URL}/auth/login`;
+    const loginLink = contact.loginLink || `${BASE_URL}/auth/login`;
 
     const html = await render(
         ContactPersonEmail({
@@ -63,6 +68,7 @@ export async function sendContactPersonEmail(contact: {
     await sendMail({
         to: contact.email,
         subject: `You're a Contact Person for ${contact.eventTitle}`,
+        //@ts-ignore
         html,
     });
 }

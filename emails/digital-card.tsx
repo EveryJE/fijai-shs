@@ -5,6 +5,7 @@ import {
     Heading,
     Hr,
     Html,
+    Img,
     Link,
     Preview,
     Section,
@@ -17,6 +18,7 @@ interface DigitalCardEmailProps {
     eventTitle: string;
     cardLink: string;
     loginLink: string;
+    classYear?: string;
 }
 
 export default function DigitalCardEmail({
@@ -25,6 +27,7 @@ export default function DigitalCardEmail({
     eventTitle = "2026 School Project",
     cardLink = "http://localhost:3000/card/CARD-ABC123",
     loginLink = "http://localhost:3000/auth/login",
+    classYear,
 }: DigitalCardEmailProps) {
     return (
         <Html>
@@ -33,6 +36,13 @@ export default function DigitalCardEmail({
             <Body style={body}>
                 <Container style={container}>
                     <Section style={header}>
+                        <Img
+                            src="https://wgitknkazyorrhqbpnub.supabase.co/storage/v1/object/public/profile/Fijai_Senior_High_School.png"
+                            width="60"
+                            height="60"
+                            alt="Fijai SHS Logo"
+                            style={logo}
+                        />
                         <Heading style={headerTitle}>Fijai SHS Alumni</Heading>
                         <Text style={headerSubtitle}>{eventTitle}</Text>
                     </Section>
@@ -67,6 +77,13 @@ export default function DigitalCardEmail({
                         </Text>
 
                         <Hr style={hr} />
+
+                        <Text style={paragraph}>
+                            <strong>Login Details:</strong> Your account has been
+                            created. You can log in using your email address.
+                            Your default password is your <strong>email address</strong>.
+                            Please change it after your first login.
+                        </Text>
 
                         <Text style={footerText}>
                             Need to check your dashboard?{" "}
@@ -114,6 +131,10 @@ const headerSubtitle = {
     color: "#ffffff",
     margin: "4px 0 0",
     fontSize: "14px",
+};
+
+const logo = {
+    margin: "0 auto 12px",
 };
 
 const content = {

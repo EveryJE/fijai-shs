@@ -42,11 +42,11 @@ serve(async (req) => {
 
         const { data: profile } = await supabase
             .from("profiles")
-            .select("role")
+            .select("roles")
             .eq("id", user.id)
             .single();
 
-        if (profile?.role !== "admin") {
+        if (!profile?.roles?.includes("admin")) {
             return new Response(
                 JSON.stringify({ error: "Only admins can update organization bank account" }),
                 { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -116,14 +116,14 @@ serve(async (req) => {
         const { error: dbError } = await supabase
             .from("organizations")
             .update({
-                bank_code: bankCode,
-                bank_name: bankName || null,
-                account_number: accountNumber,
-                account_name: accountName,
-                subaccount_code: subaccountCode,
-                settlement_bank: paystackData.data.settlement_bank,
+                bankCode: bankCode,
+                bankName: bankName || null,
+                accountNumber: accountNumber,
+                accountName: accountName,
+                subaccountCode: subaccountCode,
+                settlementBank: paystackData.data.settlement_bank,
                 currency,
-                updated_at: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
             })
             .eq("id", organizationId);
 

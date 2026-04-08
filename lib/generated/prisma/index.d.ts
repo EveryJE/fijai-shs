@@ -49,6 +49,11 @@ export type DonationItem = $Result.DefaultSelection<Prisma.$DonationItemPayload>
  */
 export type ContactPerson = $Result.DefaultSelection<Prisma.$ContactPersonPayload>
 /**
+ * Model Staff
+ * 
+ */
+export type Staff = $Result.DefaultSelection<Prisma.$StaffPayload>
+/**
  * Model Profile
  * 
  */
@@ -244,6 +249,16 @@ export class PrismaClient<
     * ```
     */
   get contactPerson(): Prisma.ContactPersonDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.staff`: Exposes CRUD operations for the **Staff** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Staff
+    * const staff = await prisma.staff.findMany()
+    * ```
+    */
+  get staff(): Prisma.StaffDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.profile`: Exposes CRUD operations for the **Profile** model.
@@ -695,6 +710,7 @@ export namespace Prisma {
     Category: 'Category',
     DonationItem: 'DonationItem',
     ContactPerson: 'ContactPerson',
+    Staff: 'Staff',
     Profile: 'Profile'
   };
 
@@ -711,7 +727,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "digitalCard" | "donation" | "organization" | "event" | "category" | "donationItem" | "contactPerson" | "profile"
+      modelProps: "digitalCard" | "donation" | "organization" | "event" | "category" | "donationItem" | "contactPerson" | "staff" | "profile"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1233,6 +1249,80 @@ export namespace Prisma {
           }
         }
       }
+      Staff: {
+        payload: Prisma.$StaffPayload<ExtArgs>
+        fields: Prisma.StaffFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StaffFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StaffFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+          }
+          findFirst: {
+            args: Prisma.StaffFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StaffFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+          }
+          findMany: {
+            args: Prisma.StaffFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>[]
+          }
+          create: {
+            args: Prisma.StaffCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+          }
+          createMany: {
+            args: Prisma.StaffCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StaffCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>[]
+          }
+          delete: {
+            args: Prisma.StaffDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+          }
+          update: {
+            args: Prisma.StaffUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+          }
+          deleteMany: {
+            args: Prisma.StaffDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StaffUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StaffUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>[]
+          }
+          upsert: {
+            args: Prisma.StaffUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+          }
+          aggregate: {
+            args: Prisma.StaffAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStaff>
+          }
+          groupBy: {
+            args: Prisma.StaffGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StaffGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StaffCountArgs<ExtArgs>
+            result: $Utils.Optional<StaffCountAggregateOutputType> | number
+          }
+        }
+      }
       Profile: {
         payload: Prisma.$ProfilePayload<ExtArgs>
         fields: Prisma.ProfileFieldRefs
@@ -1422,6 +1512,7 @@ export namespace Prisma {
     category?: CategoryOmit
     donationItem?: DonationItemOmit
     contactPerson?: ContactPersonOmit
+    staff?: StaffOmit
     profile?: ProfileOmit
   }
 
@@ -1526,37 +1617,6 @@ export namespace Prisma {
    */
   export type DigitalCardCountOutputTypeCountDonationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DonationWhereInput
-  }
-
-
-  /**
-   * Count Type OrganizationCountOutputType
-   */
-
-  export type OrganizationCountOutputType = {
-    events: number
-  }
-
-  export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    events?: boolean | OrganizationCountOutputTypeCountEventsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * OrganizationCountOutputType without action
-   */
-  export type OrganizationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrganizationCountOutputType
-     */
-    select?: OrganizationCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * OrganizationCountOutputType without action
-   */
-  export type OrganizationCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: EventWhereInput
   }
 
 
@@ -1712,6 +1772,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ProfileCountOutputType
+   */
+
+  export type ProfileCountOutputType = {
+    contactPersons: number
+    digitalCards: number
+  }
+
+  export type ProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contactPersons?: boolean | ProfileCountOutputTypeCountContactPersonsArgs
+    digitalCards?: boolean | ProfileCountOutputTypeCountDigitalCardsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProfileCountOutputType without action
+   */
+  export type ProfileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProfileCountOutputType
+     */
+    select?: ProfileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProfileCountOutputType without action
+   */
+  export type ProfileCountOutputTypeCountContactPersonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactPersonWhereInput
+  }
+
+  /**
+   * ProfileCountOutputType without action
+   */
+  export type ProfileCountOutputTypeCountDigitalCardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DigitalCardWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -1728,6 +1828,7 @@ export namespace Prisma {
   export type DigitalCardMinAggregateOutputType = {
     id: string | null
     eventId: string | null
+    profileId: string | null
     cardCode: string | null
     holderName: string | null
     email: string | null
@@ -1743,6 +1844,7 @@ export namespace Prisma {
   export type DigitalCardMaxAggregateOutputType = {
     id: string | null
     eventId: string | null
+    profileId: string | null
     cardCode: string | null
     holderName: string | null
     email: string | null
@@ -1758,6 +1860,7 @@ export namespace Prisma {
   export type DigitalCardCountAggregateOutputType = {
     id: number
     eventId: number
+    profileId: number
     cardCode: number
     holderName: number
     email: number
@@ -1775,6 +1878,7 @@ export namespace Prisma {
   export type DigitalCardMinAggregateInputType = {
     id?: true
     eventId?: true
+    profileId?: true
     cardCode?: true
     holderName?: true
     email?: true
@@ -1790,6 +1894,7 @@ export namespace Prisma {
   export type DigitalCardMaxAggregateInputType = {
     id?: true
     eventId?: true
+    profileId?: true
     cardCode?: true
     holderName?: true
     email?: true
@@ -1805,6 +1910,7 @@ export namespace Prisma {
   export type DigitalCardCountAggregateInputType = {
     id?: true
     eventId?: true
+    profileId?: true
     cardCode?: true
     holderName?: true
     email?: true
@@ -1893,6 +1999,7 @@ export namespace Prisma {
   export type DigitalCardGroupByOutputType = {
     id: string
     eventId: string
+    profileId: string | null
     cardCode: string
     holderName: string
     email: string | null
@@ -1925,6 +2032,7 @@ export namespace Prisma {
   export type DigitalCardSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     eventId?: boolean
+    profileId?: boolean
     cardCode?: boolean
     holderName?: boolean
     email?: boolean
@@ -1936,6 +2044,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | DigitalCard$profileArgs<ExtArgs>
     donations?: boolean | DigitalCard$donationsArgs<ExtArgs>
     _count?: boolean | DigitalCardCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["digitalCard"]>
@@ -1943,6 +2052,7 @@ export namespace Prisma {
   export type DigitalCardSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     eventId?: boolean
+    profileId?: boolean
     cardCode?: boolean
     holderName?: boolean
     email?: boolean
@@ -1954,11 +2064,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | DigitalCard$profileArgs<ExtArgs>
   }, ExtArgs["result"]["digitalCard"]>
 
   export type DigitalCardSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     eventId?: boolean
+    profileId?: boolean
     cardCode?: boolean
     holderName?: boolean
     email?: boolean
@@ -1970,11 +2082,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | DigitalCard$profileArgs<ExtArgs>
   }, ExtArgs["result"]["digitalCard"]>
 
   export type DigitalCardSelectScalar = {
     id?: boolean
     eventId?: boolean
+    profileId?: boolean
     cardCode?: boolean
     holderName?: boolean
     email?: boolean
@@ -1987,28 +2101,33 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type DigitalCardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "cardCode" | "holderName" | "email" | "profilePictureUrl" | "classYear" | "qrCodeUrl" | "isActive" | "issuedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["digitalCard"]>
+  export type DigitalCardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "profileId" | "cardCode" | "holderName" | "email" | "profilePictureUrl" | "classYear" | "qrCodeUrl" | "isActive" | "issuedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["digitalCard"]>
   export type DigitalCardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | DigitalCard$profileArgs<ExtArgs>
     donations?: boolean | DigitalCard$donationsArgs<ExtArgs>
     _count?: boolean | DigitalCardCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DigitalCardIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | DigitalCard$profileArgs<ExtArgs>
   }
   export type DigitalCardIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | DigitalCard$profileArgs<ExtArgs>
   }
 
   export type $DigitalCardPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DigitalCard"
     objects: {
       event: Prisma.$EventPayload<ExtArgs>
+      profile: Prisma.$ProfilePayload<ExtArgs> | null
       donations: Prisma.$DonationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       eventId: string
+      profileId: string | null
       cardCode: string
       holderName: string
       email: string | null
@@ -2414,6 +2533,7 @@ export namespace Prisma {
   export interface Prisma__DigitalCardClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     event<T extends EventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EventDefaultArgs<ExtArgs>>): Prisma__EventClient<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    profile<T extends DigitalCard$profileArgs<ExtArgs> = {}>(args?: Subset<T, DigitalCard$profileArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     donations<T extends DigitalCard$donationsArgs<ExtArgs> = {}>(args?: Subset<T, DigitalCard$donationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DonationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2446,6 +2566,7 @@ export namespace Prisma {
   interface DigitalCardFieldRefs {
     readonly id: FieldRef<"DigitalCard", 'String'>
     readonly eventId: FieldRef<"DigitalCard", 'String'>
+    readonly profileId: FieldRef<"DigitalCard", 'String'>
     readonly cardCode: FieldRef<"DigitalCard", 'String'>
     readonly holderName: FieldRef<"DigitalCard", 'String'>
     readonly email: FieldRef<"DigitalCard", 'String'>
@@ -2854,6 +2975,25 @@ export namespace Prisma {
      * Limit how many DigitalCards to delete.
      */
     limit?: number
+  }
+
+  /**
+   * DigitalCard.profile
+   */
+  export type DigitalCard$profileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profile
+     */
+    select?: ProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profile
+     */
+    omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    where?: ProfileWhereInput
   }
 
   /**
@@ -4333,6 +4473,13 @@ export namespace Prisma {
     secondaryColor: string | null
     tertiaryColor: string | null
     logoUrl: string | null
+    bankCode: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountName: string | null
+    subaccountCode: string | null
+    settlementBank: string | null
+    currency: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4344,6 +4491,13 @@ export namespace Prisma {
     secondaryColor: string | null
     tertiaryColor: string | null
     logoUrl: string | null
+    bankCode: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountName: string | null
+    subaccountCode: string | null
+    settlementBank: string | null
+    currency: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4355,6 +4509,13 @@ export namespace Prisma {
     secondaryColor: number
     tertiaryColor: number
     logoUrl: number
+    bankCode: number
+    bankName: number
+    accountNumber: number
+    accountName: number
+    subaccountCode: number
+    settlementBank: number
+    currency: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4368,6 +4529,13 @@ export namespace Prisma {
     secondaryColor?: true
     tertiaryColor?: true
     logoUrl?: true
+    bankCode?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    subaccountCode?: true
+    settlementBank?: true
+    currency?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4379,6 +4547,13 @@ export namespace Prisma {
     secondaryColor?: true
     tertiaryColor?: true
     logoUrl?: true
+    bankCode?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    subaccountCode?: true
+    settlementBank?: true
+    currency?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4390,6 +4565,13 @@ export namespace Prisma {
     secondaryColor?: true
     tertiaryColor?: true
     logoUrl?: true
+    bankCode?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    subaccountCode?: true
+    settlementBank?: true
+    currency?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4474,6 +4656,13 @@ export namespace Prisma {
     secondaryColor: string
     tertiaryColor: string
     logoUrl: string | null
+    bankCode: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountName: string | null
+    subaccountCode: string | null
+    settlementBank: string | null
+    currency: string
     createdAt: Date
     updatedAt: Date
     _count: OrganizationCountAggregateOutputType | null
@@ -4502,10 +4691,15 @@ export namespace Prisma {
     secondaryColor?: boolean
     tertiaryColor?: boolean
     logoUrl?: boolean
+    bankCode?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    subaccountCode?: boolean
+    settlementBank?: boolean
+    currency?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    events?: boolean | Organization$eventsArgs<ExtArgs>
-    _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
   export type OrganizationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4515,6 +4709,13 @@ export namespace Prisma {
     secondaryColor?: boolean
     tertiaryColor?: boolean
     logoUrl?: boolean
+    bankCode?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    subaccountCode?: boolean
+    settlementBank?: boolean
+    currency?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["organization"]>
@@ -4526,6 +4727,13 @@ export namespace Prisma {
     secondaryColor?: boolean
     tertiaryColor?: boolean
     logoUrl?: boolean
+    bankCode?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    subaccountCode?: boolean
+    settlementBank?: boolean
+    currency?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["organization"]>
@@ -4537,23 +4745,22 @@ export namespace Prisma {
     secondaryColor?: boolean
     tertiaryColor?: boolean
     logoUrl?: boolean
+    bankCode?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    subaccountCode?: boolean
+    settlementBank?: boolean
+    currency?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "primaryColor" | "secondaryColor" | "tertiaryColor" | "logoUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["organization"]>
-  export type OrganizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    events?: boolean | Organization$eventsArgs<ExtArgs>
-    _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type OrganizationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "primaryColor" | "secondaryColor" | "tertiaryColor" | "logoUrl" | "bankCode" | "bankName" | "accountNumber" | "accountName" | "subaccountCode" | "settlementBank" | "currency" | "createdAt" | "updatedAt", ExtArgs["result"]["organization"]>
 
   export type $OrganizationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Organization"
-    objects: {
-      events: Prisma.$EventPayload<ExtArgs>[]
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
@@ -4561,6 +4768,13 @@ export namespace Prisma {
       secondaryColor: string
       tertiaryColor: string
       logoUrl: string | null
+      bankCode: string | null
+      bankName: string | null
+      accountNumber: string | null
+      accountName: string | null
+      subaccountCode: string | null
+      settlementBank: string | null
+      currency: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["organization"]>
@@ -4957,7 +5171,6 @@ export namespace Prisma {
    */
   export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    events<T extends Organization$eventsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4993,6 +5206,13 @@ export namespace Prisma {
     readonly secondaryColor: FieldRef<"Organization", 'String'>
     readonly tertiaryColor: FieldRef<"Organization", 'String'>
     readonly logoUrl: FieldRef<"Organization", 'String'>
+    readonly bankCode: FieldRef<"Organization", 'String'>
+    readonly bankName: FieldRef<"Organization", 'String'>
+    readonly accountNumber: FieldRef<"Organization", 'String'>
+    readonly accountName: FieldRef<"Organization", 'String'>
+    readonly subaccountCode: FieldRef<"Organization", 'String'>
+    readonly settlementBank: FieldRef<"Organization", 'String'>
+    readonly currency: FieldRef<"Organization", 'String'>
     readonly createdAt: FieldRef<"Organization", 'DateTime'>
     readonly updatedAt: FieldRef<"Organization", 'DateTime'>
   }
@@ -5012,10 +5232,6 @@ export namespace Prisma {
      */
     omit?: OrganizationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
-    /**
      * Filter, which Organization to fetch.
      */
     where: OrganizationWhereUniqueInput
@@ -5034,10 +5250,6 @@ export namespace Prisma {
      */
     omit?: OrganizationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
-    /**
      * Filter, which Organization to fetch.
      */
     where: OrganizationWhereUniqueInput
@@ -5055,10 +5267,6 @@ export namespace Prisma {
      * Omit specific fields from the Organization
      */
     omit?: OrganizationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
     /**
      * Filter, which Organization to fetch.
      */
@@ -5108,10 +5316,6 @@ export namespace Prisma {
      */
     omit?: OrganizationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
-    /**
      * Filter, which Organization to fetch.
      */
     where?: OrganizationWhereInput
@@ -5159,10 +5363,6 @@ export namespace Prisma {
      * Omit specific fields from the Organization
      */
     omit?: OrganizationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
     /**
      * Filter, which Organizations to fetch.
      */
@@ -5212,10 +5412,6 @@ export namespace Prisma {
      */
     omit?: OrganizationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
-    /**
      * The data needed to create a Organization.
      */
     data: XOR<OrganizationCreateInput, OrganizationUncheckedCreateInput>
@@ -5263,10 +5459,6 @@ export namespace Prisma {
      * Omit specific fields from the Organization
      */
     omit?: OrganizationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
     /**
      * The data needed to update a Organization.
      */
@@ -5334,10 +5526,6 @@ export namespace Prisma {
      */
     omit?: OrganizationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
-    /**
      * The filter to search for the Organization to update in case it exists.
      */
     where: OrganizationWhereUniqueInput
@@ -5364,10 +5552,6 @@ export namespace Prisma {
      */
     omit?: OrganizationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
-    /**
      * Filter which Organization to delete.
      */
     where: OrganizationWhereUniqueInput
@@ -5388,30 +5572,6 @@ export namespace Prisma {
   }
 
   /**
-   * Organization.events
-   */
-  export type Organization$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Event
-     */
-    select?: EventSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Event
-     */
-    omit?: EventOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EventInclude<ExtArgs> | null
-    where?: EventWhereInput
-    orderBy?: EventOrderByWithRelationInput | EventOrderByWithRelationInput[]
-    cursor?: EventWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: EventScalarFieldEnum | EventScalarFieldEnum[]
-  }
-
-  /**
    * Organization without action
    */
   export type OrganizationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5423,10 +5583,6 @@ export namespace Prisma {
      * Omit specific fields from the Organization
      */
     omit?: OrganizationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrganizationInclude<ExtArgs> | null
   }
 
 
@@ -5442,7 +5598,6 @@ export namespace Prisma {
 
   export type EventMinAggregateOutputType = {
     id: string | null
-    organizationId: string | null
     title: string | null
     description: string | null
     status: string | null
@@ -5454,7 +5609,6 @@ export namespace Prisma {
 
   export type EventMaxAggregateOutputType = {
     id: string | null
-    organizationId: string | null
     title: string | null
     description: string | null
     status: string | null
@@ -5466,7 +5620,6 @@ export namespace Prisma {
 
   export type EventCountAggregateOutputType = {
     id: number
-    organizationId: number
     title: number
     description: number
     status: number
@@ -5480,7 +5633,6 @@ export namespace Prisma {
 
   export type EventMinAggregateInputType = {
     id?: true
-    organizationId?: true
     title?: true
     description?: true
     status?: true
@@ -5492,7 +5644,6 @@ export namespace Prisma {
 
   export type EventMaxAggregateInputType = {
     id?: true
-    organizationId?: true
     title?: true
     description?: true
     status?: true
@@ -5504,7 +5655,6 @@ export namespace Prisma {
 
   export type EventCountAggregateInputType = {
     id?: true
-    organizationId?: true
     title?: true
     description?: true
     status?: true
@@ -5589,7 +5739,6 @@ export namespace Prisma {
 
   export type EventGroupByOutputType = {
     id: string
-    organizationId: string
     title: string
     description: string | null
     status: string
@@ -5618,7 +5767,6 @@ export namespace Prisma {
 
   export type EventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    organizationId?: boolean
     title?: boolean
     description?: boolean
     status?: boolean
@@ -5626,7 +5774,6 @@ export namespace Prisma {
     endDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     categories?: boolean | Event$categoriesArgs<ExtArgs>
     contactPersons?: boolean | Event$contactPersonsArgs<ExtArgs>
     digitalCards?: boolean | Event$digitalCardsArgs<ExtArgs>
@@ -5636,7 +5783,6 @@ export namespace Prisma {
 
   export type EventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    organizationId?: boolean
     title?: boolean
     description?: boolean
     status?: boolean
@@ -5644,12 +5790,10 @@ export namespace Prisma {
     endDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    organizationId?: boolean
     title?: boolean
     description?: boolean
     status?: boolean
@@ -5657,12 +5801,10 @@ export namespace Prisma {
     endDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectScalar = {
     id?: boolean
-    organizationId?: boolean
     title?: boolean
     description?: boolean
     status?: boolean
@@ -5672,26 +5814,20 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "title" | "description" | "status" | "startDate" | "endDate" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "status" | "startDate" | "endDate" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     categories?: boolean | Event$categoriesArgs<ExtArgs>
     contactPersons?: boolean | Event$contactPersonsArgs<ExtArgs>
     digitalCards?: boolean | Event$digitalCardsArgs<ExtArgs>
     donations?: boolean | Event$donationsArgs<ExtArgs>
     _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type EventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-  }
-  export type EventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-  }
+  export type EventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type EventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $EventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Event"
     objects: {
-      organization: Prisma.$OrganizationPayload<ExtArgs>
       categories: Prisma.$CategoryPayload<ExtArgs>[]
       contactPersons: Prisma.$ContactPersonPayload<ExtArgs>[]
       digitalCards: Prisma.$DigitalCardPayload<ExtArgs>[]
@@ -5699,7 +5835,6 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      organizationId: string
       title: string
       description: string | null
       status: string
@@ -6101,7 +6236,6 @@ export namespace Prisma {
    */
   export interface Prisma__EventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     categories<T extends Event$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Event$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contactPersons<T extends Event$contactPersonsArgs<ExtArgs> = {}>(args?: Subset<T, Event$contactPersonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPersonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     digitalCards<T extends Event$digitalCardsArgs<ExtArgs> = {}>(args?: Subset<T, Event$digitalCardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DigitalCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6136,7 +6270,6 @@ export namespace Prisma {
    */
   interface EventFieldRefs {
     readonly id: FieldRef<"Event", 'String'>
-    readonly organizationId: FieldRef<"Event", 'String'>
     readonly title: FieldRef<"Event", 'String'>
     readonly description: FieldRef<"Event", 'String'>
     readonly status: FieldRef<"Event", 'String'>
@@ -6398,10 +6531,6 @@ export namespace Prisma {
      */
     data: EventCreateManyInput | EventCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EventIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6472,10 +6601,6 @@ export namespace Prisma {
      * Limit how many Events to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EventIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9008,6 +9133,7 @@ export namespace Prisma {
   export type ContactPersonMinAggregateOutputType = {
     id: string | null
     eventId: string | null
+    profileId: string | null
     uniqueCode: string | null
     name: string | null
     profilePictureUrl: string | null
@@ -9022,6 +9148,7 @@ export namespace Prisma {
   export type ContactPersonMaxAggregateOutputType = {
     id: string | null
     eventId: string | null
+    profileId: string | null
     uniqueCode: string | null
     name: string | null
     profilePictureUrl: string | null
@@ -9036,6 +9163,7 @@ export namespace Prisma {
   export type ContactPersonCountAggregateOutputType = {
     id: number
     eventId: number
+    profileId: number
     uniqueCode: number
     name: number
     profilePictureUrl: number
@@ -9053,6 +9181,7 @@ export namespace Prisma {
   export type ContactPersonMinAggregateInputType = {
     id?: true
     eventId?: true
+    profileId?: true
     uniqueCode?: true
     name?: true
     profilePictureUrl?: true
@@ -9067,6 +9196,7 @@ export namespace Prisma {
   export type ContactPersonMaxAggregateInputType = {
     id?: true
     eventId?: true
+    profileId?: true
     uniqueCode?: true
     name?: true
     profilePictureUrl?: true
@@ -9081,6 +9211,7 @@ export namespace Prisma {
   export type ContactPersonCountAggregateInputType = {
     id?: true
     eventId?: true
+    profileId?: true
     uniqueCode?: true
     name?: true
     profilePictureUrl?: true
@@ -9169,6 +9300,7 @@ export namespace Prisma {
   export type ContactPersonGroupByOutputType = {
     id: string
     eventId: string
+    profileId: string | null
     uniqueCode: string
     name: string
     profilePictureUrl: string | null
@@ -9201,6 +9333,7 @@ export namespace Prisma {
   export type ContactPersonSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     eventId?: boolean
+    profileId?: boolean
     uniqueCode?: boolean
     name?: boolean
     profilePictureUrl?: boolean
@@ -9212,6 +9345,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | ContactPerson$profileArgs<ExtArgs>
     donations?: boolean | ContactPerson$donationsArgs<ExtArgs>
     _count?: boolean | ContactPersonCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contactPerson"]>
@@ -9219,6 +9353,7 @@ export namespace Prisma {
   export type ContactPersonSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     eventId?: boolean
+    profileId?: boolean
     uniqueCode?: boolean
     name?: boolean
     profilePictureUrl?: boolean
@@ -9230,11 +9365,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | ContactPerson$profileArgs<ExtArgs>
   }, ExtArgs["result"]["contactPerson"]>
 
   export type ContactPersonSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     eventId?: boolean
+    profileId?: boolean
     uniqueCode?: boolean
     name?: boolean
     profilePictureUrl?: boolean
@@ -9246,11 +9383,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | ContactPerson$profileArgs<ExtArgs>
   }, ExtArgs["result"]["contactPerson"]>
 
   export type ContactPersonSelectScalar = {
     id?: boolean
     eventId?: boolean
+    profileId?: boolean
     uniqueCode?: boolean
     name?: boolean
     profilePictureUrl?: boolean
@@ -9263,28 +9402,33 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ContactPersonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "uniqueCode" | "name" | "profilePictureUrl" | "classYear" | "email" | "phone" | "metadata" | "qrCodeUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["contactPerson"]>
+  export type ContactPersonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "profileId" | "uniqueCode" | "name" | "profilePictureUrl" | "classYear" | "email" | "phone" | "metadata" | "qrCodeUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["contactPerson"]>
   export type ContactPersonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | ContactPerson$profileArgs<ExtArgs>
     donations?: boolean | ContactPerson$donationsArgs<ExtArgs>
     _count?: boolean | ContactPersonCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ContactPersonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | ContactPerson$profileArgs<ExtArgs>
   }
   export type ContactPersonIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
+    profile?: boolean | ContactPerson$profileArgs<ExtArgs>
   }
 
   export type $ContactPersonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ContactPerson"
     objects: {
       event: Prisma.$EventPayload<ExtArgs>
+      profile: Prisma.$ProfilePayload<ExtArgs> | null
       donations: Prisma.$DonationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       eventId: string
+      profileId: string | null
       uniqueCode: string
       name: string
       profilePictureUrl: string | null
@@ -9690,6 +9834,7 @@ export namespace Prisma {
   export interface Prisma__ContactPersonClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     event<T extends EventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EventDefaultArgs<ExtArgs>>): Prisma__EventClient<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    profile<T extends ContactPerson$profileArgs<ExtArgs> = {}>(args?: Subset<T, ContactPerson$profileArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     donations<T extends ContactPerson$donationsArgs<ExtArgs> = {}>(args?: Subset<T, ContactPerson$donationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DonationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -9722,6 +9867,7 @@ export namespace Prisma {
   interface ContactPersonFieldRefs {
     readonly id: FieldRef<"ContactPerson", 'String'>
     readonly eventId: FieldRef<"ContactPerson", 'String'>
+    readonly profileId: FieldRef<"ContactPerson", 'String'>
     readonly uniqueCode: FieldRef<"ContactPerson", 'String'>
     readonly name: FieldRef<"ContactPerson", 'String'>
     readonly profilePictureUrl: FieldRef<"ContactPerson", 'String'>
@@ -10133,6 +10279,25 @@ export namespace Prisma {
   }
 
   /**
+   * ContactPerson.profile
+   */
+  export type ContactPerson$profileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profile
+     */
+    select?: ProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profile
+     */
+    omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    where?: ProfileWhereInput
+  }
+
+  /**
    * ContactPerson.donations
    */
   export type ContactPerson$donationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10176,6 +10341,1092 @@ export namespace Prisma {
 
 
   /**
+   * Model Staff
+   */
+
+  export type AggregateStaff = {
+    _count: StaffCountAggregateOutputType | null
+    _avg: StaffAvgAggregateOutputType | null
+    _sum: StaffSumAggregateOutputType | null
+    _min: StaffMinAggregateOutputType | null
+    _max: StaffMaxAggregateOutputType | null
+  }
+
+  export type StaffAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type StaffSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type StaffMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    title: string | null
+    photoUrl: string | null
+    email: string | null
+    phone: string | null
+    order: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StaffMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    title: string | null
+    photoUrl: string | null
+    email: string | null
+    phone: string | null
+    order: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StaffCountAggregateOutputType = {
+    id: number
+    name: number
+    title: number
+    photoUrl: number
+    email: number
+    phone: number
+    order: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StaffAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type StaffSumAggregateInputType = {
+    order?: true
+  }
+
+  export type StaffMinAggregateInputType = {
+    id?: true
+    name?: true
+    title?: true
+    photoUrl?: true
+    email?: true
+    phone?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StaffMaxAggregateInputType = {
+    id?: true
+    name?: true
+    title?: true
+    photoUrl?: true
+    email?: true
+    phone?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StaffCountAggregateInputType = {
+    id?: true
+    name?: true
+    title?: true
+    photoUrl?: true
+    email?: true
+    phone?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StaffAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Staff to aggregate.
+     */
+    where?: StaffWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Staff to fetch.
+     */
+    orderBy?: StaffOrderByWithRelationInput | StaffOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StaffWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Staff from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Staff.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Staff
+    **/
+    _count?: true | StaffCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StaffAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StaffSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StaffMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StaffMaxAggregateInputType
+  }
+
+  export type GetStaffAggregateType<T extends StaffAggregateArgs> = {
+        [P in keyof T & keyof AggregateStaff]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStaff[P]>
+      : GetScalarType<T[P], AggregateStaff[P]>
+  }
+
+
+
+
+  export type StaffGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StaffWhereInput
+    orderBy?: StaffOrderByWithAggregationInput | StaffOrderByWithAggregationInput[]
+    by: StaffScalarFieldEnum[] | StaffScalarFieldEnum
+    having?: StaffScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StaffCountAggregateInputType | true
+    _avg?: StaffAvgAggregateInputType
+    _sum?: StaffSumAggregateInputType
+    _min?: StaffMinAggregateInputType
+    _max?: StaffMaxAggregateInputType
+  }
+
+  export type StaffGroupByOutputType = {
+    id: string
+    name: string
+    title: string | null
+    photoUrl: string | null
+    email: string | null
+    phone: string | null
+    order: number
+    createdAt: Date
+    updatedAt: Date
+    _count: StaffCountAggregateOutputType | null
+    _avg: StaffAvgAggregateOutputType | null
+    _sum: StaffSumAggregateOutputType | null
+    _min: StaffMinAggregateOutputType | null
+    _max: StaffMaxAggregateOutputType | null
+  }
+
+  type GetStaffGroupByPayload<T extends StaffGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StaffGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StaffGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StaffGroupByOutputType[P]>
+            : GetScalarType<T[P], StaffGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StaffSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    title?: boolean
+    photoUrl?: boolean
+    email?: boolean
+    phone?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["staff"]>
+
+  export type StaffSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    title?: boolean
+    photoUrl?: boolean
+    email?: boolean
+    phone?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["staff"]>
+
+  export type StaffSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    title?: boolean
+    photoUrl?: boolean
+    email?: boolean
+    phone?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["staff"]>
+
+  export type StaffSelectScalar = {
+    id?: boolean
+    name?: boolean
+    title?: boolean
+    photoUrl?: boolean
+    email?: boolean
+    phone?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StaffOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "title" | "photoUrl" | "email" | "phone" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["staff"]>
+
+  export type $StaffPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Staff"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      title: string | null
+      photoUrl: string | null
+      email: string | null
+      phone: string | null
+      order: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["staff"]>
+    composites: {}
+  }
+
+  type StaffGetPayload<S extends boolean | null | undefined | StaffDefaultArgs> = $Result.GetResult<Prisma.$StaffPayload, S>
+
+  type StaffCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StaffFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StaffCountAggregateInputType | true
+    }
+
+  export interface StaffDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Staff'], meta: { name: 'Staff' } }
+    /**
+     * Find zero or one Staff that matches the filter.
+     * @param {StaffFindUniqueArgs} args - Arguments to find a Staff
+     * @example
+     * // Get one Staff
+     * const staff = await prisma.staff.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StaffFindUniqueArgs>(args: SelectSubset<T, StaffFindUniqueArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Staff that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StaffFindUniqueOrThrowArgs} args - Arguments to find a Staff
+     * @example
+     * // Get one Staff
+     * const staff = await prisma.staff.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StaffFindUniqueOrThrowArgs>(args: SelectSubset<T, StaffFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Staff that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffFindFirstArgs} args - Arguments to find a Staff
+     * @example
+     * // Get one Staff
+     * const staff = await prisma.staff.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StaffFindFirstArgs>(args?: SelectSubset<T, StaffFindFirstArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Staff that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffFindFirstOrThrowArgs} args - Arguments to find a Staff
+     * @example
+     * // Get one Staff
+     * const staff = await prisma.staff.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StaffFindFirstOrThrowArgs>(args?: SelectSubset<T, StaffFindFirstOrThrowArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Staff that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Staff
+     * const staff = await prisma.staff.findMany()
+     * 
+     * // Get first 10 Staff
+     * const staff = await prisma.staff.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const staffWithIdOnly = await prisma.staff.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StaffFindManyArgs>(args?: SelectSubset<T, StaffFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Staff.
+     * @param {StaffCreateArgs} args - Arguments to create a Staff.
+     * @example
+     * // Create one Staff
+     * const Staff = await prisma.staff.create({
+     *   data: {
+     *     // ... data to create a Staff
+     *   }
+     * })
+     * 
+     */
+    create<T extends StaffCreateArgs>(args: SelectSubset<T, StaffCreateArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Staff.
+     * @param {StaffCreateManyArgs} args - Arguments to create many Staff.
+     * @example
+     * // Create many Staff
+     * const staff = await prisma.staff.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StaffCreateManyArgs>(args?: SelectSubset<T, StaffCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Staff and returns the data saved in the database.
+     * @param {StaffCreateManyAndReturnArgs} args - Arguments to create many Staff.
+     * @example
+     * // Create many Staff
+     * const staff = await prisma.staff.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Staff and only return the `id`
+     * const staffWithIdOnly = await prisma.staff.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StaffCreateManyAndReturnArgs>(args?: SelectSubset<T, StaffCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Staff.
+     * @param {StaffDeleteArgs} args - Arguments to delete one Staff.
+     * @example
+     * // Delete one Staff
+     * const Staff = await prisma.staff.delete({
+     *   where: {
+     *     // ... filter to delete one Staff
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StaffDeleteArgs>(args: SelectSubset<T, StaffDeleteArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Staff.
+     * @param {StaffUpdateArgs} args - Arguments to update one Staff.
+     * @example
+     * // Update one Staff
+     * const staff = await prisma.staff.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StaffUpdateArgs>(args: SelectSubset<T, StaffUpdateArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Staff.
+     * @param {StaffDeleteManyArgs} args - Arguments to filter Staff to delete.
+     * @example
+     * // Delete a few Staff
+     * const { count } = await prisma.staff.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StaffDeleteManyArgs>(args?: SelectSubset<T, StaffDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Staff.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Staff
+     * const staff = await prisma.staff.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StaffUpdateManyArgs>(args: SelectSubset<T, StaffUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Staff and returns the data updated in the database.
+     * @param {StaffUpdateManyAndReturnArgs} args - Arguments to update many Staff.
+     * @example
+     * // Update many Staff
+     * const staff = await prisma.staff.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Staff and only return the `id`
+     * const staffWithIdOnly = await prisma.staff.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StaffUpdateManyAndReturnArgs>(args: SelectSubset<T, StaffUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Staff.
+     * @param {StaffUpsertArgs} args - Arguments to update or create a Staff.
+     * @example
+     * // Update or create a Staff
+     * const staff = await prisma.staff.upsert({
+     *   create: {
+     *     // ... data to create a Staff
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Staff we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StaffUpsertArgs>(args: SelectSubset<T, StaffUpsertArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Staff.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffCountArgs} args - Arguments to filter Staff to count.
+     * @example
+     * // Count the number of Staff
+     * const count = await prisma.staff.count({
+     *   where: {
+     *     // ... the filter for the Staff we want to count
+     *   }
+     * })
+    **/
+    count<T extends StaffCountArgs>(
+      args?: Subset<T, StaffCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StaffCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Staff.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StaffAggregateArgs>(args: Subset<T, StaffAggregateArgs>): Prisma.PrismaPromise<GetStaffAggregateType<T>>
+
+    /**
+     * Group by Staff.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StaffGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StaffGroupByArgs['orderBy'] }
+        : { orderBy?: StaffGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StaffGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStaffGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Staff model
+   */
+  readonly fields: StaffFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Staff.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StaffClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Staff model
+   */
+  interface StaffFieldRefs {
+    readonly id: FieldRef<"Staff", 'String'>
+    readonly name: FieldRef<"Staff", 'String'>
+    readonly title: FieldRef<"Staff", 'String'>
+    readonly photoUrl: FieldRef<"Staff", 'String'>
+    readonly email: FieldRef<"Staff", 'String'>
+    readonly phone: FieldRef<"Staff", 'String'>
+    readonly order: FieldRef<"Staff", 'Int'>
+    readonly createdAt: FieldRef<"Staff", 'DateTime'>
+    readonly updatedAt: FieldRef<"Staff", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Staff findUnique
+   */
+  export type StaffFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * Filter, which Staff to fetch.
+     */
+    where: StaffWhereUniqueInput
+  }
+
+  /**
+   * Staff findUniqueOrThrow
+   */
+  export type StaffFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * Filter, which Staff to fetch.
+     */
+    where: StaffWhereUniqueInput
+  }
+
+  /**
+   * Staff findFirst
+   */
+  export type StaffFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * Filter, which Staff to fetch.
+     */
+    where?: StaffWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Staff to fetch.
+     */
+    orderBy?: StaffOrderByWithRelationInput | StaffOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Staff.
+     */
+    cursor?: StaffWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Staff from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Staff.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Staff.
+     */
+    distinct?: StaffScalarFieldEnum | StaffScalarFieldEnum[]
+  }
+
+  /**
+   * Staff findFirstOrThrow
+   */
+  export type StaffFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * Filter, which Staff to fetch.
+     */
+    where?: StaffWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Staff to fetch.
+     */
+    orderBy?: StaffOrderByWithRelationInput | StaffOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Staff.
+     */
+    cursor?: StaffWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Staff from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Staff.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Staff.
+     */
+    distinct?: StaffScalarFieldEnum | StaffScalarFieldEnum[]
+  }
+
+  /**
+   * Staff findMany
+   */
+  export type StaffFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * Filter, which Staff to fetch.
+     */
+    where?: StaffWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Staff to fetch.
+     */
+    orderBy?: StaffOrderByWithRelationInput | StaffOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Staff.
+     */
+    cursor?: StaffWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Staff from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Staff.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Staff.
+     */
+    distinct?: StaffScalarFieldEnum | StaffScalarFieldEnum[]
+  }
+
+  /**
+   * Staff create
+   */
+  export type StaffCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Staff.
+     */
+    data: XOR<StaffCreateInput, StaffUncheckedCreateInput>
+  }
+
+  /**
+   * Staff createMany
+   */
+  export type StaffCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Staff.
+     */
+    data: StaffCreateManyInput | StaffCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Staff createManyAndReturn
+   */
+  export type StaffCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * The data used to create many Staff.
+     */
+    data: StaffCreateManyInput | StaffCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Staff update
+   */
+  export type StaffUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Staff.
+     */
+    data: XOR<StaffUpdateInput, StaffUncheckedUpdateInput>
+    /**
+     * Choose, which Staff to update.
+     */
+    where: StaffWhereUniqueInput
+  }
+
+  /**
+   * Staff updateMany
+   */
+  export type StaffUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Staff.
+     */
+    data: XOR<StaffUpdateManyMutationInput, StaffUncheckedUpdateManyInput>
+    /**
+     * Filter which Staff to update
+     */
+    where?: StaffWhereInput
+    /**
+     * Limit how many Staff to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Staff updateManyAndReturn
+   */
+  export type StaffUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * The data used to update Staff.
+     */
+    data: XOR<StaffUpdateManyMutationInput, StaffUncheckedUpdateManyInput>
+    /**
+     * Filter which Staff to update
+     */
+    where?: StaffWhereInput
+    /**
+     * Limit how many Staff to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Staff upsert
+   */
+  export type StaffUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Staff to update in case it exists.
+     */
+    where: StaffWhereUniqueInput
+    /**
+     * In case the Staff found by the `where` argument doesn't exist, create a new Staff with this data.
+     */
+    create: XOR<StaffCreateInput, StaffUncheckedCreateInput>
+    /**
+     * In case the Staff was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StaffUpdateInput, StaffUncheckedUpdateInput>
+  }
+
+  /**
+   * Staff delete
+   */
+  export type StaffDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+    /**
+     * Filter which Staff to delete.
+     */
+    where: StaffWhereUniqueInput
+  }
+
+  /**
+   * Staff deleteMany
+   */
+  export type StaffDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Staff to delete
+     */
+    where?: StaffWhereInput
+    /**
+     * Limit how many Staff to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Staff without action
+   */
+  export type StaffDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Staff
+     */
+    select?: StaffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Staff
+     */
+    omit?: StaffOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Profile
    */
 
@@ -10191,7 +11442,8 @@ export namespace Prisma {
     fullName: string | null
     avatarUrl: string | null
     phone: string | null
-    role: string | null
+    aliasName: string | null
+    uniqueCode: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10202,7 +11454,8 @@ export namespace Prisma {
     fullName: string | null
     avatarUrl: string | null
     phone: string | null
-    role: string | null
+    aliasName: string | null
+    uniqueCode: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10213,7 +11466,9 @@ export namespace Prisma {
     fullName: number
     avatarUrl: number
     phone: number
-    role: number
+    roles: number
+    aliasName: number
+    uniqueCode: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10226,7 +11481,8 @@ export namespace Prisma {
     fullName?: true
     avatarUrl?: true
     phone?: true
-    role?: true
+    aliasName?: true
+    uniqueCode?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10237,7 +11493,8 @@ export namespace Prisma {
     fullName?: true
     avatarUrl?: true
     phone?: true
-    role?: true
+    aliasName?: true
+    uniqueCode?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10248,7 +11505,9 @@ export namespace Prisma {
     fullName?: true
     avatarUrl?: true
     phone?: true
-    role?: true
+    roles?: true
+    aliasName?: true
+    uniqueCode?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10332,7 +11591,9 @@ export namespace Prisma {
     fullName: string | null
     avatarUrl: string | null
     phone: string | null
-    role: string
+    roles: string[]
+    aliasName: string | null
+    uniqueCode: string | null
     createdAt: Date
     updatedAt: Date
     _count: ProfileCountAggregateOutputType | null
@@ -10360,9 +11621,14 @@ export namespace Prisma {
     fullName?: boolean
     avatarUrl?: boolean
     phone?: boolean
-    role?: boolean
+    roles?: boolean
+    aliasName?: boolean
+    uniqueCode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    contactPersons?: boolean | Profile$contactPersonsArgs<ExtArgs>
+    digitalCards?: boolean | Profile$digitalCardsArgs<ExtArgs>
+    _count?: boolean | ProfileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["profile"]>
 
   export type ProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10371,7 +11637,9 @@ export namespace Prisma {
     fullName?: boolean
     avatarUrl?: boolean
     phone?: boolean
-    role?: boolean
+    roles?: boolean
+    aliasName?: boolean
+    uniqueCode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["profile"]>
@@ -10382,7 +11650,9 @@ export namespace Prisma {
     fullName?: boolean
     avatarUrl?: boolean
     phone?: boolean
-    role?: boolean
+    roles?: boolean
+    aliasName?: boolean
+    uniqueCode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["profile"]>
@@ -10393,23 +11663,37 @@ export namespace Prisma {
     fullName?: boolean
     avatarUrl?: boolean
     phone?: boolean
-    role?: boolean
+    roles?: boolean
+    aliasName?: boolean
+    uniqueCode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "fullName" | "avatarUrl" | "phone" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "fullName" | "avatarUrl" | "phone" | "roles" | "aliasName" | "uniqueCode" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+  export type ProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contactPersons?: boolean | Profile$contactPersonsArgs<ExtArgs>
+    digitalCards?: boolean | Profile$digitalCardsArgs<ExtArgs>
+    _count?: boolean | ProfileCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ProfileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $ProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Profile"
-    objects: {}
+    objects: {
+      contactPersons: Prisma.$ContactPersonPayload<ExtArgs>[]
+      digitalCards: Prisma.$DigitalCardPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
       fullName: string | null
       avatarUrl: string | null
       phone: string | null
-      role: string
+      roles: string[]
+      aliasName: string | null
+      uniqueCode: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["profile"]>
@@ -10806,6 +12090,8 @@ export namespace Prisma {
    */
   export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    contactPersons<T extends Profile$contactPersonsArgs<ExtArgs> = {}>(args?: Subset<T, Profile$contactPersonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPersonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    digitalCards<T extends Profile$digitalCardsArgs<ExtArgs> = {}>(args?: Subset<T, Profile$digitalCardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DigitalCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10840,7 +12126,9 @@ export namespace Prisma {
     readonly fullName: FieldRef<"Profile", 'String'>
     readonly avatarUrl: FieldRef<"Profile", 'String'>
     readonly phone: FieldRef<"Profile", 'String'>
-    readonly role: FieldRef<"Profile", 'String'>
+    readonly roles: FieldRef<"Profile", 'String[]'>
+    readonly aliasName: FieldRef<"Profile", 'String'>
+    readonly uniqueCode: FieldRef<"Profile", 'String'>
     readonly createdAt: FieldRef<"Profile", 'DateTime'>
     readonly updatedAt: FieldRef<"Profile", 'DateTime'>
   }
@@ -10860,6 +12148,10 @@ export namespace Prisma {
      */
     omit?: ProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    /**
      * Filter, which Profile to fetch.
      */
     where: ProfileWhereUniqueInput
@@ -10878,6 +12170,10 @@ export namespace Prisma {
      */
     omit?: ProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    /**
      * Filter, which Profile to fetch.
      */
     where: ProfileWhereUniqueInput
@@ -10895,6 +12191,10 @@ export namespace Prisma {
      * Omit specific fields from the Profile
      */
     omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
     /**
      * Filter, which Profile to fetch.
      */
@@ -10944,6 +12244,10 @@ export namespace Prisma {
      */
     omit?: ProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    /**
      * Filter, which Profile to fetch.
      */
     where?: ProfileWhereInput
@@ -10991,6 +12295,10 @@ export namespace Prisma {
      * Omit specific fields from the Profile
      */
     omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
     /**
      * Filter, which Profiles to fetch.
      */
@@ -11040,6 +12348,10 @@ export namespace Prisma {
      */
     omit?: ProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    /**
      * The data needed to create a Profile.
      */
     data: XOR<ProfileCreateInput, ProfileUncheckedCreateInput>
@@ -11087,6 +12399,10 @@ export namespace Prisma {
      * Omit specific fields from the Profile
      */
     omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
     /**
      * The data needed to update a Profile.
      */
@@ -11154,6 +12470,10 @@ export namespace Prisma {
      */
     omit?: ProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    /**
      * The filter to search for the Profile to update in case it exists.
      */
     where: ProfileWhereUniqueInput
@@ -11180,6 +12500,10 @@ export namespace Prisma {
      */
     omit?: ProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    /**
      * Filter which Profile to delete.
      */
     where: ProfileWhereUniqueInput
@@ -11200,6 +12524,54 @@ export namespace Prisma {
   }
 
   /**
+   * Profile.contactPersons
+   */
+  export type Profile$contactPersonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactPerson
+     */
+    select?: ContactPersonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactPerson
+     */
+    omit?: ContactPersonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactPersonInclude<ExtArgs> | null
+    where?: ContactPersonWhereInput
+    orderBy?: ContactPersonOrderByWithRelationInput | ContactPersonOrderByWithRelationInput[]
+    cursor?: ContactPersonWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactPersonScalarFieldEnum | ContactPersonScalarFieldEnum[]
+  }
+
+  /**
+   * Profile.digitalCards
+   */
+  export type Profile$digitalCardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DigitalCard
+     */
+    select?: DigitalCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DigitalCard
+     */
+    omit?: DigitalCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DigitalCardInclude<ExtArgs> | null
+    where?: DigitalCardWhereInput
+    orderBy?: DigitalCardOrderByWithRelationInput | DigitalCardOrderByWithRelationInput[]
+    cursor?: DigitalCardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DigitalCardScalarFieldEnum | DigitalCardScalarFieldEnum[]
+  }
+
+  /**
    * Profile without action
    */
   export type ProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11211,6 +12583,10 @@ export namespace Prisma {
      * Omit specific fields from the Profile
      */
     omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
   }
 
 
@@ -11231,6 +12607,7 @@ export namespace Prisma {
   export const DigitalCardScalarFieldEnum: {
     id: 'id',
     eventId: 'eventId',
+    profileId: 'profileId',
     cardCode: 'cardCode',
     holderName: 'holderName',
     email: 'email',
@@ -11283,6 +12660,13 @@ export namespace Prisma {
     secondaryColor: 'secondaryColor',
     tertiaryColor: 'tertiaryColor',
     logoUrl: 'logoUrl',
+    bankCode: 'bankCode',
+    bankName: 'bankName',
+    accountNumber: 'accountNumber',
+    accountName: 'accountName',
+    subaccountCode: 'subaccountCode',
+    settlementBank: 'settlementBank',
+    currency: 'currency',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -11292,7 +12676,6 @@ export namespace Prisma {
 
   export const EventScalarFieldEnum: {
     id: 'id',
-    organizationId: 'organizationId',
     title: 'title',
     description: 'description',
     status: 'status',
@@ -11336,6 +12719,7 @@ export namespace Prisma {
   export const ContactPersonScalarFieldEnum: {
     id: 'id',
     eventId: 'eventId',
+    profileId: 'profileId',
     uniqueCode: 'uniqueCode',
     name: 'name',
     profilePictureUrl: 'profilePictureUrl',
@@ -11351,13 +12735,30 @@ export namespace Prisma {
   export type ContactPersonScalarFieldEnum = (typeof ContactPersonScalarFieldEnum)[keyof typeof ContactPersonScalarFieldEnum]
 
 
+  export const StaffScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    title: 'title',
+    photoUrl: 'photoUrl',
+    email: 'email',
+    phone: 'phone',
+    order: 'order',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StaffScalarFieldEnum = (typeof StaffScalarFieldEnum)[keyof typeof StaffScalarFieldEnum]
+
+
   export const ProfileScalarFieldEnum: {
     id: 'id',
     email: 'email',
     fullName: 'fullName',
     avatarUrl: 'avatarUrl',
     phone: 'phone',
-    role: 'role',
+    roles: 'roles',
+    aliasName: 'aliasName',
+    uniqueCode: 'uniqueCode',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -11511,6 +12912,7 @@ export namespace Prisma {
     NOT?: DigitalCardWhereInput | DigitalCardWhereInput[]
     id?: StringFilter<"DigitalCard"> | string
     eventId?: StringFilter<"DigitalCard"> | string
+    profileId?: StringNullableFilter<"DigitalCard"> | string | null
     cardCode?: StringFilter<"DigitalCard"> | string
     holderName?: StringFilter<"DigitalCard"> | string
     email?: StringNullableFilter<"DigitalCard"> | string | null
@@ -11522,12 +12924,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DigitalCard"> | Date | string
     updatedAt?: DateTimeFilter<"DigitalCard"> | Date | string
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
+    profile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
     donations?: DonationListRelationFilter
   }
 
   export type DigitalCardOrderByWithRelationInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrderInput | SortOrder
     cardCode?: SortOrder
     holderName?: SortOrder
     email?: SortOrderInput | SortOrder
@@ -11539,6 +12943,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     event?: EventOrderByWithRelationInput
+    profile?: ProfileOrderByWithRelationInput
     donations?: DonationOrderByRelationAggregateInput
   }
 
@@ -11549,6 +12954,7 @@ export namespace Prisma {
     OR?: DigitalCardWhereInput[]
     NOT?: DigitalCardWhereInput | DigitalCardWhereInput[]
     eventId?: StringFilter<"DigitalCard"> | string
+    profileId?: StringNullableFilter<"DigitalCard"> | string | null
     holderName?: StringFilter<"DigitalCard"> | string
     email?: StringNullableFilter<"DigitalCard"> | string | null
     profilePictureUrl?: StringNullableFilter<"DigitalCard"> | string | null
@@ -11559,12 +12965,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DigitalCard"> | Date | string
     updatedAt?: DateTimeFilter<"DigitalCard"> | Date | string
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
+    profile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
     donations?: DonationListRelationFilter
   }, "id" | "cardCode">
 
   export type DigitalCardOrderByWithAggregationInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrderInput | SortOrder
     cardCode?: SortOrder
     holderName?: SortOrder
     email?: SortOrderInput | SortOrder
@@ -11586,6 +12994,7 @@ export namespace Prisma {
     NOT?: DigitalCardScalarWhereWithAggregatesInput | DigitalCardScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"DigitalCard"> | string
     eventId?: StringWithAggregatesFilter<"DigitalCard"> | string
+    profileId?: StringNullableWithAggregatesFilter<"DigitalCard"> | string | null
     cardCode?: StringWithAggregatesFilter<"DigitalCard"> | string
     holderName?: StringWithAggregatesFilter<"DigitalCard"> | string
     email?: StringNullableWithAggregatesFilter<"DigitalCard"> | string | null
@@ -11769,9 +13178,15 @@ export namespace Prisma {
     secondaryColor?: StringFilter<"Organization"> | string
     tertiaryColor?: StringFilter<"Organization"> | string
     logoUrl?: StringNullableFilter<"Organization"> | string | null
+    bankCode?: StringNullableFilter<"Organization"> | string | null
+    bankName?: StringNullableFilter<"Organization"> | string | null
+    accountNumber?: StringNullableFilter<"Organization"> | string | null
+    accountName?: StringNullableFilter<"Organization"> | string | null
+    subaccountCode?: StringNullableFilter<"Organization"> | string | null
+    settlementBank?: StringNullableFilter<"Organization"> | string | null
+    currency?: StringFilter<"Organization"> | string
     createdAt?: DateTimeFilter<"Organization"> | Date | string
     updatedAt?: DateTimeFilter<"Organization"> | Date | string
-    events?: EventListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -11781,9 +13196,15 @@ export namespace Prisma {
     secondaryColor?: SortOrder
     tertiaryColor?: SortOrder
     logoUrl?: SortOrderInput | SortOrder
+    bankCode?: SortOrderInput | SortOrder
+    bankName?: SortOrderInput | SortOrder
+    accountNumber?: SortOrderInput | SortOrder
+    accountName?: SortOrderInput | SortOrder
+    subaccountCode?: SortOrderInput | SortOrder
+    settlementBank?: SortOrderInput | SortOrder
+    currency?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    events?: EventOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -11796,9 +13217,15 @@ export namespace Prisma {
     secondaryColor?: StringFilter<"Organization"> | string
     tertiaryColor?: StringFilter<"Organization"> | string
     logoUrl?: StringNullableFilter<"Organization"> | string | null
+    bankCode?: StringNullableFilter<"Organization"> | string | null
+    bankName?: StringNullableFilter<"Organization"> | string | null
+    accountNumber?: StringNullableFilter<"Organization"> | string | null
+    accountName?: StringNullableFilter<"Organization"> | string | null
+    subaccountCode?: StringNullableFilter<"Organization"> | string | null
+    settlementBank?: StringNullableFilter<"Organization"> | string | null
+    currency?: StringFilter<"Organization"> | string
     createdAt?: DateTimeFilter<"Organization"> | Date | string
     updatedAt?: DateTimeFilter<"Organization"> | Date | string
-    events?: EventListRelationFilter
   }, "id">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -11808,6 +13235,13 @@ export namespace Prisma {
     secondaryColor?: SortOrder
     tertiaryColor?: SortOrder
     logoUrl?: SortOrderInput | SortOrder
+    bankCode?: SortOrderInput | SortOrder
+    bankName?: SortOrderInput | SortOrder
+    accountNumber?: SortOrderInput | SortOrder
+    accountName?: SortOrderInput | SortOrder
+    subaccountCode?: SortOrderInput | SortOrder
+    settlementBank?: SortOrderInput | SortOrder
+    currency?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: OrganizationCountOrderByAggregateInput
@@ -11825,6 +13259,13 @@ export namespace Prisma {
     secondaryColor?: StringWithAggregatesFilter<"Organization"> | string
     tertiaryColor?: StringWithAggregatesFilter<"Organization"> | string
     logoUrl?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    bankCode?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    bankName?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    accountNumber?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    accountName?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    subaccountCode?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    settlementBank?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    currency?: StringWithAggregatesFilter<"Organization"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
   }
@@ -11834,7 +13275,6 @@ export namespace Prisma {
     OR?: EventWhereInput[]
     NOT?: EventWhereInput | EventWhereInput[]
     id?: StringFilter<"Event"> | string
-    organizationId?: StringFilter<"Event"> | string
     title?: StringFilter<"Event"> | string
     description?: StringNullableFilter<"Event"> | string | null
     status?: StringFilter<"Event"> | string
@@ -11842,7 +13282,6 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Event"> | Date | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     categories?: CategoryListRelationFilter
     contactPersons?: ContactPersonListRelationFilter
     digitalCards?: DigitalCardListRelationFilter
@@ -11851,7 +13290,6 @@ export namespace Prisma {
 
   export type EventOrderByWithRelationInput = {
     id?: SortOrder
-    organizationId?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -11859,7 +13297,6 @@ export namespace Prisma {
     endDate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    organization?: OrganizationOrderByWithRelationInput
     categories?: CategoryOrderByRelationAggregateInput
     contactPersons?: ContactPersonOrderByRelationAggregateInput
     digitalCards?: DigitalCardOrderByRelationAggregateInput
@@ -11871,7 +13308,6 @@ export namespace Prisma {
     AND?: EventWhereInput | EventWhereInput[]
     OR?: EventWhereInput[]
     NOT?: EventWhereInput | EventWhereInput[]
-    organizationId?: StringFilter<"Event"> | string
     title?: StringFilter<"Event"> | string
     description?: StringNullableFilter<"Event"> | string | null
     status?: StringFilter<"Event"> | string
@@ -11879,7 +13315,6 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Event"> | Date | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     categories?: CategoryListRelationFilter
     contactPersons?: ContactPersonListRelationFilter
     digitalCards?: DigitalCardListRelationFilter
@@ -11888,7 +13323,6 @@ export namespace Prisma {
 
   export type EventOrderByWithAggregationInput = {
     id?: SortOrder
-    organizationId?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -11906,7 +13340,6 @@ export namespace Prisma {
     OR?: EventScalarWhereWithAggregatesInput[]
     NOT?: EventScalarWhereWithAggregatesInput | EventScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Event"> | string
-    organizationId?: StringWithAggregatesFilter<"Event"> | string
     title?: StringWithAggregatesFilter<"Event"> | string
     description?: StringNullableWithAggregatesFilter<"Event"> | string | null
     status?: StringWithAggregatesFilter<"Event"> | string
@@ -12072,6 +13505,7 @@ export namespace Prisma {
     NOT?: ContactPersonWhereInput | ContactPersonWhereInput[]
     id?: StringFilter<"ContactPerson"> | string
     eventId?: StringFilter<"ContactPerson"> | string
+    profileId?: StringNullableFilter<"ContactPerson"> | string | null
     uniqueCode?: StringFilter<"ContactPerson"> | string
     name?: StringFilter<"ContactPerson"> | string
     profilePictureUrl?: StringNullableFilter<"ContactPerson"> | string | null
@@ -12083,12 +13517,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ContactPerson"> | Date | string
     updatedAt?: DateTimeFilter<"ContactPerson"> | Date | string
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
+    profile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
     donations?: DonationListRelationFilter
   }
 
   export type ContactPersonOrderByWithRelationInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrderInput | SortOrder
     uniqueCode?: SortOrder
     name?: SortOrder
     profilePictureUrl?: SortOrderInput | SortOrder
@@ -12100,6 +13536,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     event?: EventOrderByWithRelationInput
+    profile?: ProfileOrderByWithRelationInput
     donations?: DonationOrderByRelationAggregateInput
   }
 
@@ -12110,6 +13547,7 @@ export namespace Prisma {
     OR?: ContactPersonWhereInput[]
     NOT?: ContactPersonWhereInput | ContactPersonWhereInput[]
     eventId?: StringFilter<"ContactPerson"> | string
+    profileId?: StringNullableFilter<"ContactPerson"> | string | null
     name?: StringFilter<"ContactPerson"> | string
     profilePictureUrl?: StringNullableFilter<"ContactPerson"> | string | null
     classYear?: StringNullableFilter<"ContactPerson"> | string | null
@@ -12120,12 +13558,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ContactPerson"> | Date | string
     updatedAt?: DateTimeFilter<"ContactPerson"> | Date | string
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
+    profile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
     donations?: DonationListRelationFilter
   }, "id" | "uniqueCode">
 
   export type ContactPersonOrderByWithAggregationInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrderInput | SortOrder
     uniqueCode?: SortOrder
     name?: SortOrder
     profilePictureUrl?: SortOrderInput | SortOrder
@@ -12147,6 +13587,7 @@ export namespace Prisma {
     NOT?: ContactPersonScalarWhereWithAggregatesInput | ContactPersonScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"ContactPerson"> | string
     eventId?: StringWithAggregatesFilter<"ContactPerson"> | string
+    profileId?: StringNullableWithAggregatesFilter<"ContactPerson"> | string | null
     uniqueCode?: StringWithAggregatesFilter<"ContactPerson"> | string
     name?: StringWithAggregatesFilter<"ContactPerson"> | string
     profilePictureUrl?: StringNullableWithAggregatesFilter<"ContactPerson"> | string | null
@@ -12159,6 +13600,80 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ContactPerson"> | Date | string
   }
 
+  export type StaffWhereInput = {
+    AND?: StaffWhereInput | StaffWhereInput[]
+    OR?: StaffWhereInput[]
+    NOT?: StaffWhereInput | StaffWhereInput[]
+    id?: StringFilter<"Staff"> | string
+    name?: StringFilter<"Staff"> | string
+    title?: StringNullableFilter<"Staff"> | string | null
+    photoUrl?: StringNullableFilter<"Staff"> | string | null
+    email?: StringNullableFilter<"Staff"> | string | null
+    phone?: StringNullableFilter<"Staff"> | string | null
+    order?: IntFilter<"Staff"> | number
+    createdAt?: DateTimeFilter<"Staff"> | Date | string
+    updatedAt?: DateTimeFilter<"Staff"> | Date | string
+  }
+
+  export type StaffOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    title?: SortOrderInput | SortOrder
+    photoUrl?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaffWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StaffWhereInput | StaffWhereInput[]
+    OR?: StaffWhereInput[]
+    NOT?: StaffWhereInput | StaffWhereInput[]
+    name?: StringFilter<"Staff"> | string
+    title?: StringNullableFilter<"Staff"> | string | null
+    photoUrl?: StringNullableFilter<"Staff"> | string | null
+    email?: StringNullableFilter<"Staff"> | string | null
+    phone?: StringNullableFilter<"Staff"> | string | null
+    order?: IntFilter<"Staff"> | number
+    createdAt?: DateTimeFilter<"Staff"> | Date | string
+    updatedAt?: DateTimeFilter<"Staff"> | Date | string
+  }, "id">
+
+  export type StaffOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    title?: SortOrderInput | SortOrder
+    photoUrl?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StaffCountOrderByAggregateInput
+    _avg?: StaffAvgOrderByAggregateInput
+    _max?: StaffMaxOrderByAggregateInput
+    _min?: StaffMinOrderByAggregateInput
+    _sum?: StaffSumOrderByAggregateInput
+  }
+
+  export type StaffScalarWhereWithAggregatesInput = {
+    AND?: StaffScalarWhereWithAggregatesInput | StaffScalarWhereWithAggregatesInput[]
+    OR?: StaffScalarWhereWithAggregatesInput[]
+    NOT?: StaffScalarWhereWithAggregatesInput | StaffScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Staff"> | string
+    name?: StringWithAggregatesFilter<"Staff"> | string
+    title?: StringNullableWithAggregatesFilter<"Staff"> | string | null
+    photoUrl?: StringNullableWithAggregatesFilter<"Staff"> | string | null
+    email?: StringNullableWithAggregatesFilter<"Staff"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"Staff"> | string | null
+    order?: IntWithAggregatesFilter<"Staff"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Staff"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Staff"> | Date | string
+  }
+
   export type ProfileWhereInput = {
     AND?: ProfileWhereInput | ProfileWhereInput[]
     OR?: ProfileWhereInput[]
@@ -12168,9 +13683,13 @@ export namespace Prisma {
     fullName?: StringNullableFilter<"Profile"> | string | null
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
     phone?: StringNullableFilter<"Profile"> | string | null
-    role?: StringFilter<"Profile"> | string
+    roles?: StringNullableListFilter<"Profile">
+    aliasName?: StringNullableFilter<"Profile"> | string | null
+    uniqueCode?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
+    contactPersons?: ContactPersonListRelationFilter
+    digitalCards?: DigitalCardListRelationFilter
   }
 
   export type ProfileOrderByWithRelationInput = {
@@ -12179,24 +13698,32 @@ export namespace Prisma {
     fullName?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
-    role?: SortOrder
+    roles?: SortOrder
+    aliasName?: SortOrderInput | SortOrder
+    uniqueCode?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    contactPersons?: ContactPersonOrderByRelationAggregateInput
+    digitalCards?: DigitalCardOrderByRelationAggregateInput
   }
 
   export type ProfileWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
     phone?: string
+    uniqueCode?: string
     AND?: ProfileWhereInput | ProfileWhereInput[]
     OR?: ProfileWhereInput[]
     NOT?: ProfileWhereInput | ProfileWhereInput[]
     fullName?: StringNullableFilter<"Profile"> | string | null
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
-    role?: StringFilter<"Profile"> | string
+    roles?: StringNullableListFilter<"Profile">
+    aliasName?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
-  }, "id" | "email" | "phone">
+    contactPersons?: ContactPersonListRelationFilter
+    digitalCards?: DigitalCardListRelationFilter
+  }, "id" | "email" | "phone" | "uniqueCode">
 
   export type ProfileOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12204,7 +13731,9 @@ export namespace Prisma {
     fullName?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
-    role?: SortOrder
+    roles?: SortOrder
+    aliasName?: SortOrderInput | SortOrder
+    uniqueCode?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProfileCountOrderByAggregateInput
@@ -12221,7 +13750,9 @@ export namespace Prisma {
     fullName?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     avatarUrl?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Profile"> | string | null
-    role?: StringWithAggregatesFilter<"Profile"> | string
+    roles?: StringNullableListFilter<"Profile">
+    aliasName?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    uniqueCode?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
   }
@@ -12239,12 +13770,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     event: EventCreateNestedOneWithoutDigitalCardsInput
+    profile?: ProfileCreateNestedOneWithoutDigitalCardsInput
     donations?: DonationCreateNestedManyWithoutDigitalCardInput
   }
 
   export type DigitalCardUncheckedCreateInput = {
     id?: string
     eventId: string
+    profileId?: string | null
     cardCode: string
     holderName: string
     email?: string | null
@@ -12271,12 +13804,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: EventUpdateOneRequiredWithoutDigitalCardsNestedInput
+    profile?: ProfileUpdateOneWithoutDigitalCardsNestedInput
     donations?: DonationUpdateManyWithoutDigitalCardNestedInput
   }
 
   export type DigitalCardUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     cardCode?: StringFieldUpdateOperationsInput | string
     holderName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12293,6 +13828,7 @@ export namespace Prisma {
   export type DigitalCardCreateManyInput = {
     id?: string
     eventId: string
+    profileId?: string | null
     cardCode: string
     holderName: string
     email?: string | null
@@ -12322,6 +13858,7 @@ export namespace Prisma {
   export type DigitalCardUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     cardCode?: StringFieldUpdateOperationsInput | string
     holderName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12526,9 +14063,15 @@ export namespace Prisma {
     secondaryColor?: string
     tertiaryColor?: string
     logoUrl?: string | null
+    bankCode?: string | null
+    bankName?: string | null
+    accountNumber?: string | null
+    accountName?: string | null
+    subaccountCode?: string | null
+    settlementBank?: string | null
+    currency?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    events?: EventCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -12538,9 +14081,15 @@ export namespace Prisma {
     secondaryColor?: string
     tertiaryColor?: string
     logoUrl?: string | null
+    bankCode?: string | null
+    bankName?: string | null
+    accountNumber?: string | null
+    accountName?: string | null
+    subaccountCode?: string | null
+    settlementBank?: string | null
+    currency?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    events?: EventUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -12550,9 +14099,15 @@ export namespace Prisma {
     secondaryColor?: StringFieldUpdateOperationsInput | string
     tertiaryColor?: StringFieldUpdateOperationsInput | string
     logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCode?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: NullableStringFieldUpdateOperationsInput | string | null
+    subaccountCode?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementBank?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    events?: EventUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -12562,9 +14117,15 @@ export namespace Prisma {
     secondaryColor?: StringFieldUpdateOperationsInput | string
     tertiaryColor?: StringFieldUpdateOperationsInput | string
     logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCode?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: NullableStringFieldUpdateOperationsInput | string | null
+    subaccountCode?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementBank?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    events?: EventUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -12574,6 +14135,13 @@ export namespace Prisma {
     secondaryColor?: string
     tertiaryColor?: string
     logoUrl?: string | null
+    bankCode?: string | null
+    bankName?: string | null
+    accountNumber?: string | null
+    accountName?: string | null
+    subaccountCode?: string | null
+    settlementBank?: string | null
+    currency?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12585,6 +14153,13 @@ export namespace Prisma {
     secondaryColor?: StringFieldUpdateOperationsInput | string
     tertiaryColor?: StringFieldUpdateOperationsInput | string
     logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCode?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: NullableStringFieldUpdateOperationsInput | string | null
+    subaccountCode?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementBank?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12596,6 +14171,13 @@ export namespace Prisma {
     secondaryColor?: StringFieldUpdateOperationsInput | string
     tertiaryColor?: StringFieldUpdateOperationsInput | string
     logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCode?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: NullableStringFieldUpdateOperationsInput | string | null
+    subaccountCode?: NullableStringFieldUpdateOperationsInput | string | null
+    settlementBank?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12609,7 +14191,6 @@ export namespace Prisma {
     endDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutEventsInput
     categories?: CategoryCreateNestedManyWithoutEventInput
     contactPersons?: ContactPersonCreateNestedManyWithoutEventInput
     digitalCards?: DigitalCardCreateNestedManyWithoutEventInput
@@ -12618,7 +14199,6 @@ export namespace Prisma {
 
   export type EventUncheckedCreateInput = {
     id?: string
-    organizationId: string
     title: string
     description?: string | null
     status?: string
@@ -12641,7 +14221,6 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutEventsNestedInput
     categories?: CategoryUpdateManyWithoutEventNestedInput
     contactPersons?: ContactPersonUpdateManyWithoutEventNestedInput
     digitalCards?: DigitalCardUpdateManyWithoutEventNestedInput
@@ -12650,7 +14229,6 @@ export namespace Prisma {
 
   export type EventUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -12666,7 +14244,6 @@ export namespace Prisma {
 
   export type EventCreateManyInput = {
     id?: string
-    organizationId: string
     title: string
     description?: string | null
     status?: string
@@ -12689,7 +14266,6 @@ export namespace Prisma {
 
   export type EventUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -12872,12 +14448,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     event: EventCreateNestedOneWithoutContactPersonsInput
+    profile?: ProfileCreateNestedOneWithoutContactPersonsInput
     donations?: DonationCreateNestedManyWithoutContactPersonInput
   }
 
   export type ContactPersonUncheckedCreateInput = {
     id?: string
     eventId: string
+    profileId?: string | null
     uniqueCode: string
     name: string
     profilePictureUrl?: string | null
@@ -12904,12 +14482,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: EventUpdateOneRequiredWithoutContactPersonsNestedInput
+    profile?: ProfileUpdateOneWithoutContactPersonsNestedInput
     donations?: DonationUpdateManyWithoutContactPersonNestedInput
   }
 
   export type ContactPersonUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12926,6 +14506,7 @@ export namespace Prisma {
   export type ContactPersonCreateManyInput = {
     id?: string
     eventId: string
+    profileId?: string | null
     uniqueCode: string
     name: string
     profilePictureUrl?: string | null
@@ -12955,6 +14536,7 @@ export namespace Prisma {
   export type ContactPersonUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12967,15 +14549,103 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StaffCreateInput = {
+    id?: string
+    name: string
+    title?: string | null
+    photoUrl?: string | null
+    email?: string | null
+    phone?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StaffUncheckedCreateInput = {
+    id?: string
+    name: string
+    title?: string | null
+    photoUrl?: string | null
+    email?: string | null
+    phone?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StaffUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaffUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaffCreateManyInput = {
+    id?: string
+    name: string
+    title?: string | null
+    photoUrl?: string | null
+    email?: string | null
+    phone?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StaffUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaffUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProfileCreateInput = {
     id?: string
     email: string
     fullName?: string | null
     avatarUrl?: string | null
     phone?: string | null
-    role?: string
+    roles?: ProfileCreaterolesInput | string[]
+    aliasName?: string | null
+    uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    contactPersons?: ContactPersonCreateNestedManyWithoutProfileInput
+    digitalCards?: DigitalCardCreateNestedManyWithoutProfileInput
   }
 
   export type ProfileUncheckedCreateInput = {
@@ -12984,9 +14654,13 @@ export namespace Prisma {
     fullName?: string | null
     avatarUrl?: string | null
     phone?: string | null
-    role?: string
+    roles?: ProfileCreaterolesInput | string[]
+    aliasName?: string | null
+    uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    contactPersons?: ContactPersonUncheckedCreateNestedManyWithoutProfileInput
+    digitalCards?: DigitalCardUncheckedCreateNestedManyWithoutProfileInput
   }
 
   export type ProfileUpdateInput = {
@@ -12995,9 +14669,13 @@ export namespace Prisma {
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
+    roles?: ProfileUpdaterolesInput | string[]
+    aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactPersons?: ContactPersonUpdateManyWithoutProfileNestedInput
+    digitalCards?: DigitalCardUpdateManyWithoutProfileNestedInput
   }
 
   export type ProfileUncheckedUpdateInput = {
@@ -13006,9 +14684,13 @@ export namespace Prisma {
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
+    roles?: ProfileUpdaterolesInput | string[]
+    aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactPersons?: ContactPersonUncheckedUpdateManyWithoutProfileNestedInput
+    digitalCards?: DigitalCardUncheckedUpdateManyWithoutProfileNestedInput
   }
 
   export type ProfileCreateManyInput = {
@@ -13017,7 +14699,9 @@ export namespace Prisma {
     fullName?: string | null
     avatarUrl?: string | null
     phone?: string | null
-    role?: string
+    roles?: ProfileCreaterolesInput | string[]
+    aliasName?: string | null
+    uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13028,7 +14712,9 @@ export namespace Prisma {
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
+    roles?: ProfileUpdaterolesInput | string[]
+    aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13039,7 +14725,9 @@ export namespace Prisma {
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
+    roles?: ProfileUpdaterolesInput | string[]
+    aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13095,6 +14783,11 @@ export namespace Prisma {
     isNot?: EventWhereInput
   }
 
+  export type ProfileNullableScalarRelationFilter = {
+    is?: ProfileWhereInput | null
+    isNot?: ProfileWhereInput | null
+  }
+
   export type DonationListRelationFilter = {
     every?: DonationWhereInput
     some?: DonationWhereInput
@@ -13113,6 +14806,7 @@ export namespace Prisma {
   export type DigitalCardCountOrderByAggregateInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrder
     cardCode?: SortOrder
     holderName?: SortOrder
     email?: SortOrder
@@ -13128,6 +14822,7 @@ export namespace Prisma {
   export type DigitalCardMaxOrderByAggregateInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrder
     cardCode?: SortOrder
     holderName?: SortOrder
     email?: SortOrder
@@ -13143,6 +14838,7 @@ export namespace Prisma {
   export type DigitalCardMinOrderByAggregateInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrder
     cardCode?: SortOrder
     holderName?: SortOrder
     email?: SortOrder
@@ -13414,16 +15110,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type EventListRelationFilter = {
-    every?: EventWhereInput
-    some?: EventWhereInput
-    none?: EventWhereInput
-  }
-
-  export type EventOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type OrganizationCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -13431,6 +15117,13 @@ export namespace Prisma {
     secondaryColor?: SortOrder
     tertiaryColor?: SortOrder
     logoUrl?: SortOrder
+    bankCode?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    subaccountCode?: SortOrder
+    settlementBank?: SortOrder
+    currency?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13442,6 +15135,13 @@ export namespace Prisma {
     secondaryColor?: SortOrder
     tertiaryColor?: SortOrder
     logoUrl?: SortOrder
+    bankCode?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    subaccountCode?: SortOrder
+    settlementBank?: SortOrder
+    currency?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13453,13 +15153,15 @@ export namespace Prisma {
     secondaryColor?: SortOrder
     tertiaryColor?: SortOrder
     logoUrl?: SortOrder
+    bankCode?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    subaccountCode?: SortOrder
+    settlementBank?: SortOrder
+    currency?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type OrganizationScalarRelationFilter = {
-    is?: OrganizationWhereInput
-    isNot?: OrganizationWhereInput
   }
 
   export type CategoryListRelationFilter = {
@@ -13494,7 +15196,6 @@ export namespace Prisma {
 
   export type EventCountOrderByAggregateInput = {
     id?: SortOrder
-    organizationId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -13506,7 +15207,6 @@ export namespace Prisma {
 
   export type EventMaxOrderByAggregateInput = {
     id?: SortOrder
-    organizationId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -13518,7 +15218,6 @@ export namespace Prisma {
 
   export type EventMinOrderByAggregateInput = {
     id?: SortOrder
-    organizationId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -13684,6 +15383,7 @@ export namespace Prisma {
   export type ContactPersonCountOrderByAggregateInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrder
     uniqueCode?: SortOrder
     name?: SortOrder
     profilePictureUrl?: SortOrder
@@ -13699,6 +15399,7 @@ export namespace Prisma {
   export type ContactPersonMaxOrderByAggregateInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrder
     uniqueCode?: SortOrder
     name?: SortOrder
     profilePictureUrl?: SortOrder
@@ -13713,6 +15414,7 @@ export namespace Prisma {
   export type ContactPersonMinOrderByAggregateInput = {
     id?: SortOrder
     eventId?: SortOrder
+    profileId?: SortOrder
     uniqueCode?: SortOrder
     name?: SortOrder
     profilePictureUrl?: SortOrder
@@ -13724,13 +15426,67 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type StaffCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    title?: SortOrder
+    photoUrl?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaffAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type StaffMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    title?: SortOrder
+    photoUrl?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaffMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    title?: SortOrder
+    photoUrl?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaffSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type ProfileCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     fullName?: SortOrder
     avatarUrl?: SortOrder
     phone?: SortOrder
-    role?: SortOrder
+    roles?: SortOrder
+    aliasName?: SortOrder
+    uniqueCode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13741,7 +15497,8 @@ export namespace Prisma {
     fullName?: SortOrder
     avatarUrl?: SortOrder
     phone?: SortOrder
-    role?: SortOrder
+    aliasName?: SortOrder
+    uniqueCode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13752,7 +15509,8 @@ export namespace Prisma {
     fullName?: SortOrder
     avatarUrl?: SortOrder
     phone?: SortOrder
-    role?: SortOrder
+    aliasName?: SortOrder
+    uniqueCode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13761,6 +15519,12 @@ export namespace Prisma {
     create?: XOR<EventCreateWithoutDigitalCardsInput, EventUncheckedCreateWithoutDigitalCardsInput>
     connectOrCreate?: EventCreateOrConnectWithoutDigitalCardsInput
     connect?: EventWhereUniqueInput
+  }
+
+  export type ProfileCreateNestedOneWithoutDigitalCardsInput = {
+    create?: XOR<ProfileCreateWithoutDigitalCardsInput, ProfileUncheckedCreateWithoutDigitalCardsInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutDigitalCardsInput
+    connect?: ProfileWhereUniqueInput
   }
 
   export type DonationCreateNestedManyWithoutDigitalCardInput = {
@@ -13799,6 +15563,16 @@ export namespace Prisma {
     upsert?: EventUpsertWithoutDigitalCardsInput
     connect?: EventWhereUniqueInput
     update?: XOR<XOR<EventUpdateToOneWithWhereWithoutDigitalCardsInput, EventUpdateWithoutDigitalCardsInput>, EventUncheckedUpdateWithoutDigitalCardsInput>
+  }
+
+  export type ProfileUpdateOneWithoutDigitalCardsNestedInput = {
+    create?: XOR<ProfileCreateWithoutDigitalCardsInput, ProfileUncheckedCreateWithoutDigitalCardsInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutDigitalCardsInput
+    upsert?: ProfileUpsertWithoutDigitalCardsInput
+    disconnect?: ProfileWhereInput | boolean
+    delete?: ProfileWhereInput | boolean
+    connect?: ProfileWhereUniqueInput
+    update?: XOR<XOR<ProfileUpdateToOneWithWhereWithoutDigitalCardsInput, ProfileUpdateWithoutDigitalCardsInput>, ProfileUncheckedUpdateWithoutDigitalCardsInput>
   }
 
   export type DonationUpdateManyWithoutDigitalCardNestedInput = {
@@ -13903,54 +15677,6 @@ export namespace Prisma {
     update?: XOR<XOR<DonationItemUpdateToOneWithWhereWithoutDonationsInput, DonationItemUpdateWithoutDonationsInput>, DonationItemUncheckedUpdateWithoutDonationsInput>
   }
 
-  export type EventCreateNestedManyWithoutOrganizationInput = {
-    create?: XOR<EventCreateWithoutOrganizationInput, EventUncheckedCreateWithoutOrganizationInput> | EventCreateWithoutOrganizationInput[] | EventUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: EventCreateOrConnectWithoutOrganizationInput | EventCreateOrConnectWithoutOrganizationInput[]
-    createMany?: EventCreateManyOrganizationInputEnvelope
-    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
-  }
-
-  export type EventUncheckedCreateNestedManyWithoutOrganizationInput = {
-    create?: XOR<EventCreateWithoutOrganizationInput, EventUncheckedCreateWithoutOrganizationInput> | EventCreateWithoutOrganizationInput[] | EventUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: EventCreateOrConnectWithoutOrganizationInput | EventCreateOrConnectWithoutOrganizationInput[]
-    createMany?: EventCreateManyOrganizationInputEnvelope
-    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
-  }
-
-  export type EventUpdateManyWithoutOrganizationNestedInput = {
-    create?: XOR<EventCreateWithoutOrganizationInput, EventUncheckedCreateWithoutOrganizationInput> | EventCreateWithoutOrganizationInput[] | EventUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: EventCreateOrConnectWithoutOrganizationInput | EventCreateOrConnectWithoutOrganizationInput[]
-    upsert?: EventUpsertWithWhereUniqueWithoutOrganizationInput | EventUpsertWithWhereUniqueWithoutOrganizationInput[]
-    createMany?: EventCreateManyOrganizationInputEnvelope
-    set?: EventWhereUniqueInput | EventWhereUniqueInput[]
-    disconnect?: EventWhereUniqueInput | EventWhereUniqueInput[]
-    delete?: EventWhereUniqueInput | EventWhereUniqueInput[]
-    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
-    update?: EventUpdateWithWhereUniqueWithoutOrganizationInput | EventUpdateWithWhereUniqueWithoutOrganizationInput[]
-    updateMany?: EventUpdateManyWithWhereWithoutOrganizationInput | EventUpdateManyWithWhereWithoutOrganizationInput[]
-    deleteMany?: EventScalarWhereInput | EventScalarWhereInput[]
-  }
-
-  export type EventUncheckedUpdateManyWithoutOrganizationNestedInput = {
-    create?: XOR<EventCreateWithoutOrganizationInput, EventUncheckedCreateWithoutOrganizationInput> | EventCreateWithoutOrganizationInput[] | EventUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: EventCreateOrConnectWithoutOrganizationInput | EventCreateOrConnectWithoutOrganizationInput[]
-    upsert?: EventUpsertWithWhereUniqueWithoutOrganizationInput | EventUpsertWithWhereUniqueWithoutOrganizationInput[]
-    createMany?: EventCreateManyOrganizationInputEnvelope
-    set?: EventWhereUniqueInput | EventWhereUniqueInput[]
-    disconnect?: EventWhereUniqueInput | EventWhereUniqueInput[]
-    delete?: EventWhereUniqueInput | EventWhereUniqueInput[]
-    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
-    update?: EventUpdateWithWhereUniqueWithoutOrganizationInput | EventUpdateWithWhereUniqueWithoutOrganizationInput[]
-    updateMany?: EventUpdateManyWithWhereWithoutOrganizationInput | EventUpdateManyWithWhereWithoutOrganizationInput[]
-    deleteMany?: EventScalarWhereInput | EventScalarWhereInput[]
-  }
-
-  export type OrganizationCreateNestedOneWithoutEventsInput = {
-    create?: XOR<OrganizationCreateWithoutEventsInput, OrganizationUncheckedCreateWithoutEventsInput>
-    connectOrCreate?: OrganizationCreateOrConnectWithoutEventsInput
-    connect?: OrganizationWhereUniqueInput
-  }
-
   export type CategoryCreateNestedManyWithoutEventInput = {
     create?: XOR<CategoryCreateWithoutEventInput, CategoryUncheckedCreateWithoutEventInput> | CategoryCreateWithoutEventInput[] | CategoryUncheckedCreateWithoutEventInput[]
     connectOrCreate?: CategoryCreateOrConnectWithoutEventInput | CategoryCreateOrConnectWithoutEventInput[]
@@ -14005,14 +15731,6 @@ export namespace Prisma {
     connectOrCreate?: DonationCreateOrConnectWithoutEventInput | DonationCreateOrConnectWithoutEventInput[]
     createMany?: DonationCreateManyEventInputEnvelope
     connect?: DonationWhereUniqueInput | DonationWhereUniqueInput[]
-  }
-
-  export type OrganizationUpdateOneRequiredWithoutEventsNestedInput = {
-    create?: XOR<OrganizationCreateWithoutEventsInput, OrganizationUncheckedCreateWithoutEventsInput>
-    connectOrCreate?: OrganizationCreateOrConnectWithoutEventsInput
-    upsert?: OrganizationUpsertWithoutEventsInput
-    connect?: OrganizationWhereUniqueInput
-    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutEventsInput, OrganizationUpdateWithoutEventsInput>, OrganizationUncheckedUpdateWithoutEventsInput>
   }
 
   export type CategoryUpdateManyWithoutEventNestedInput = {
@@ -14261,6 +15979,12 @@ export namespace Prisma {
     connect?: EventWhereUniqueInput
   }
 
+  export type ProfileCreateNestedOneWithoutContactPersonsInput = {
+    create?: XOR<ProfileCreateWithoutContactPersonsInput, ProfileUncheckedCreateWithoutContactPersonsInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutContactPersonsInput
+    connect?: ProfileWhereUniqueInput
+  }
+
   export type DonationCreateNestedManyWithoutContactPersonInput = {
     create?: XOR<DonationCreateWithoutContactPersonInput, DonationUncheckedCreateWithoutContactPersonInput> | DonationCreateWithoutContactPersonInput[] | DonationUncheckedCreateWithoutContactPersonInput[]
     connectOrCreate?: DonationCreateOrConnectWithoutContactPersonInput | DonationCreateOrConnectWithoutContactPersonInput[]
@@ -14281,6 +16005,16 @@ export namespace Prisma {
     upsert?: EventUpsertWithoutContactPersonsInput
     connect?: EventWhereUniqueInput
     update?: XOR<XOR<EventUpdateToOneWithWhereWithoutContactPersonsInput, EventUpdateWithoutContactPersonsInput>, EventUncheckedUpdateWithoutContactPersonsInput>
+  }
+
+  export type ProfileUpdateOneWithoutContactPersonsNestedInput = {
+    create?: XOR<ProfileCreateWithoutContactPersonsInput, ProfileUncheckedCreateWithoutContactPersonsInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutContactPersonsInput
+    upsert?: ProfileUpsertWithoutContactPersonsInput
+    disconnect?: ProfileWhereInput | boolean
+    delete?: ProfileWhereInput | boolean
+    connect?: ProfileWhereUniqueInput
+    update?: XOR<XOR<ProfileUpdateToOneWithWhereWithoutContactPersonsInput, ProfileUpdateWithoutContactPersonsInput>, ProfileUncheckedUpdateWithoutContactPersonsInput>
   }
 
   export type DonationUpdateManyWithoutContactPersonNestedInput = {
@@ -14309,6 +16043,99 @@ export namespace Prisma {
     update?: DonationUpdateWithWhereUniqueWithoutContactPersonInput | DonationUpdateWithWhereUniqueWithoutContactPersonInput[]
     updateMany?: DonationUpdateManyWithWhereWithoutContactPersonInput | DonationUpdateManyWithWhereWithoutContactPersonInput[]
     deleteMany?: DonationScalarWhereInput | DonationScalarWhereInput[]
+  }
+
+  export type ProfileCreaterolesInput = {
+    set: string[]
+  }
+
+  export type ContactPersonCreateNestedManyWithoutProfileInput = {
+    create?: XOR<ContactPersonCreateWithoutProfileInput, ContactPersonUncheckedCreateWithoutProfileInput> | ContactPersonCreateWithoutProfileInput[] | ContactPersonUncheckedCreateWithoutProfileInput[]
+    connectOrCreate?: ContactPersonCreateOrConnectWithoutProfileInput | ContactPersonCreateOrConnectWithoutProfileInput[]
+    createMany?: ContactPersonCreateManyProfileInputEnvelope
+    connect?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+  }
+
+  export type DigitalCardCreateNestedManyWithoutProfileInput = {
+    create?: XOR<DigitalCardCreateWithoutProfileInput, DigitalCardUncheckedCreateWithoutProfileInput> | DigitalCardCreateWithoutProfileInput[] | DigitalCardUncheckedCreateWithoutProfileInput[]
+    connectOrCreate?: DigitalCardCreateOrConnectWithoutProfileInput | DigitalCardCreateOrConnectWithoutProfileInput[]
+    createMany?: DigitalCardCreateManyProfileInputEnvelope
+    connect?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+  }
+
+  export type ContactPersonUncheckedCreateNestedManyWithoutProfileInput = {
+    create?: XOR<ContactPersonCreateWithoutProfileInput, ContactPersonUncheckedCreateWithoutProfileInput> | ContactPersonCreateWithoutProfileInput[] | ContactPersonUncheckedCreateWithoutProfileInput[]
+    connectOrCreate?: ContactPersonCreateOrConnectWithoutProfileInput | ContactPersonCreateOrConnectWithoutProfileInput[]
+    createMany?: ContactPersonCreateManyProfileInputEnvelope
+    connect?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+  }
+
+  export type DigitalCardUncheckedCreateNestedManyWithoutProfileInput = {
+    create?: XOR<DigitalCardCreateWithoutProfileInput, DigitalCardUncheckedCreateWithoutProfileInput> | DigitalCardCreateWithoutProfileInput[] | DigitalCardUncheckedCreateWithoutProfileInput[]
+    connectOrCreate?: DigitalCardCreateOrConnectWithoutProfileInput | DigitalCardCreateOrConnectWithoutProfileInput[]
+    createMany?: DigitalCardCreateManyProfileInputEnvelope
+    connect?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+  }
+
+  export type ProfileUpdaterolesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ContactPersonUpdateManyWithoutProfileNestedInput = {
+    create?: XOR<ContactPersonCreateWithoutProfileInput, ContactPersonUncheckedCreateWithoutProfileInput> | ContactPersonCreateWithoutProfileInput[] | ContactPersonUncheckedCreateWithoutProfileInput[]
+    connectOrCreate?: ContactPersonCreateOrConnectWithoutProfileInput | ContactPersonCreateOrConnectWithoutProfileInput[]
+    upsert?: ContactPersonUpsertWithWhereUniqueWithoutProfileInput | ContactPersonUpsertWithWhereUniqueWithoutProfileInput[]
+    createMany?: ContactPersonCreateManyProfileInputEnvelope
+    set?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+    disconnect?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+    delete?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+    connect?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+    update?: ContactPersonUpdateWithWhereUniqueWithoutProfileInput | ContactPersonUpdateWithWhereUniqueWithoutProfileInput[]
+    updateMany?: ContactPersonUpdateManyWithWhereWithoutProfileInput | ContactPersonUpdateManyWithWhereWithoutProfileInput[]
+    deleteMany?: ContactPersonScalarWhereInput | ContactPersonScalarWhereInput[]
+  }
+
+  export type DigitalCardUpdateManyWithoutProfileNestedInput = {
+    create?: XOR<DigitalCardCreateWithoutProfileInput, DigitalCardUncheckedCreateWithoutProfileInput> | DigitalCardCreateWithoutProfileInput[] | DigitalCardUncheckedCreateWithoutProfileInput[]
+    connectOrCreate?: DigitalCardCreateOrConnectWithoutProfileInput | DigitalCardCreateOrConnectWithoutProfileInput[]
+    upsert?: DigitalCardUpsertWithWhereUniqueWithoutProfileInput | DigitalCardUpsertWithWhereUniqueWithoutProfileInput[]
+    createMany?: DigitalCardCreateManyProfileInputEnvelope
+    set?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+    disconnect?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+    delete?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+    connect?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+    update?: DigitalCardUpdateWithWhereUniqueWithoutProfileInput | DigitalCardUpdateWithWhereUniqueWithoutProfileInput[]
+    updateMany?: DigitalCardUpdateManyWithWhereWithoutProfileInput | DigitalCardUpdateManyWithWhereWithoutProfileInput[]
+    deleteMany?: DigitalCardScalarWhereInput | DigitalCardScalarWhereInput[]
+  }
+
+  export type ContactPersonUncheckedUpdateManyWithoutProfileNestedInput = {
+    create?: XOR<ContactPersonCreateWithoutProfileInput, ContactPersonUncheckedCreateWithoutProfileInput> | ContactPersonCreateWithoutProfileInput[] | ContactPersonUncheckedCreateWithoutProfileInput[]
+    connectOrCreate?: ContactPersonCreateOrConnectWithoutProfileInput | ContactPersonCreateOrConnectWithoutProfileInput[]
+    upsert?: ContactPersonUpsertWithWhereUniqueWithoutProfileInput | ContactPersonUpsertWithWhereUniqueWithoutProfileInput[]
+    createMany?: ContactPersonCreateManyProfileInputEnvelope
+    set?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+    disconnect?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+    delete?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+    connect?: ContactPersonWhereUniqueInput | ContactPersonWhereUniqueInput[]
+    update?: ContactPersonUpdateWithWhereUniqueWithoutProfileInput | ContactPersonUpdateWithWhereUniqueWithoutProfileInput[]
+    updateMany?: ContactPersonUpdateManyWithWhereWithoutProfileInput | ContactPersonUpdateManyWithWhereWithoutProfileInput[]
+    deleteMany?: ContactPersonScalarWhereInput | ContactPersonScalarWhereInput[]
+  }
+
+  export type DigitalCardUncheckedUpdateManyWithoutProfileNestedInput = {
+    create?: XOR<DigitalCardCreateWithoutProfileInput, DigitalCardUncheckedCreateWithoutProfileInput> | DigitalCardCreateWithoutProfileInput[] | DigitalCardUncheckedCreateWithoutProfileInput[]
+    connectOrCreate?: DigitalCardCreateOrConnectWithoutProfileInput | DigitalCardCreateOrConnectWithoutProfileInput[]
+    upsert?: DigitalCardUpsertWithWhereUniqueWithoutProfileInput | DigitalCardUpsertWithWhereUniqueWithoutProfileInput[]
+    createMany?: DigitalCardCreateManyProfileInputEnvelope
+    set?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+    disconnect?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+    delete?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+    connect?: DigitalCardWhereUniqueInput | DigitalCardWhereUniqueInput[]
+    update?: DigitalCardUpdateWithWhereUniqueWithoutProfileInput | DigitalCardUpdateWithWhereUniqueWithoutProfileInput[]
+    updateMany?: DigitalCardUpdateManyWithWhereWithoutProfileInput | DigitalCardUpdateManyWithWhereWithoutProfileInput[]
+    deleteMany?: DigitalCardScalarWhereInput | DigitalCardScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -14571,7 +16398,6 @@ export namespace Prisma {
     endDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutEventsInput
     categories?: CategoryCreateNestedManyWithoutEventInput
     contactPersons?: ContactPersonCreateNestedManyWithoutEventInput
     donations?: DonationCreateNestedManyWithoutEventInput
@@ -14579,7 +16405,6 @@ export namespace Prisma {
 
   export type EventUncheckedCreateWithoutDigitalCardsInput = {
     id?: string
-    organizationId: string
     title: string
     description?: string | null
     status?: string
@@ -14595,6 +16420,39 @@ export namespace Prisma {
   export type EventCreateOrConnectWithoutDigitalCardsInput = {
     where: EventWhereUniqueInput
     create: XOR<EventCreateWithoutDigitalCardsInput, EventUncheckedCreateWithoutDigitalCardsInput>
+  }
+
+  export type ProfileCreateWithoutDigitalCardsInput = {
+    id?: string
+    email: string
+    fullName?: string | null
+    avatarUrl?: string | null
+    phone?: string | null
+    roles?: ProfileCreaterolesInput | string[]
+    aliasName?: string | null
+    uniqueCode?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    contactPersons?: ContactPersonCreateNestedManyWithoutProfileInput
+  }
+
+  export type ProfileUncheckedCreateWithoutDigitalCardsInput = {
+    id?: string
+    email: string
+    fullName?: string | null
+    avatarUrl?: string | null
+    phone?: string | null
+    roles?: ProfileCreaterolesInput | string[]
+    aliasName?: string | null
+    uniqueCode?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    contactPersons?: ContactPersonUncheckedCreateNestedManyWithoutProfileInput
+  }
+
+  export type ProfileCreateOrConnectWithoutDigitalCardsInput = {
+    where: ProfileWhereUniqueInput
+    create: XOR<ProfileCreateWithoutDigitalCardsInput, ProfileUncheckedCreateWithoutDigitalCardsInput>
   }
 
   export type DonationCreateWithoutDigitalCardInput = {
@@ -14679,7 +16537,6 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutEventsNestedInput
     categories?: CategoryUpdateManyWithoutEventNestedInput
     contactPersons?: ContactPersonUpdateManyWithoutEventNestedInput
     donations?: DonationUpdateManyWithoutEventNestedInput
@@ -14687,7 +16544,6 @@ export namespace Prisma {
 
   export type EventUncheckedUpdateWithoutDigitalCardsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -14698,6 +16554,45 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutEventNestedInput
     contactPersons?: ContactPersonUncheckedUpdateManyWithoutEventNestedInput
     donations?: DonationUncheckedUpdateManyWithoutEventNestedInput
+  }
+
+  export type ProfileUpsertWithoutDigitalCardsInput = {
+    update: XOR<ProfileUpdateWithoutDigitalCardsInput, ProfileUncheckedUpdateWithoutDigitalCardsInput>
+    create: XOR<ProfileCreateWithoutDigitalCardsInput, ProfileUncheckedCreateWithoutDigitalCardsInput>
+    where?: ProfileWhereInput
+  }
+
+  export type ProfileUpdateToOneWithWhereWithoutDigitalCardsInput = {
+    where?: ProfileWhereInput
+    data: XOR<ProfileUpdateWithoutDigitalCardsInput, ProfileUncheckedUpdateWithoutDigitalCardsInput>
+  }
+
+  export type ProfileUpdateWithoutDigitalCardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: ProfileUpdaterolesInput | string[]
+    aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactPersons?: ContactPersonUpdateManyWithoutProfileNestedInput
+  }
+
+  export type ProfileUncheckedUpdateWithoutDigitalCardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: ProfileUpdaterolesInput | string[]
+    aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactPersons?: ContactPersonUncheckedUpdateManyWithoutProfileNestedInput
   }
 
   export type DonationUpsertWithWhereUniqueWithoutDigitalCardInput = {
@@ -14755,7 +16650,6 @@ export namespace Prisma {
     endDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutEventsInput
     categories?: CategoryCreateNestedManyWithoutEventInput
     contactPersons?: ContactPersonCreateNestedManyWithoutEventInput
     digitalCards?: DigitalCardCreateNestedManyWithoutEventInput
@@ -14763,7 +16657,6 @@ export namespace Prisma {
 
   export type EventUncheckedCreateWithoutDonationsInput = {
     id?: string
-    organizationId: string
     title: string
     description?: string | null
     status?: string
@@ -14794,11 +16687,13 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     event: EventCreateNestedOneWithoutContactPersonsInput
+    profile?: ProfileCreateNestedOneWithoutContactPersonsInput
   }
 
   export type ContactPersonUncheckedCreateWithoutDonationsInput = {
     id?: string
     eventId: string
+    profileId?: string | null
     uniqueCode: string
     name: string
     profilePictureUrl?: string | null
@@ -14829,11 +16724,13 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     event: EventCreateNestedOneWithoutDigitalCardsInput
+    profile?: ProfileCreateNestedOneWithoutDigitalCardsInput
   }
 
   export type DigitalCardUncheckedCreateWithoutDonationsInput = {
     id?: string
     eventId: string
+    profileId?: string | null
     cardCode: string
     holderName: string
     email?: string | null
@@ -14900,7 +16797,6 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutEventsNestedInput
     categories?: CategoryUpdateManyWithoutEventNestedInput
     contactPersons?: ContactPersonUpdateManyWithoutEventNestedInput
     digitalCards?: DigitalCardUpdateManyWithoutEventNestedInput
@@ -14908,7 +16804,6 @@ export namespace Prisma {
 
   export type EventUncheckedUpdateWithoutDonationsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -14945,11 +16840,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: EventUpdateOneRequiredWithoutContactPersonsNestedInput
+    profile?: ProfileUpdateOneWithoutContactPersonsNestedInput
   }
 
   export type ContactPersonUncheckedUpdateWithoutDonationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14986,11 +16883,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: EventUpdateOneRequiredWithoutDigitalCardsNestedInput
+    profile?: ProfileUpdateOneWithoutDigitalCardsNestedInput
   }
 
   export type DigitalCardUncheckedUpdateWithoutDonationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     cardCode?: StringFieldUpdateOperationsInput | string
     holderName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15038,104 +16937,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type EventCreateWithoutOrganizationInput = {
-    id?: string
-    title: string
-    description?: string | null
-    status?: string
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    categories?: CategoryCreateNestedManyWithoutEventInput
-    contactPersons?: ContactPersonCreateNestedManyWithoutEventInput
-    digitalCards?: DigitalCardCreateNestedManyWithoutEventInput
-    donations?: DonationCreateNestedManyWithoutEventInput
-  }
-
-  export type EventUncheckedCreateWithoutOrganizationInput = {
-    id?: string
-    title: string
-    description?: string | null
-    status?: string
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    categories?: CategoryUncheckedCreateNestedManyWithoutEventInput
-    contactPersons?: ContactPersonUncheckedCreateNestedManyWithoutEventInput
-    digitalCards?: DigitalCardUncheckedCreateNestedManyWithoutEventInput
-    donations?: DonationUncheckedCreateNestedManyWithoutEventInput
-  }
-
-  export type EventCreateOrConnectWithoutOrganizationInput = {
-    where: EventWhereUniqueInput
-    create: XOR<EventCreateWithoutOrganizationInput, EventUncheckedCreateWithoutOrganizationInput>
-  }
-
-  export type EventCreateManyOrganizationInputEnvelope = {
-    data: EventCreateManyOrganizationInput | EventCreateManyOrganizationInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type EventUpsertWithWhereUniqueWithoutOrganizationInput = {
-    where: EventWhereUniqueInput
-    update: XOR<EventUpdateWithoutOrganizationInput, EventUncheckedUpdateWithoutOrganizationInput>
-    create: XOR<EventCreateWithoutOrganizationInput, EventUncheckedCreateWithoutOrganizationInput>
-  }
-
-  export type EventUpdateWithWhereUniqueWithoutOrganizationInput = {
-    where: EventWhereUniqueInput
-    data: XOR<EventUpdateWithoutOrganizationInput, EventUncheckedUpdateWithoutOrganizationInput>
-  }
-
-  export type EventUpdateManyWithWhereWithoutOrganizationInput = {
-    where: EventScalarWhereInput
-    data: XOR<EventUpdateManyMutationInput, EventUncheckedUpdateManyWithoutOrganizationInput>
-  }
-
-  export type EventScalarWhereInput = {
-    AND?: EventScalarWhereInput | EventScalarWhereInput[]
-    OR?: EventScalarWhereInput[]
-    NOT?: EventScalarWhereInput | EventScalarWhereInput[]
-    id?: StringFilter<"Event"> | string
-    organizationId?: StringFilter<"Event"> | string
-    title?: StringFilter<"Event"> | string
-    description?: StringNullableFilter<"Event"> | string | null
-    status?: StringFilter<"Event"> | string
-    startDate?: DateTimeNullableFilter<"Event"> | Date | string | null
-    endDate?: DateTimeNullableFilter<"Event"> | Date | string | null
-    createdAt?: DateTimeFilter<"Event"> | Date | string
-    updatedAt?: DateTimeFilter<"Event"> | Date | string
-  }
-
-  export type OrganizationCreateWithoutEventsInput = {
-    id?: string
-    name: string
-    primaryColor?: string
-    secondaryColor?: string
-    tertiaryColor?: string
-    logoUrl?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type OrganizationUncheckedCreateWithoutEventsInput = {
-    id?: string
-    name: string
-    primaryColor?: string
-    secondaryColor?: string
-    tertiaryColor?: string
-    logoUrl?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type OrganizationCreateOrConnectWithoutEventsInput = {
-    where: OrganizationWhereUniqueInput
-    create: XOR<OrganizationCreateWithoutEventsInput, OrganizationUncheckedCreateWithoutEventsInput>
-  }
-
   export type CategoryCreateWithoutEventInput = {
     id?: string
     name: string
@@ -15178,11 +16979,13 @@ export namespace Prisma {
     qrCodeUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    profile?: ProfileCreateNestedOneWithoutContactPersonsInput
     donations?: DonationCreateNestedManyWithoutContactPersonInput
   }
 
   export type ContactPersonUncheckedCreateWithoutEventInput = {
     id?: string
+    profileId?: string | null
     uniqueCode: string
     name: string
     profilePictureUrl?: string | null
@@ -15218,11 +17021,13 @@ export namespace Prisma {
     issuedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profile?: ProfileCreateNestedOneWithoutDigitalCardsInput
     donations?: DonationCreateNestedManyWithoutDigitalCardInput
   }
 
   export type DigitalCardUncheckedCreateWithoutEventInput = {
     id?: string
+    profileId?: string | null
     cardCode: string
     holderName: string
     email?: string | null
@@ -15308,39 +17113,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type OrganizationUpsertWithoutEventsInput = {
-    update: XOR<OrganizationUpdateWithoutEventsInput, OrganizationUncheckedUpdateWithoutEventsInput>
-    create: XOR<OrganizationCreateWithoutEventsInput, OrganizationUncheckedCreateWithoutEventsInput>
-    where?: OrganizationWhereInput
-  }
-
-  export type OrganizationUpdateToOneWithWhereWithoutEventsInput = {
-    where?: OrganizationWhereInput
-    data: XOR<OrganizationUpdateWithoutEventsInput, OrganizationUncheckedUpdateWithoutEventsInput>
-  }
-
-  export type OrganizationUpdateWithoutEventsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    primaryColor?: StringFieldUpdateOperationsInput | string
-    secondaryColor?: StringFieldUpdateOperationsInput | string
-    tertiaryColor?: StringFieldUpdateOperationsInput | string
-    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OrganizationUncheckedUpdateWithoutEventsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    primaryColor?: StringFieldUpdateOperationsInput | string
-    secondaryColor?: StringFieldUpdateOperationsInput | string
-    tertiaryColor?: StringFieldUpdateOperationsInput | string
-    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type CategoryUpsertWithWhereUniqueWithoutEventInput = {
     where: CategoryWhereUniqueInput
     update: XOR<CategoryUpdateWithoutEventInput, CategoryUncheckedUpdateWithoutEventInput>
@@ -15392,6 +17164,7 @@ export namespace Prisma {
     NOT?: ContactPersonScalarWhereInput | ContactPersonScalarWhereInput[]
     id?: StringFilter<"ContactPerson"> | string
     eventId?: StringFilter<"ContactPerson"> | string
+    profileId?: StringNullableFilter<"ContactPerson"> | string | null
     uniqueCode?: StringFilter<"ContactPerson"> | string
     name?: StringFilter<"ContactPerson"> | string
     profilePictureUrl?: StringNullableFilter<"ContactPerson"> | string | null
@@ -15426,6 +17199,7 @@ export namespace Prisma {
     NOT?: DigitalCardScalarWhereInput | DigitalCardScalarWhereInput[]
     id?: StringFilter<"DigitalCard"> | string
     eventId?: StringFilter<"DigitalCard"> | string
+    profileId?: StringNullableFilter<"DigitalCard"> | string | null
     cardCode?: StringFilter<"DigitalCard"> | string
     holderName?: StringFilter<"DigitalCard"> | string
     email?: StringNullableFilter<"DigitalCard"> | string | null
@@ -15463,7 +17237,6 @@ export namespace Prisma {
     endDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutEventsInput
     contactPersons?: ContactPersonCreateNestedManyWithoutEventInput
     digitalCards?: DigitalCardCreateNestedManyWithoutEventInput
     donations?: DonationCreateNestedManyWithoutEventInput
@@ -15471,7 +17244,6 @@ export namespace Prisma {
 
   export type EventUncheckedCreateWithoutCategoriesInput = {
     id?: string
-    organizationId: string
     title: string
     description?: string | null
     status?: string
@@ -15543,7 +17315,6 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutEventsNestedInput
     contactPersons?: ContactPersonUpdateManyWithoutEventNestedInput
     digitalCards?: DigitalCardUpdateManyWithoutEventNestedInput
     donations?: DonationUpdateManyWithoutEventNestedInput
@@ -15551,7 +17322,6 @@ export namespace Prisma {
 
   export type EventUncheckedUpdateWithoutCategoriesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -15738,7 +17508,6 @@ export namespace Prisma {
     endDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutEventsInput
     categories?: CategoryCreateNestedManyWithoutEventInput
     digitalCards?: DigitalCardCreateNestedManyWithoutEventInput
     donations?: DonationCreateNestedManyWithoutEventInput
@@ -15746,7 +17515,6 @@ export namespace Prisma {
 
   export type EventUncheckedCreateWithoutContactPersonsInput = {
     id?: string
-    organizationId: string
     title: string
     description?: string | null
     status?: string
@@ -15762,6 +17530,39 @@ export namespace Prisma {
   export type EventCreateOrConnectWithoutContactPersonsInput = {
     where: EventWhereUniqueInput
     create: XOR<EventCreateWithoutContactPersonsInput, EventUncheckedCreateWithoutContactPersonsInput>
+  }
+
+  export type ProfileCreateWithoutContactPersonsInput = {
+    id?: string
+    email: string
+    fullName?: string | null
+    avatarUrl?: string | null
+    phone?: string | null
+    roles?: ProfileCreaterolesInput | string[]
+    aliasName?: string | null
+    uniqueCode?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    digitalCards?: DigitalCardCreateNestedManyWithoutProfileInput
+  }
+
+  export type ProfileUncheckedCreateWithoutContactPersonsInput = {
+    id?: string
+    email: string
+    fullName?: string | null
+    avatarUrl?: string | null
+    phone?: string | null
+    roles?: ProfileCreaterolesInput | string[]
+    aliasName?: string | null
+    uniqueCode?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    digitalCards?: DigitalCardUncheckedCreateNestedManyWithoutProfileInput
+  }
+
+  export type ProfileCreateOrConnectWithoutContactPersonsInput = {
+    where: ProfileWhereUniqueInput
+    create: XOR<ProfileCreateWithoutContactPersonsInput, ProfileUncheckedCreateWithoutContactPersonsInput>
   }
 
   export type DonationCreateWithoutContactPersonInput = {
@@ -15846,7 +17647,6 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutEventsNestedInput
     categories?: CategoryUpdateManyWithoutEventNestedInput
     digitalCards?: DigitalCardUpdateManyWithoutEventNestedInput
     donations?: DonationUpdateManyWithoutEventNestedInput
@@ -15854,7 +17654,6 @@ export namespace Prisma {
 
   export type EventUncheckedUpdateWithoutContactPersonsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -15865,6 +17664,45 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutEventNestedInput
     digitalCards?: DigitalCardUncheckedUpdateManyWithoutEventNestedInput
     donations?: DonationUncheckedUpdateManyWithoutEventNestedInput
+  }
+
+  export type ProfileUpsertWithoutContactPersonsInput = {
+    update: XOR<ProfileUpdateWithoutContactPersonsInput, ProfileUncheckedUpdateWithoutContactPersonsInput>
+    create: XOR<ProfileCreateWithoutContactPersonsInput, ProfileUncheckedCreateWithoutContactPersonsInput>
+    where?: ProfileWhereInput
+  }
+
+  export type ProfileUpdateToOneWithWhereWithoutContactPersonsInput = {
+    where?: ProfileWhereInput
+    data: XOR<ProfileUpdateWithoutContactPersonsInput, ProfileUncheckedUpdateWithoutContactPersonsInput>
+  }
+
+  export type ProfileUpdateWithoutContactPersonsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: ProfileUpdaterolesInput | string[]
+    aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    digitalCards?: DigitalCardUpdateManyWithoutProfileNestedInput
+  }
+
+  export type ProfileUncheckedUpdateWithoutContactPersonsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: ProfileUpdaterolesInput | string[]
+    aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    digitalCards?: DigitalCardUncheckedUpdateManyWithoutProfileNestedInput
   }
 
   export type DonationUpsertWithWhereUniqueWithoutContactPersonInput = {
@@ -15881,6 +17719,122 @@ export namespace Prisma {
   export type DonationUpdateManyWithWhereWithoutContactPersonInput = {
     where: DonationScalarWhereInput
     data: XOR<DonationUpdateManyMutationInput, DonationUncheckedUpdateManyWithoutContactPersonInput>
+  }
+
+  export type ContactPersonCreateWithoutProfileInput = {
+    id?: string
+    uniqueCode: string
+    name: string
+    profilePictureUrl?: string | null
+    classYear?: string | null
+    email?: string | null
+    phone?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    qrCodeUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    event: EventCreateNestedOneWithoutContactPersonsInput
+    donations?: DonationCreateNestedManyWithoutContactPersonInput
+  }
+
+  export type ContactPersonUncheckedCreateWithoutProfileInput = {
+    id?: string
+    eventId: string
+    uniqueCode: string
+    name: string
+    profilePictureUrl?: string | null
+    classYear?: string | null
+    email?: string | null
+    phone?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    qrCodeUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    donations?: DonationUncheckedCreateNestedManyWithoutContactPersonInput
+  }
+
+  export type ContactPersonCreateOrConnectWithoutProfileInput = {
+    where: ContactPersonWhereUniqueInput
+    create: XOR<ContactPersonCreateWithoutProfileInput, ContactPersonUncheckedCreateWithoutProfileInput>
+  }
+
+  export type ContactPersonCreateManyProfileInputEnvelope = {
+    data: ContactPersonCreateManyProfileInput | ContactPersonCreateManyProfileInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DigitalCardCreateWithoutProfileInput = {
+    id?: string
+    cardCode: string
+    holderName: string
+    email?: string | null
+    profilePictureUrl?: string | null
+    classYear?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    issuedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    event: EventCreateNestedOneWithoutDigitalCardsInput
+    donations?: DonationCreateNestedManyWithoutDigitalCardInput
+  }
+
+  export type DigitalCardUncheckedCreateWithoutProfileInput = {
+    id?: string
+    eventId: string
+    cardCode: string
+    holderName: string
+    email?: string | null
+    profilePictureUrl?: string | null
+    classYear?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    issuedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    donations?: DonationUncheckedCreateNestedManyWithoutDigitalCardInput
+  }
+
+  export type DigitalCardCreateOrConnectWithoutProfileInput = {
+    where: DigitalCardWhereUniqueInput
+    create: XOR<DigitalCardCreateWithoutProfileInput, DigitalCardUncheckedCreateWithoutProfileInput>
+  }
+
+  export type DigitalCardCreateManyProfileInputEnvelope = {
+    data: DigitalCardCreateManyProfileInput | DigitalCardCreateManyProfileInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ContactPersonUpsertWithWhereUniqueWithoutProfileInput = {
+    where: ContactPersonWhereUniqueInput
+    update: XOR<ContactPersonUpdateWithoutProfileInput, ContactPersonUncheckedUpdateWithoutProfileInput>
+    create: XOR<ContactPersonCreateWithoutProfileInput, ContactPersonUncheckedCreateWithoutProfileInput>
+  }
+
+  export type ContactPersonUpdateWithWhereUniqueWithoutProfileInput = {
+    where: ContactPersonWhereUniqueInput
+    data: XOR<ContactPersonUpdateWithoutProfileInput, ContactPersonUncheckedUpdateWithoutProfileInput>
+  }
+
+  export type ContactPersonUpdateManyWithWhereWithoutProfileInput = {
+    where: ContactPersonScalarWhereInput
+    data: XOR<ContactPersonUpdateManyMutationInput, ContactPersonUncheckedUpdateManyWithoutProfileInput>
+  }
+
+  export type DigitalCardUpsertWithWhereUniqueWithoutProfileInput = {
+    where: DigitalCardWhereUniqueInput
+    update: XOR<DigitalCardUpdateWithoutProfileInput, DigitalCardUncheckedUpdateWithoutProfileInput>
+    create: XOR<DigitalCardCreateWithoutProfileInput, DigitalCardUncheckedCreateWithoutProfileInput>
+  }
+
+  export type DigitalCardUpdateWithWhereUniqueWithoutProfileInput = {
+    where: DigitalCardWhereUniqueInput
+    data: XOR<DigitalCardUpdateWithoutProfileInput, DigitalCardUncheckedUpdateWithoutProfileInput>
+  }
+
+  export type DigitalCardUpdateManyWithWhereWithoutProfileInput = {
+    where: DigitalCardScalarWhereInput
+    data: XOR<DigitalCardUpdateManyMutationInput, DigitalCardUncheckedUpdateManyWithoutProfileInput>
   }
 
   export type DonationCreateManyDigitalCardInput = {
@@ -15987,58 +17941,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type EventCreateManyOrganizationInput = {
-    id?: string
-    title: string
-    description?: string | null
-    status?: string
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type EventUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categories?: CategoryUpdateManyWithoutEventNestedInput
-    contactPersons?: ContactPersonUpdateManyWithoutEventNestedInput
-    digitalCards?: DigitalCardUpdateManyWithoutEventNestedInput
-    donations?: DonationUpdateManyWithoutEventNestedInput
-  }
-
-  export type EventUncheckedUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categories?: CategoryUncheckedUpdateManyWithoutEventNestedInput
-    contactPersons?: ContactPersonUncheckedUpdateManyWithoutEventNestedInput
-    digitalCards?: DigitalCardUncheckedUpdateManyWithoutEventNestedInput
-    donations?: DonationUncheckedUpdateManyWithoutEventNestedInput
-  }
-
-  export type EventUncheckedUpdateManyWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type CategoryCreateManyEventInput = {
     id?: string
     name: string
@@ -16050,6 +17952,7 @@ export namespace Prisma {
 
   export type ContactPersonCreateManyEventInput = {
     id?: string
+    profileId?: string | null
     uniqueCode: string
     name: string
     profilePictureUrl?: string | null
@@ -16064,6 +17967,7 @@ export namespace Prisma {
 
   export type DigitalCardCreateManyEventInput = {
     id?: string
+    profileId?: string | null
     cardCode: string
     holderName: string
     email?: string | null
@@ -16143,11 +18047,13 @@ export namespace Prisma {
     qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUpdateOneWithoutContactPersonsNestedInput
     donations?: DonationUpdateManyWithoutContactPersonNestedInput
   }
 
   export type ContactPersonUncheckedUpdateWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16163,6 +18069,7 @@ export namespace Prisma {
 
   export type ContactPersonUncheckedUpdateManyWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16187,11 +18094,13 @@ export namespace Prisma {
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUpdateOneWithoutDigitalCardsNestedInput
     donations?: DonationUpdateManyWithoutDigitalCardNestedInput
   }
 
   export type DigitalCardUncheckedUpdateWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     cardCode?: StringFieldUpdateOperationsInput | string
     holderName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16207,6 +18116,7 @@ export namespace Prisma {
 
   export type DigitalCardUncheckedUpdateManyWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
+    profileId?: NullableStringFieldUpdateOperationsInput | string | null
     cardCode?: StringFieldUpdateOperationsInput | string
     holderName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16547,6 +18457,130 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     donatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactPersonCreateManyProfileInput = {
+    id?: string
+    eventId: string
+    uniqueCode: string
+    name: string
+    profilePictureUrl?: string | null
+    classYear?: string | null
+    email?: string | null
+    phone?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    qrCodeUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DigitalCardCreateManyProfileInput = {
+    id?: string
+    eventId: string
+    cardCode: string
+    holderName: string
+    email?: string | null
+    profilePictureUrl?: string | null
+    classYear?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    issuedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactPersonUpdateWithoutProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    event?: EventUpdateOneRequiredWithoutContactPersonsNestedInput
+    donations?: DonationUpdateManyWithoutContactPersonNestedInput
+  }
+
+  export type ContactPersonUncheckedUpdateWithoutProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    donations?: DonationUncheckedUpdateManyWithoutContactPersonNestedInput
+  }
+
+  export type ContactPersonUncheckedUpdateManyWithoutProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DigitalCardUpdateWithoutProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cardCode?: StringFieldUpdateOperationsInput | string
+    holderName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    event?: EventUpdateOneRequiredWithoutDigitalCardsNestedInput
+    donations?: DonationUpdateManyWithoutDigitalCardNestedInput
+  }
+
+  export type DigitalCardUncheckedUpdateWithoutProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    cardCode?: StringFieldUpdateOperationsInput | string
+    holderName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    donations?: DonationUncheckedUpdateManyWithoutDigitalCardNestedInput
+  }
+
+  export type DigitalCardUncheckedUpdateManyWithoutProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    cardCode?: StringFieldUpdateOperationsInput | string
+    holderName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
