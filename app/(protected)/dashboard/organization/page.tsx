@@ -1,11 +1,19 @@
 import { getOrganization } from "@/lib/dal/stats";
+import { getProfileById } from "@/lib/dal/profile";
+import { createClient } from "@/utils/supabase/server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OrgGeneralSettings } from "@/components/dashboard/OrgGeneralSettings";
 import { OrgAccountDetails } from "@/components/dashboard/OrgAccountDetails";
 import { Building2Icon, LandmarkIcon } from "lucide-react";
 
 export default async function OrgSettingsPage() {
-    const org = await getOrganization();
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    const [org, profile] = await Promise.all([
+        getOrganization(),
+        user ? getProfileById(user.id) : Promise.resolve(null)
+    ]);
 
     return (
         <div className="mx-auto max-w-5xl p-6 lg:p-10 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -34,7 +42,7 @@ export default async function OrgSettingsPage() {
                     <OrgGeneralSettings organization={org} />
                 </TabsContent>
                 <TabsContent value="payouts" className="animate-in fade-in slide-in-from-right-2 duration-500">
-                    <OrgAccountDetails organization={org} />
+                    <OrgAccountDetails organization={org} userRoles={profile?.roles || []} />
                 </TabsContent>
             </Tabs>
         </div>

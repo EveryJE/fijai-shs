@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { createEvent, updateEvent } from "@/lib/actions/events";
 import { CalendarIcon, PlusIcon, PencilIcon } from "lucide-react";
+import { Combobox } from "@/components/ui/combobox";
 import { cn } from "@/lib/utils";
 
 interface Event {
@@ -95,8 +96,8 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
           </Button>
         )}
       </div>
-      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
-        <SheetHeader>
+      <SheetContent side="right" className="w-full sm:max-w-xl p-0 flex flex-col h-full">
+        <SheetHeader className="flex-shrink-0 p-6 border-b bg-background z-10">
           <SheetTitle>{isEditing ? "Edit Event" : "Create New Event"}</SheetTitle>
           <SheetDescription>
             {isEditing 
@@ -104,83 +105,85 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
                 : "Fill in the basic info to get your event started."}
           </SheetDescription>
         </SheetHeader>
-        <form onSubmit={handleSubmit} className="space-y-6 mt-8 pb-10">
-          <div className="space-y-2">
-            <Label htmlFor="title">Event Title</Label>
-            <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="e.g. Founder's Day Celebration"
-              required
-            />
-          </div>
+        <div className="flex-1 overflow-y-auto px-6 py-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="title">Event Title</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="e.g. Founder's Day Celebration"
+                required
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Tell us more about the event..."
-              className="min-h-[100px]"
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Tell us more about the event..."
+                className="min-h-[100px]"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <select
-                id="status"
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Combobox
+                options={[
+                  { value: "draft", label: "Draft" },
+                  { value: "active", label: "Active" },
+                  { value: "closed", label: "Closed" },
+                ]}
                 value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-                <option value="draft">Draft</option>
-                <option value="active">Active</option>
-                <option value="closed">Closed</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="startDate" className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4" /> Start Date
-              </Label>
-              <Input
-                id="startDate"
-                type="datetime-local"
-                value={formData.startDate}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                onChange={(val) => setFormData({ ...formData, status: val })}
+                placeholder="Select status"
+                className="w-full"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="endDate" className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4" /> End Date
-              </Label>
-              <Input
-                id="endDate"
-                type="datetime-local"
-                value={formData.endDate}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-              />
-            </div>
-          </div>
 
-          <div className="pt-4 flex gap-3">
-            <Button 
-                type="button" 
-                variant="outline" 
-                className="flex-1" 
-                onClick={() => setOpen(false)}
-                disabled={isPending}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" className="flex-1" disabled={isPending}>
-              {isPending ? "Saving..." : isEditing ? "Save Changes" : "Create Event"}
-            </Button>
-          </div>
-        </form>
+            <div className="grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="startDate" className="flex items-center gap-2">
+                  <CalendarIcon className="h-4 w-4" /> Start Date
+                </Label>
+                <Input
+                  id="startDate"
+                  type="datetime-local"
+                  value={formData.startDate}
+                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="endDate" className="flex items-center gap-2">
+                  <CalendarIcon className="h-4 w-4" /> End Date
+                </Label>
+                <Input
+                  id="endDate"
+                  type="datetime-local"
+                  value={formData.endDate}
+                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className="flex-shrink-0 p-6 border-t bg-background z-10 flex gap-3">
+          <Button 
+              type="button" 
+              variant="outline" 
+              className="flex-1" 
+              onClick={() => setOpen(false)}
+              disabled={isPending}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" form="event-form" className="flex-1" disabled={isPending}>
+            {isPending ? "Saving..." : isEditing ? "Save Changes" : "Create Event"}
+          </Button>
+        </div>
       </SheetContent>
     </Sheet>
   );

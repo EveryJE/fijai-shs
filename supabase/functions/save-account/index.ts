@@ -1,58 +1,51 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
 const PAYSTACK_SECRET = Deno.env.get("PAYSTACK_SECRET_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+async function supabaseFetch(endpoint: string, method: string, body?: any) {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
+        method,
+        headers: {
+            "apikey": SUPABASE_SERVICE_KEY,
+            "Authorization": `Bearer ${SUPABASE_SERVICE_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": method === "POST" ? "return=minimal" : "return=minimal",
+        },
+        body: body ? JSON.stringify(body) : undefined,
+    });
+    return response;
+}
 
 serve(async (req) => {
     if (req.method === "OPTIONS") {
         return new Response("ok", { headers: corsHeaders });
     }
 
+    console.log("save-account function started");
+
     try {
-        // Authenticate — only admin can save org bank account
-        const authHeader = req.headers.get("Authorization");
-        if (!authHeader) {
-            return new Response(
-                JSON.stringify({ error: "Unauthorized" }),
-                { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-            );
+        // 1. Authenticate using Supabase auth
+        const authHeader = req.headers.get("Authorization") ?? "";
+        const token = authHeader.replace("Bearer ", "");
+        
+        const authRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+            headers: {
+                "apikey": SUPABASE_SERVICE_KEY,
+                "Authorization": `Bearer ${token}`,
+            }
+        });
+        
+        if (!authRes.ok) {
+            return new Response("Unauthorized", { status: 401, headers: corsHeaders });
         }
+        
+        const user = await authRes.json();
+        console.log("User authenticated:", user.id);
 
-        const anonClient = createClient(
-            Deno.env.get("SUPABASE_URL"),
-            Deno.env.get("SUPABASE_ANON_KEY"),
-            { global: { headers: { Authorization: authHeader } } }
-        );
-        const {
-            data: { user },
-        } = await anonClient.auth.getUser();
-        if (!user) {
-            return new Response(
-                JSON.stringify({ error: "Unauthorized" }),
-                { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-            );
-        }
-
-        // Verify caller is admin
-        const supabase = createClient(
-            Deno.env.get("SUPABASE_URL"),
-            Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
-        );
-
-        const { data: profile } = await supabase
-            .from("profiles")
-            .select("roles")
-            .eq("id", user.id)
-            .single();
-
-        if (!profile?.roles?.includes("admin")) {
-            return new Response(
-                JSON.stringify({ error: "Only admins can update organization bank account" }),
-                { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-            );
-        }
-
+        // 2. Parse request body
         const {
             organizationId,
             accountNumber,
@@ -60,7 +53,10 @@ serve(async (req) => {
             bankName,
             accountName,
             currency = "GHS",
+            userRoles = [],
         } = await req.json();
+
+        console.log("Received:", { organizationId, accountNumber, bankCode, accountName, userRoles });
 
         if (!organizationId || !accountNumber || !bankCode || !accountName) {
             return new Response(
@@ -69,34 +65,98 @@ serve(async (req) => {
             );
         }
 
-        // Determine settlement type based on currency
-        const typeMap: Record<string, string> = {
-            GHS: "mobile_money",
-            NGN: "nuban",
-            KES: "mobile_money",
-            ZAR: "basa",
-        };
-        const settlementType = typeMap[currency] || "mobile_money";
+        // 3. Check userRoles
+        const hasAdminRole = Array.isArray(userRoles) && userRoles.includes("admin");
+        
+        if (!hasAdminRole) {
+            return new Response(
+                JSON.stringify({ error: "Only admins can update organization bank account" }),
+                { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
 
-        // Create a Paystack subaccount — org receives 100% of every charge
-        // percentage_charge on subaccounts means "% the MAIN account keeps"
-        // So percentage_charge: 0 means the subaccount (org) gets everything after Paystack fees
-        const paystackRes = await fetch(
-            "https://api.paystack.co/subaccount",
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${PAYSTACK_SECRET}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    business_name: accountName,
-                    settlement_bank: bankCode,
-                    account_number: accountNumber,
-                    percentage_charge: 0, // main account keeps 0% → org gets 100%
-                }),
+        // 4. Check if org already has a subaccount
+        const orgRes = await supabaseFetch(`organizations?select=subaccountCode&id=eq.${organizationId}`, "GET");
+        const orgData = await orgRes.json();
+        console.log("Org check:", orgData);
+
+        if (!orgData || orgData.length === 0) {
+            return new Response(
+                JSON.stringify({ error: "Organization not found" }),
+                { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
+
+        const existingSubaccount = orgData[0]?.subaccountCode;
+
+        if (existingSubaccount) {
+            // Update existing subaccount on Paystack
+            const paystackRes = await fetch(
+                `https://api.paystack.co/subaccount/${existingSubaccount}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${PAYSTACK_SECRET}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        settlement_bank: bankCode,
+                        account_number: accountNumber,
+                        business_name: accountName,
+                    }),
+                }
+            );
+
+            const paystackData = await paystackRes.json();
+
+            if (!paystackData.status) {
+                console.error("Paystack subaccount update failed:", paystackData);
+                return new Response(
+                    JSON.stringify({
+                        error: paystackData.message || "Failed to update payment account",
+                    }),
+                    { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+                );
             }
-        );
+
+            // Update local record
+            await supabaseFetch(
+                `organizations?id=eq.${organizationId}`,
+                "PATCH",
+                {
+                    bankCode,
+                    bankName: bankName || null,
+                    accountNumber,
+                    accountName,
+                    updatedAt: new Date().toISOString(),
+                }
+            );
+
+            return new Response(
+                JSON.stringify({
+                    success: true,
+                    subaccountCode: existingSubaccount,
+                    message: "Payment account updated successfully.",
+                }),
+                { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
+
+        // 5. Create Paystack subaccount
+        const paystackRes = await fetch("https://api.paystack.co/subaccount", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${PAYSTACK_SECRET}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                business_name: accountName,
+                account_number: accountNumber,
+                percentage_charge: 0,
+                settlement_bank: bankCode,
+                primary_contact_email: user.email,
+            }),
+        });
 
         const paystackData = await paystackRes.json();
 
@@ -112,23 +172,25 @@ serve(async (req) => {
 
         const subaccountCode = paystackData.data.subaccount_code;
 
-        // Save to organization record
-        const { error: dbError } = await supabase
-            .from("organizations")
-            .update({
-                bankCode: bankCode,
+        // 6. Save to organization record
+        const updateRes = await supabaseFetch(
+            `organizations?id=eq.${organizationId}`,
+            "PATCH",
+            {
+                bankCode,
                 bankName: bankName || null,
-                accountNumber: accountNumber,
-                accountName: accountName,
-                subaccountCode: subaccountCode,
+                accountNumber,
+                accountName,
+                subaccountCode,
                 settlementBank: paystackData.data.settlement_bank,
                 currency,
                 updatedAt: new Date().toISOString(),
-            })
-            .eq("id", organizationId);
+            }
+        );
 
-        if (dbError) {
-            console.error("DB update error:", dbError);
+        if (!updateRes.ok) {
+            const errorText = await updateRes.text();
+            console.error("DB update error:", errorText);
             return new Response(
                 JSON.stringify({ error: "Failed to save account details" }),
                 { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

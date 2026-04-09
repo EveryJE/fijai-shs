@@ -16,9 +16,10 @@ import { cn } from "@/lib/utils";
 
 interface OrgAccountDetailsProps {
     readonly organization: any;
+    readonly userRoles?: string[];
 }
 
-export function OrgAccountDetails({ organization }: OrgAccountDetailsProps) {
+export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDetailsProps) {
     const [isPending, startTransition] = useTransition();
     const [bankType, setBankType] = useState<"momo" | "bank">("momo");
     const [country, setCountry] = useState("GH");
@@ -80,9 +81,13 @@ export function OrgAccountDetails({ organization }: OrgAccountDetailsProps) {
         setVerifiedName(null);
 
         try {
+            console.log("Verifying account:", { accountNumber, bankCode });
+            
             const { data, error } = await supabase.functions.invoke("verify-account", {
-                body: { accountNumber, bankCode },
+                body: JSON.stringify({ accountNumber, bankCode }),
             });
+
+            console.log("Verify response:", { data, error });
 
             if (error || !data?.success) {
                 toast.error(data?.error || "Verification failed. Check your details.");
@@ -91,7 +96,8 @@ export function OrgAccountDetails({ organization }: OrgAccountDetailsProps) {
 
             setVerifiedName(data.accountName);
             toast.success("Account verified successfully.");
-        } catch {
+        } catch (err) {
+            console.error("Verify error:", err);
             toast.error("Failed to verify account.");
         } finally {
             setIsVerifying(false);
@@ -101,9 +107,11 @@ export function OrgAccountDetails({ organization }: OrgAccountDetailsProps) {
     async function handleSave() {
         if (!accountNumber || !bankCode || !verifiedName) return;
 
+        const selectedBank = [...banks, ...momoNetworks].find(b => b.code === bankCode);
+
         startTransition(async () => {
             try {
-                const selectedBank = [...banks, ...momoNetworks].find(b => b.code === bankCode);
+                console.log("Saving account:", { accountNumber, bankCode });
                 
                 const { data, error } = await supabase.functions.invoke("save-account", {
                     body: {
@@ -112,12 +120,15 @@ export function OrgAccountDetails({ organization }: OrgAccountDetailsProps) {
                         bankCode,
                         bankName: selectedBank?.name || "",
                         accountName: verifiedName,
-                        currency: "GHS"
+                        currency: "GHS",
+                        userRoles
                     }
                 });
 
+                console.log("Save response:", { data, error });
+
                 if (error || !data?.success) {
-                    toast.error(data?.error || "Failed to setup transaction account.");
+                    toast.error(data?.error || error?.message || "Failed to setup transaction account.");
                     return;
                 }
 

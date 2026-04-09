@@ -8,8 +8,15 @@ serve(async (req) => {
         return new Response("ok", { headers: corsHeaders });
     }
 
+    console.log("Request method:", req.method);
+    console.log("Auth header present:", !!req.headers.get("authorization"));
+
     try {
+        console.log("verify-account function started");
+        
         const { accountNumber, bankCode } = await req.json();
+        
+        console.log("Received:", { accountNumber, bankCode, hasAccountNumber: !!accountNumber, hasBankCode: !!bankCode });
 
         if (!accountNumber || !bankCode) {
             return new Response(
@@ -18,14 +25,14 @@ serve(async (req) => {
             );
         }
 
-        // Validate inputs
-        if (!/^\d{5,15}$/.test(accountNumber)) {
+        // Validate inputs - allow more flexible formats for mobile money and bank codes
+        if (!/^\d{5,20}$/.test(accountNumber)) {
             return new Response(
                 JSON.stringify({ error: "Invalid account number format" }),
                 { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
         }
-        if (!/^[A-Za-z0-9]{2,10}$/.test(bankCode)) {
+        if (!/^[A-Za-z0-9_%-]{1,20}$/.test(bankCode)) {
             return new Response(
                 JSON.stringify({ error: "Invalid bank code format" }),
                 { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -36,12 +43,16 @@ serve(async (req) => {
         const url = new URL("https://api.paystack.co/bank/resolve");
         url.searchParams.set("account_number", accountNumber);
         url.searchParams.set("bank_code", bankCode);
+        
+        console.log("Calling Paystack:", url.toString());
 
         const res = await fetch(url.toString(), {
             headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` },
         });
 
         const result = await res.json();
+        
+        console.log("Paystack response:", result);
 
         if (result.status && result.data?.account_name) {
             return new Response(
