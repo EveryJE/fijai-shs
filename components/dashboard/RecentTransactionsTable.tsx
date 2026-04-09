@@ -45,7 +45,7 @@ export function RecentTransactionsTable({ transactions }: RecentTransactionsTabl
                         </CardDescription>
                     </div>
                     <div className="flex gap-4">
-                         <div className="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[2px] border border-emerald-200 shadow-sm flex items-center gap-2">
+                         <div className="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-[2px] border border-emerald-200 shadow-sm flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
                             Live reconciliation
                          </div>

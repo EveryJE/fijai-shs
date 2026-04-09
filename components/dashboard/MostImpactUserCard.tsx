@@ -54,11 +54,11 @@ export function MostImpactUserCard({ user }: MostImpactUserCardProps) {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                     <div className="bg-white/10 p-4 rounded-xl border border-white/10 backdrop-blur-sm">
+                     <div className="bg-white/10 p-4 rounded-md border border-white/10 backdrop-blur-sm">
                          <p className="text-[8px] font-black uppercase tracking-widest text-white/50 mb-1">Impact Level</p>
                          <p className="text-lg font-black tracking-tight text-[#DAA520]">Elite Tier</p>
                      </div>
-                     <div className="bg-white/10 p-4 rounded-xl border border-white/10 backdrop-blur-sm">
+                     <div className="bg-white/10 p-4 rounded-md border border-white/10 backdrop-blur-sm">
                          <p className="text-[8px] font-black uppercase tracking-widest text-white/50 mb-1">Alumni Code</p>
                          <p className="text-lg font-black tracking-tight uppercase">{user.uniqueCode || "N/A"}</p>
                      </div>

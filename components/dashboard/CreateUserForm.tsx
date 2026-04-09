@@ -70,7 +70,7 @@ export function CreateUserForm({ events }: { events: Event[] }) {
       <SheetContent side="right" className="w-full sm:w-[500px] bg-white text-black/90 p-10">
         <SheetHeader className="pb-8 border-b">
           <div className="flex items-center gap-3 mb-2">
-               <div className="bg-primary/10 p-2 rounded-xl text-primary">
+               <div className="bg-primary/10 p-2 rounded-md text-primary">
                     <UsersIcon className="h-6 w-6" />
                </div>
                <SheetTitle className="text-2xl font-black uppercase tracking-tighter text-[#730303]">Institutional Intake</SheetTitle>
@@ -135,7 +135,7 @@ export function CreateUserForm({ events }: { events: Event[] }) {
 
           <div className="space-y-3">
             <Label className="text-[10px] font-black uppercase tracking-widest text-[#730303]/60">Designated Institutional Roles</Label>
-            <div className="grid grid-cols-1 gap-3 p-4 bg-muted/30 rounded-xl border border-muted-foreground/5 inner-shadow">
+            <div className="grid grid-cols-1 gap-3 p-4 bg-muted/30 rounded-md border border-muted-foreground/5 inner-shadow">
               {ROLES.map(role => (
                 <label key={role.value} className="flex items-center gap-4 cursor-pointer hover:bg-white/60 p-3 rounded-lg transition-all border border-transparent hover:border-primary/10 hover:shadow-sm">
                   <input
@@ -157,7 +157,7 @@ export function CreateUserForm({ events }: { events: Event[] }) {
           </div>
           
           <div className="pt-8 mt-6 border-t">
-              <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 mb-6">
+              <div className="bg-emerald-50 p-4 rounded-md border border-emerald-100 mb-6">
                 <p className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest leading-relaxed">
                     Note: Creating an institutional record will automatically provision a secure platform identity. The member will receive authentication credentials via their provided identifier.
                 </p>

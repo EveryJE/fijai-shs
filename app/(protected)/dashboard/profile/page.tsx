@@ -33,7 +33,7 @@ export default async function ProfilePage() {
     }
 
     return (
-        <div className="mx-auto max-w-6xl p-6 lg:p-10 space-y-12">
+        <div className="max-w-6xl p-6 lg:p-10 space-y-12">
             <div className="flex flex-col md:flex-row items-baseline justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-[#730303] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">

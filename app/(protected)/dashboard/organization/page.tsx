@@ -27,7 +27,7 @@ export default async function OrgSettingsPage() {
             </div>
 
             <Tabs defaultValue="general" className="space-y-8">
-                <TabsList variant="institutional" className="p-1.5 shadow-xl shadow-primary/5">
+                <TabsList variant="institutional" className="p-1">
                     <TabsTrigger value="general" className="px-10 py-2.5 font-black uppercase tracking-[2px] text-[10px]">
                         <Building2Icon className="mr-2 h-4 w-4" />
                         Branding

@@ -36,7 +36,7 @@ export function OrgGeneralSettings({ organization }: { organization: any }) {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <Card className="border-none shadow-md">
+                <Card className="border-none">
                     <CardHeader>
                         <div className="flex items-center gap-2">
                              <Building2Icon className="h-5 w-5 text-primary" />
@@ -52,7 +52,7 @@ export function OrgGeneralSettings({ organization }: { organization: any }) {
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-md">
+                <Card className="border-none">
                     <CardHeader>
                         <div className="flex items-center gap-2">
                              <PaletteIcon className="h-5 w-5 text-primary" />

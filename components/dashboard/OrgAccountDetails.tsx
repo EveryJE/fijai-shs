@@ -200,7 +200,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-700">
-            <Card className="border-none shadow-xl bg-white overflow-hidden">
+            <Card className="border-none bg-white overflow-hidden">
                 <CardHeader className="bg-muted/30 border-b">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -254,7 +254,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
 
             {/* Sheet for adding/editing payout account */}
             <Sheet open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+                <SheetContent className="w-full sm:max-w-xl overflow-y-auto font-">
                     <SheetHeader className="mb-6">
                         <SheetTitle className="text-xl font-bold">
                             {payoutAccountNumber ? "Update Payout Account" : "Add Payout Account"}
@@ -350,7 +350,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                 type="button"
                                 onClick={handleVerify}
                                 disabled={isVerifying || !accountNumber || !bankCode}
-                                className="h-12 px-8 font-black uppercase tracking-[2px] shadow-xl shadow-primary/10"
+                                className=" px-8 tracking-[2px] shadow-xl shadow-primary/10"
                             >
                                 {isVerifying ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -364,7 +364,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                 type="button"
                                 onClick={handleSave}
                                 disabled={isPending}
-                                className="h-12 px-8 font-black uppercase tracking-[2px] bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/20"
+                                className="h-12 px-8 tracking-[2px] bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/20"
                             >
                                 {isPending ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

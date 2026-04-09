@@ -46,7 +46,7 @@ export default async function DashboardPage() {
     const isAdmin = profile?.roles.includes("admin");
 
     return (
-        <div className="mx-auto max-w-7xl p-6 lg:p-10 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="max-w-7xl p-6 lg:p-10 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             
             {/* Header / Active Event Banner */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -202,7 +202,7 @@ function StatCard({ title, value, icon: Icon, color, trend }: any) {
             <div className="absolute top-0 left-0 w-1 h-full bg-muted-foreground/10 group-hover:bg-primary transition-colors" />
             <CardHeader className="pb-4 flex flex-row items-center justify-between">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest text-[#730303]/60">{title}</CardTitle>
-                <div className={cn("p-2 rounded-xl bg-muted/50 border border-muted ring-4 ring-muted/20", color)}>
+                <div className={cn("p-2 rounded-md bg-muted/50 border border-muted ring-4 ring-muted/20", color)}>
                     <Icon className="h-4 w-4" />
                 </div>
             </CardHeader>

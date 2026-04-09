@@ -13,11 +13,11 @@ export default async function ParticipantsPage() {
     ]);
 
     return (
-        <div className="mx-auto max-w-7xl p-6 lg:p-10 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
+        <div className=" max-w-7xl p-6 lg:p-10 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
             <div className="flex flex-col md:flex-row items-baseline md:items-center justify-between border-b pb-8 gap-6 group">
                 <div className="space-y-1">
                     <div className="flex items-center gap-3">
-                         <div className="p-2 bg-[#730303]/10 rounded-xl text-[#730303]">
+                         <div className="p-2 bg-[#730303]/10 rounded-md text-[#730303]">
                             <ShieldCheckIcon className="h-6 w-6" />
                          </div>
                          <h1 className="text-4xl font-black tracking-tighter text-[#730303] uppercase">

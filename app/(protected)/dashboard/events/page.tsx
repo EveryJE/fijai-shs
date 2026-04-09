@@ -4,8 +4,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { format } from "date-fns";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { EventSheet } from "@/components/dashboard/EventSheet";
-import { CalendarDaysIcon, MoreHorizontalIcon } from "lucide-react";
+import { CalendarDaysIcon, MoreHorizontalIcon, EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function EventsPage() {
     const events = await getAllEvents();
@@ -53,7 +54,9 @@ export default async function EventsPage() {
                                     events.map((event: any) => (
                                         <TableRow key={event.id} className="hover:bg-muted/50 transition-colors">
                                             <TableCell className="font-semibold text-foreground">
-                                                {event.title}
+                                                <Link href={`/dashboard/events/${event.id}`} className="hover:underline">
+                                                    {event.title}
+                                                </Link>
                                             </TableCell>
                                             <TableCell>
                                                 <StatusBadge variant={event.status} size="sm" />
