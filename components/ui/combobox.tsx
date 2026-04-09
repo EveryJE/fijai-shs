@@ -55,7 +55,7 @@ export function Combobox({
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </button>
             } />
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0 overflow-hidden" align="start">
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0 overflow-hidden max-h-[300px]" align="start" side="bottom" sideOffset={5}>
                 <Input
                     placeholder="Search..."
                     value={search}

@@ -3,26 +3,17 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function updateOrganization(id: string | null, data: any) {
-  let targetId = id;
-
-  if (!targetId) {
-    const firstOrg = await prisma.organization.findFirst();
-    targetId = firstOrg?.id || "singleton-org";
-  }
+export async function updateOrganization(id: string | null, data: {
+  name?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  tertiaryColor?: string;
+}) {
+  const targetId = id || (await prisma.organization.findFirst())?.id || "singleton-org";
 
   await prisma.organization.upsert({
     where: { id: targetId },
-    update: {
-      name: data.name,
-      primaryColor: data.primaryColor,
-      secondaryColor: data.secondaryColor,
-      tertiaryColor: data.tertiaryColor,
-      bankCode: data.bankCode,
-      bankName: data.bankName,
-      accountNumber: data.accountNumber,
-      accountName: data.accountName,
-    },
+    update: data,
     create: {
       id: targetId,
       name: data.name || "Fijai SHS",
@@ -33,4 +24,33 @@ export async function updateOrganization(id: string | null, data: any) {
   });
   
   revalidatePath("/dashboard");
+}
+
+export async function savePayoutAccount(
+  organizationId: string,
+  bankCode: string,
+  bankName: string,
+  accountNumber: string,
+  accountName: string,
+  subaccountCode: string,
+  settlementBank: string
+) {
+  // Find the actual organization ID
+  const org = await prisma.organization.findFirst();
+  const targetId = org?.id || "singleton-org";
+
+  await prisma.organization.update({
+    where: { id: targetId },
+    data: {
+      bankCode,
+      bankName,
+      accountNumber,
+      accountName,
+      subaccountCode,
+      settlementBank,
+      currency: "GHS",
+    },
+  });
+  
+  revalidatePath("/dashboard/organization");
 }

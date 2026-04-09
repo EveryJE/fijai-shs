@@ -16,7 +16,7 @@ export default async function OrgSettingsPage() {
     ]);
 
     return (
-        <div className="mx-auto max-w-5xl p-6 lg:p-10 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="max-w-7xl p-6 lg:p-10  space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div>
                 <h1 className="text-4xl font-black tracking-tighter text-[#730303] uppercase">
                     Institution Settings

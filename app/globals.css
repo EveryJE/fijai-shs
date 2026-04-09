@@ -147,3 +147,12 @@
     @apply font-sans;
   }
 }
+
+/* Tabs active state styling */
+[data-variant="default"]>[data-slot="tabs-trigger"][data-state="active"] {
+  @apply bg-background shadow-sm;
+}
+
+[data-variant="line"]>[data-slot="tabs-trigger"][data-state="active"] {
+  @apply bg-transparent shadow-none text-foreground;
+}

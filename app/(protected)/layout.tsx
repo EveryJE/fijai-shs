@@ -59,7 +59,7 @@ export default async function ProtectedLayout({
                         <span className="text-sm font-medium hidden sm:inline-block text-muted-foreground/80">Dashboard</span>
                     </div>
                 </header>
-                <div className="flex flex-1 flex-col p-0">
+                <div className="flex flex-1 flex-col p-0 ">
                     <RouteGuard user={sidebarUser}>
                         {children}
                     </RouteGuard>
