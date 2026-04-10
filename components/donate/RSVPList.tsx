@@ -51,7 +51,7 @@ export const RSVPList: React.FC<RSVPListProps> = ({ rsvps, organizationName, id 
                     {rsvp.name}
                     {rsvp.classYear && (
                         <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded uppercase tracking-tighter">
-                            '{rsvp.classYear.slice(-2)}
+                            {rsvp.classYear}
                         </span>
                     )}
                   </h4>
