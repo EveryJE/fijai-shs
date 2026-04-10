@@ -38,7 +38,13 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
   const [isPending, startTransition] = useTransition();
   const isEditing = !!event;
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    description: string;
+    status: string;
+    startDate: string;
+    endDate: string;
+  }>({
     title: "",
     description: "",
     status: "draft",
@@ -134,7 +140,7 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
               <Label htmlFor="status">Status</Label>
              <Select 
                 value={formData.status} 
-                onValueChange={(value) => setFormData({ ...formData, status: value })}
+                onValueChange={(value) => setFormData({ ...formData, status: value || "draft" })}
               >
               <SelectTrigger>
                 <SelectValue placeholder="Select status" />

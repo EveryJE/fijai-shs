@@ -10,11 +10,18 @@ import { DonateSuccess } from "./DonateSuccess";
 
 interface DonateItem {
   id: string;
+  name: string;
+  icon?: string;
+  color?: string;
   targetAmount?: string;
+  displayOrder?: number;
 }
 
 interface DonateCategory {
   id: string;
+  name: string;
+  color: string;
+  displayOrder: number;
   items: DonateItem[];
 }
 

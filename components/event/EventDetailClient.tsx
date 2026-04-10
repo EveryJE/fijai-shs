@@ -102,12 +102,14 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
 
     const handleSaveEvent = async (data: Partial<Event>) => {
         startTransition(async () => {
-            const result = await updateEvent(event.id, data);
-            if (result.success) {
-                toast.success("Event updated");
-                router.refresh();
-            } else {
-                toast.error(result.error || "Failed to update");
+            try {
+                const result = await updateEvent(event.id, data);
+                if (result.success) {
+                    toast.success("Event updated");
+                    router.refresh();
+                }
+            } catch (error) {
+                toast.error(error instanceof Error ? error.message : "Failed to update");
             }
         });
     };

@@ -14,5 +14,16 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
         notFound();
     }
 
-    return <EventDetailClient event={event} />;
+    const typedEvent = {
+        ...event,
+        categories: event.categories.map((cat: any) => ({
+            ...cat,
+            donationItems: cat.donationItems.map((item: any) => ({
+                ...item,
+                targetAmount: item.targetAmount ? Number(item.targetAmount) : null
+            }))
+        }))
+    } as any;
+
+    return <EventDetailClient event={typedEvent} />;
 }

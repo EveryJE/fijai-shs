@@ -289,7 +289,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                     <Label className="   text-[#730303]">Payout Country</Label>
                                    <Select
                                    value={country}
-                                   onValueChange={(value) => setCountry(value)}
+                                   onValueChange={(value) => setCountry(value || "GH")}
                                    disabled={isLoadingNetworks}
                                    >
                                     <SelectTrigger>
@@ -311,7 +311,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                     </Label>
                                     <Select
                                     value={bankCode}
-                                    onValueChange={(value) => setBankCode(value)}
+                                    onValueChange={(value) => setBankCode(value || "")}
                                     disabled={isLoadingNetworks}
                                     >
                                         <SelectTrigger>

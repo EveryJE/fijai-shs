@@ -48,7 +48,6 @@ const bungeeSpice = Bungee_Spice({
 
 const playwrite = Playwrite_US_Trad_Guides({
   variable: "--font-playwrite-us-trad-guides",
-  subsets: ["latin"],
   weight: "400",
 });
 

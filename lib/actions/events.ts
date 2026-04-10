@@ -31,18 +31,18 @@ export async function createEvent(data: {
 
 export async function updateEvent(id: string, data: {
   title?: string;
-  description?: string;
+  description?: string | null;
   status?: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: string | Date | null;
+  endDate?: string | Date | null;
 }) {
   try {
     const event = await prisma.event.update({
       where: { id },
       data: {
         ...data,
-        startDate: data.startDate ? new Date(data.startDate) : undefined,
-        endDate: data.endDate ? new Date(data.endDate) : undefined,
+        startDate: data.startDate ? new Date(data.startDate) : (data.startDate === null ? null : undefined),
+        endDate: data.endDate ? new Date(data.endDate) : (data.endDate === null ? null : undefined),
       },
     });
 
