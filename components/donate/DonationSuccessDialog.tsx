@@ -4,6 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CheckCircle2Icon, Share2Icon, SparklesIcon, HeartIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 interface DonationSuccessDialogProps {
   isOpen: boolean;
@@ -24,6 +25,30 @@ export function DonationSuccessDialog({
   amount,
   donorName
 }: DonationSuccessDialogProps) {
+  const handleShare = async () => {
+    const url = window.location.href;
+    const title = "Support Fijai SHS Alumni Fund";
+    const text = `I just contributed to the Fijai SHS Alumni Fund! Join me in making an institutional impact.`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title,
+          text,
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast.success("Link copied to clipboard! Spread the impact.");
+      }
+    } catch (error) {
+      if ((error as any).name !== "AbortError") {
+        console.error("Error sharing:", error);
+        toast.error("Could not share. Please copy the URL manually.");
+      }
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-none bg-transparent shadow-none">
@@ -90,6 +115,7 @@ export function DonationSuccessDialog({
                     </Button>
                     <Button 
                         className=""
+                        onClick={handleShare}
                     >
                         <Share2Icon className="w-3 h-3 mr-2" />
                         Spread the Impact
