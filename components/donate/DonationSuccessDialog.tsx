@@ -12,6 +12,8 @@ interface DonationSuccessDialogProps {
   reference: string;
   amount: number;
   donorName?: string;
+  eventTitle?: string;
+  eventDescription?: string;
 }
 
 /**
@@ -23,12 +25,17 @@ export function DonationSuccessDialog({
   onClose,
   reference,
   amount,
-  donorName
+  donorName,
+  eventTitle,
+  eventDescription
 }: DonationSuccessDialogProps) {
   const handleShare = async () => {
     const url = window.location.href;
-    const title = "Support Fijai SHS Alumni Fund";
-    const text = `I just contributed to the Fijai SHS Alumni Fund! Join me in making an institutional impact.`;
+    
+    // Fallback if event info isn't provided (e.g. still loading or edge case)
+    const title = eventTitle || "Support Fijai SHS Alumni Fund";
+    const rawDescription = eventDescription ? eventDescription.replace(/<[^>]*>?/gm, '') : ""; // Strip HTML
+    const text = `I just contributed to ${title}! ${rawDescription.slice(0, 100)}${rawDescription.length > 100 ? '...' : ''} Join me in making an impact.`;
 
     try {
       if (navigator.share) {
