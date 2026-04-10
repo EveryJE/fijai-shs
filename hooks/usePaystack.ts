@@ -1,6 +1,5 @@
 "use client";
 
-import PaystackPop from "@paystack/inline-js";
 import { useCallback, useState } from "react";
 
 import { createClient } from "@/utils/supabase/client";
@@ -37,7 +36,7 @@ export function usePaystack() {
     const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY ?? "";
 
     const resumeTransaction = useCallback(
-        (accessCode: string, options?: PaystackOptions) => {
+        async (accessCode: string, options?: PaystackOptions) => {
             if (typeof window === "undefined") {
                 throw new Error("Paystack can only be used in the browser.");
             }
@@ -46,6 +45,7 @@ export function usePaystack() {
                 throw new Error("Paystack public key is not configured.");
             }
 
+            const PaystackPop = (await import("@paystack/inline-js")).default;
             const paystack = new PaystackPop();
             paystack.newTransaction({
                 key: publicKey,

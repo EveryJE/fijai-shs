@@ -14,13 +14,16 @@ const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined;
 };
 
-const poolMax = Number.parseInt(process.env.DATABASE_POOL_MAX ?? "15", 10);
+const poolMax = Number.parseInt(
+    process.env.DATABASE_POOL_MAX ?? (process.env.VERCEL || process.env.NODE_ENV === "production" ? "1" : "15"),
+    10
+);
 
 const pool =
     globalForPrisma.pool ??
     new Pool({
         connectionString,
-        max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 5,
+        max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 1,
         idleTimeoutMillis: 60_000,
         connectionTimeoutMillis: 30_000,
         ssl: {

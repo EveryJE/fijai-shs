@@ -53,7 +53,7 @@ interface RSVP {
 }
 
 interface DonateFormClientProps {
-  digitalCard: DonateDigitalCard;
+  digitalCard?: DonateDigitalCard;
   event: DonateEvent;
   categories: DonateCategory[];
   rsvps?: RSVP[];
@@ -101,7 +101,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
           amount: data.amount,
           donorName: data.name,
           phone: data.phone,
-          digitalCardId: digitalCard.id,
+          digitalCardId: digitalCard?.id,
           donationItemId: data.item,
           momentFileUrl: data.momentFileUrl,
           momentCaption: data.momentCaption,
@@ -145,7 +145,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
         <DonateHeader
           eventTitle={event.title}
           eventDescription={event.description || "Establish your impact and contribute to the Fijai SHS Alumni Institutional Fund."}
-          digitalCodeUserName={digitalCard.holderName || digitalCard.alias || 'Campaign'}
+          digitalCodeUserName={digitalCard?.holderName || digitalCard?.alias || 'General Fund'}
         />
 
         {/* Main Donation Form Flow */}
