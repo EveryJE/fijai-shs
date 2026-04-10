@@ -35,9 +35,10 @@ export async function savePayoutAccount(
   subaccountCode: string,
   settlementBank: string
 ) {
-  // Find the actual organization ID
-  const org = await prisma.organization.findFirst();
-  const targetId = org?.id || "singleton-org";
+  const targetId =
+    organizationId ||
+    (await prisma.organization.findFirst({ select: { id: true } }))?.id ||
+    "singleton-org";
 
   await prisma.organization.update({
     where: { id: targetId },

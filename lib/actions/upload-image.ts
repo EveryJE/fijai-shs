@@ -3,10 +3,10 @@
 import { createClient } from "@/utils/supabase/server";
 import {
     STORAGE_BUCKETS,
-    deleteStorageFile,
     normalizeToPath,
     StorageBucket
 } from "@/lib/storage-utils";
+import { deleteStorageFile } from "@/lib/storage-server";
 
 export type ActionResult<T = void> =
     | { success: true; data: T }

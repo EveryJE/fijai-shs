@@ -16,57 +16,52 @@ export function MostImpactUserCard({ user }: MostImpactUserCardProps) {
     if (!user) return null;
 
     return (
-        <Card className="border-none shadow-2xl bg-gradient-to-br from-[#730303] via-[#730303] to-[#DAA520] text-white overflow-hidden relative group">
+        <Card className="border-none shadow-lg bg-primary text-primary-foreground overflow-hidden relative group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
                 <TrophyIcon className="w-32 h-32" />
             </div>
             
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-
-            <CardHeader className="relative pb-0 pt-8">
+            <CardHeader className="relative pb-0 pt-6">
                 <div className="flex items-center gap-3">
-                     <div className="bg-white/20 p-2 rounded-lg border border-white/20 backdrop-blur-md">
-                        <StarIcon className="h-5 w-5 text-[#DAA520]" />
+                     <div className="bg-white/10 p-2 rounded-lg border border-white/10">
+                        <StarIcon className="h-4 w-4 text-emerald-400 fill-emerald-400" />
                      </div>
-                     <CardTitle className="text-sm font-black uppercase tracking-[3px] text-white/90">Institutional Impact</CardTitle>
+                     <CardTitle className="text-sm font-semibold uppercase tracking-wider">Top Contributor</CardTitle>
                 </div>
-                <CardDescription className="text-white/60 font-bold uppercase tracking-wider text-[10px] mt-2">Top Contributing Alumni Member</CardDescription>
             </CardHeader>
-            <CardContent className="relative pt-8 pb-10 space-y-6">
-                <div className="flex items-end gap-6 justify-between border-b border-white/10 pb-6">
-                    <div className="flex items-center gap-4">
-                        <div className="relative">
-                            <Avatar className="h-20 w-20 border-4 border-white/20 shadow-2xl">
-                                <AvatarImage src={user.avatarUrl || ""} />
-                                <AvatarFallback className="bg-white/10 text-xl font-bold uppercase">
-                                    {(user.fullName || "A").charAt(0)}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="absolute -bottom-2 -right-2 bg-[#DAA520] p-1.5 rounded-full shadow-lg border-2 border-white/20">
-                                <TrophyIcon className="h-3.5 w-3.5 text-white" />
-                            </div>
+            <CardContent className="relative pt-6 pb-8 space-y-6">
+                <div className="flex items-center gap-4">
+                    <div className="relative">
+                        <Avatar className="h-16 w-16 border-2 border-white/20 shadow-xl">
+                            <AvatarImage src={user.avatarUrl || ""} />
+                            <AvatarFallback className="bg-white/10 text-xl font-bold">
+                                {(user.fullName || "A").charAt(0)}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div className="absolute -bottom-1 -right-1 bg-secondary p-1 rounded-full shadow border-2 border-primary">
+                            <TrophyIcon className="h-3 w-3 text-secondary-foreground" />
                         </div>
-                        <div className="space-y-1">
-                             <p className="text-2xl font-black tracking-tight">{user.fullName || "Alumni Member"}</p>
-                             <p className="text-[10px] font-black uppercase tracking-widest text-[#DAA520]">Verified Supporter</p>
-                        </div>
+                    </div>
+                    <div>
+                         <p className="text-xl font-bold leading-none">{user.fullName || "Alumni Member"}</p>
+                         <p className="text-xs text-primary-foreground/60 mt-1 uppercase font-medium tracking-wide">Verified Supporter</p>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                     <div className="bg-white/10 p-4 rounded-md border border-white/10 backdrop-blur-sm">
-                         <p className="text-[8px] font-black uppercase tracking-widest text-white/50 mb-1">Impact Level</p>
-                         <p className="text-lg font-black tracking-tight text-[#DAA520]">Elite Tier</p>
+                <div className="grid grid-cols-2 gap-3">
+                     <div className="bg-white/5 p-3 rounded-lg border border-white/10">
+                         <p className="text-[10px] uppercase font-semibold opacity-60 mb-1">Impact Level</p>
+                         <p className="text-sm font-bold text-emerald-400">Elite Tier</p>
                      </div>
-                     <div className="bg-white/10 p-4 rounded-md border border-white/10 backdrop-blur-sm">
-                         <p className="text-[8px] font-black uppercase tracking-widest text-white/50 mb-1">Alumni Code</p>
-                         <p className="text-lg font-black tracking-tight uppercase">{user.uniqueCode || "N/A"}</p>
+                     <div className="bg-white/5 p-3 rounded-lg border border-white/10">
+                         <p className="text-[10px] uppercase font-semibold opacity-60 mb-1">Alumni Code</p>
+                         <p className="text-sm font-bold uppercase">{user.uniqueCode || "N/A"}</p>
                      </div>
                 </div>
 
-                <div className="flex items-center gap-2 pt-2 text-[10px] font-black uppercase tracking-widest text-white/40">
+                <div className="flex items-center gap-2 pt-2 text-[10px] font-medium uppercase tracking-wider opacity-60">
                      <HeartHandshakeIcon className="h-3 w-3" />
-                     Institutionally Recognized Achievement
+                     Institutionally Recognized Milestone
                 </div>
             </CardContent>
         </Card>

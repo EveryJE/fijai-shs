@@ -35,8 +35,8 @@ export function PasswordResetForm() {
     };
 
     return (
-        <Card className="border-none shadow-md">
-            <CardHeader>
+        <Card className="pt-0">
+            <CardHeader className="border-b rounded-t-none border-t-0 py-3 bg-secondary-50/50">
                 <div className="flex items-center gap-2">
                      <KeyIcon className="h-5 w-5 text-primary" />
                      <CardTitle>Security & Password</CardTitle>

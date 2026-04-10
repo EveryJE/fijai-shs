@@ -4,6 +4,10 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 const PAYSTACK_SECRET = Deno.env.get("PAYSTACK_SECRET_KEY");
 
+function isValidSubaccountCode(value: string | null | undefined): value is string {
+    return typeof value === "string" && /^ACCT_[A-Za-z0-9]+$/.test(value);
+}
+
 serve(async (req) => {
     if (req.method === "OPTIONS") {
         return new Response("ok", { headers: corsHeaders });
@@ -59,7 +63,7 @@ serve(async (req) => {
 
         let subaccountCode: string;
 
-        if (org?.subaccountCode) {
+        if (isValidSubaccountCode(org?.subaccountCode)) {
             // Update existing Paystack subaccount
             const paystackRes = await fetch(
                 `https://api.paystack.co/subaccount/${org.subaccountCode}`,
@@ -114,6 +118,13 @@ serve(async (req) => {
             }
 
             subaccountCode = paystackData.data.subaccount_code;
+
+            if (!isValidSubaccountCode(subaccountCode)) {
+                return new Response(
+                    JSON.stringify({ error: "Paystack returned an invalid subaccount code" }),
+                    { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+                );
+            }
         }
 
         // 6. Return success - DB save handled by server action

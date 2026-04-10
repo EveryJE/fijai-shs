@@ -40,14 +40,52 @@
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-50: #fdeaea;
+  --color-primary-100: #fbcdcd;
+  --color-primary-200: #f89d9d;
+  --color-primary-300: #f46c6c;
+  --color-primary-400: #ec3b3b;
+  --color-primary-500: #d61f1f;
+  --color-primary-600: #b11616;
+  --color-primary-700: #8d1212;
+  --color-primary-800: #730303;
+  --color-primary-900: #5e0202;
+  --color-primary-950: #3c0101;
+
+  --color-secondary-50: #fdf8e9;
+  --color-secondary-100: #faefc7;
+  --color-secondary-200: #f3df8f;
+  --color-secondary-300: #eccf57;
+  --color-secondary-400: #e5bf1f;
+  --color-secondary-500: #daa520;
+  --color-secondary-600: #b4891a;
+  --color-secondary-700: #8e6c14;
+  --color-secondary-800: #684f0f;
+  --color-secondary-900: #55410c;
+  --color-secondary-950: #332707;
+
+  --color-accent-50: #edf3f8;
+  --color-accent-100: #d0e1ee;
+  --color-accent-200: #a1c3dd;
+  --color-accent-300: #71a5cc;
+  --color-accent-400: #4287bb;
+  --color-accent-500: #2c6e9e;
+  --color-accent-600: #23587e;
+  --color-accent-700: #1b4562;
+  --color-accent-800: #1b3a5c;
+  --color-accent-900: #162f4b;
+  --color-accent-950: #0d1c2d;
+
   --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
+  --color-popover-foreground: var(--popover-foreground);
   --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -201,4 +239,13 @@
 
 [data-variant="institutional"]>[data-slot="tabs-trigger"]:nth-child(3n + 3)[data-state="active"] {
   background-color: rgb(27 58 92 / 0.15);
+}
+
+
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }

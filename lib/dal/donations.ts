@@ -8,6 +8,27 @@ const donationIncludes = {
     event: true,
 } as const;
 
+export const getDigitalCardByCardCode = cache(async (cardCode: string | undefined) => {
+    if (!cardCode) return null;
+    return prisma.digitalCard.findUnique({
+        where: { cardCode, isActive: true },
+        include: {
+            event: {
+                include: {
+                    categories: {
+                        orderBy: { displayOrder: "asc" },
+                        include: {
+                            donationItems: {
+                                orderBy: { displayOrder: "asc" },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+});
+
 export const getDonationsByUser = cache(async (userId: string) => {
     return prisma.donation.findMany({
         where: { userId },

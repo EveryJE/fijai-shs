@@ -21,8 +21,11 @@ const pool =
     new Pool({
         connectionString,
         max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 5,
-        idleTimeoutMillis: 30_000,
-        connectionTimeoutMillis: 10_000,
+        idleTimeoutMillis: 60_000,
+        connectionTimeoutMillis: 30_000,
+        ssl: {
+            rejectUnauthorized: false
+        }
     });
 
 const adapter = globalForPrisma.adapter ?? new PrismaPg(pool);

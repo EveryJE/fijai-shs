@@ -15,6 +15,7 @@ import { createClient } from "@/utils/supabase/client";
 import { savePayoutAccount } from "@/lib/actions/org";
 import { PayoutAccountCard } from "@/components/dashboard/PayoutAccountCard";
 import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem,  SelectTrigger, SelectValue } from "../ui/select";
 
 interface OrgAccountDetailsProps {
     readonly organization: any;
@@ -208,11 +209,11 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                 <Banknote className="h-6 w-6 text-primary" />
                             </div>
                             <div>
-                                <CardTitle className="text-xl font-bold tracking-tight">Financial Payout Setup</CardTitle>
+                                <CardTitle className="text-xl font-semibold tracking-tight">Financial Payout Setup</CardTitle>
                                 <CardDescription className="text-sm font-medium">Link a verified account to receive institutional funding.</CardDescription>
                             </div>
                         </div>
-                        {isAdmin && payoutAccountNumber && (
+                        {( isAdmin && payoutAccountNumber && payoutAccountName && payoutBankCode) && (
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -228,7 +229,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                 <CardContent className="p-8">
                     {payoutAccountNumber && payoutAccountName && payoutBankCode ? (
                         <div className="flex flex-col items-center justify-center p-6 bg-muted/20 rounded-2xl border-2 border-dashed border-muted-foreground/10 space-y-4">
-                            <p className="text-[10px] font-black uppercase tracking-[3px] text-muted-foreground/60 mb-2">Current Active Account</p>
+                            <p className="text-[10px]   tracking-[3px] text-muted-foreground/60 mb-2">Current Active Account</p>
                             <PayoutAccountCard
                                 paystackBankCode={payoutBankCode}
                                 paystackAccountNumber={payoutAccountNumber}
@@ -253,10 +254,10 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
             </Card>
 
             {/* Sheet for adding/editing payout account */}
-            <Sheet open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <Sheet open={isModalOpen} onOpenChange={setIsModalOpen} modal={false}>
                 <SheetContent className="w-full sm:max-w-xl overflow-y-auto font-">
                     <SheetHeader className="mb-6">
-                        <SheetTitle className="text-xl font-bold">
+                        <SheetTitle className="text-xl font-semibold">
                             {payoutAccountNumber ? "Update Payout Account" : "Add Payout Account"}
                         </SheetTitle>
                     </SheetHeader>
@@ -265,19 +266,19 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                         <div className="space-y-4">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b">
                                 <div className="space-y-1">
-                                    <Label className="text-xs font-black uppercase tracking-widest text-[#730303]">Payout Type</Label>
+                                    <Label className="">Payout Type</Label>
                                     <div className="flex gap-2 p-1 bg-muted rounded-lg w-fit mt-1">
                                         <button
                                             type="button"
                                             onClick={() => { setBankType("momo"); setBankCode(payoutBankCode || ""); setAccountNumber(payoutAccountNumber || ""); setVerifiedName(null); }}
-                                            className={cn("px-6 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-all", bankType === "momo" ? "bg-white shadow-sm text-primary" : "text-muted-foreground/60 hover:text-muted-foreground")}
+                                            className={cn("px-6 py-1 text-sm rounded text-nowrap transition-all", bankType === "momo" ? "bg-white shadow-sm text-primary" : "text-muted-foreground/60 hover:text-muted-foreground")}
                                         >
                                             Mobile Money
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => { setBankType("bank"); setBankCode(payoutBankCode || ""); setAccountNumber(payoutAccountNumber || ""); setVerifiedName(null); }}
-                                            className={cn("px-6 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-all", bankType === "bank" ? "bg-white shadow-sm text-primary" : "text-muted-foreground/60 hover:text-muted-foreground")}
+                                            className={cn("px-6 py-1 text-sm rounded text-nowrap transition-all", bankType === "bank" ? "bg-white shadow-sm text-primary" : "text-muted-foreground/60 hover:text-muted-foreground")}
                                         >
                                             Bank Account
                                         </button>
@@ -285,42 +286,46 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                 </div>
 
                                 <div className="space-y-1 min-w-[200px]">
-                                    <Label className="text-xs font-black uppercase tracking-widest text-[#730303]">Payout Country</Label>
-                                    <select
-                                        value={country}
-                                        onChange={(e) => setCountry(e.target.value)}
-                                        disabled={isLoadingNetworks}
-                                        className="mt-1 font-bold h-11 w-full rounded-md border-2 border-input bg-background px-3 py-2 text-sm focus-visible:ring-primary/20"
-                                    >
+                                    <Label className="   text-[#730303]">Payout Country</Label>
+                                   <Select
+                                   value={country}
+                                   onValueChange={(value) => setCountry(value)}
+                                   disabled={isLoadingNetworks}
+                                   >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select Country" />
+                                    </SelectTrigger>
+                                    <SelectContent>
                                         {countryOptions.map((opt) => (
-                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                                         ))}
-                                    </select>
+                                    </SelectContent>
+                                   </Select>
                                 </div>
                             </div>
 
                             <div className="grid gap-8 sm:grid-cols-2">
                                 <div className="space-y-2 group">
-                                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 group-focus-within:text-primary transition-colors">
+                                    <Label className=" transition-colors">
                                         {bankType === "momo" ? "Network Provider" : "Financial Institution"}
                                     </Label>
-                                    <select
-                                        value={bankCode}
-                                        onChange={(e) => { 
-                                            setBankCode(e.target.value); 
-                                            if (e.target.value !== payoutBankCode) setVerifiedName(null); 
-                                        }}
-                                        disabled={isLoadingNetworks}
-                                        className="h-12 w-full rounded-md border-2 border-input bg-background px-3 py-2 text-sm focus-visible:ring-primary/20"
+                                    <Select
+                                    value={bankCode}
+                                    onValueChange={(value) => setBankCode(value)}
+                                    disabled={isLoadingNetworks}
                                     >
-                                        <option value="">{isLoadingNetworks ? "Loading..." : `Select ${bankType === "momo" ? "network" : "bank"}`}</option>
-                                        {networkOptions.map((opt) => (
-                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                        ))}
-                                    </select>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select Network Provider" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {networkOptions.map((opt) => (
+                                                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div className="space-y-2 group">
-                                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 group-focus-within:text-primary transition-colors">
+                                    <Label className="text-xs  transition-colors">
                                         Recipient Account Number
                                     </Label>
                                     <Input
@@ -330,13 +335,13 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                             setVerifiedName(null);
                                         }}
                                         placeholder={accountNumber ? accountNumber : bankType === "momo" ? "e.g. 024XXXXXXX" : "Enter account number"}
-                                        className="h-12 border-2 text-lg font-mono tracking-widest focus-visible:ring-primary/20"
+                                        className="h-9"
                                     />
 
                                     {verifiedName && (
                                         <div className="flex items-center gap-2 mt-3 px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100 animate-in zoom-in-95 fill-mode-both">
                                             <Check className="h-4 w-4 shrink-0" />
-                                            <span className="text-[11px] font-black uppercase tracking-wider">Verified: {verifiedName}</span>
+                                            <span className="text-[11px]   tracking-wider">Verified: {verifiedName}</span>
                                         </div>
                                     )}
                                 </div>
@@ -364,7 +369,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                 type="button"
                                 onClick={handleSave}
                                 disabled={isPending}
-                                className="h-12 px-8 tracking-[2px] bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/20"
+                                className=" px-8 tracking-[2px]"
                             >
                                 {isPending ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

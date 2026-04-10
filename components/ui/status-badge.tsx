@@ -1,8 +1,8 @@
 "use client"
 
-import { cn } from "@/lib/utils"
 import { Check, Clock, X, AlertTriangle, Minus, Ban, Play, Calendar, Crown, ShieldCheck, User, CreditCard } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 type StatusVariant =
     | 'active'
@@ -32,6 +32,7 @@ type StatusVariant =
     | 'member'
     | 'rsvp'
     | 'cardholder'
+    | 'paid'
 
 interface StatusConfig {
     icon: LucideIcon
@@ -46,15 +47,23 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     active: {
         icon: Check,
         iconBgColor: "bg-emerald-500",
-        textColor: "text-gray-700",
+        textColor: "text-emerald-700",
         borderColor: "border-emerald-200",
         bgColor: "bg-emerald-50",
         defaultText: "Active",
     },
+    paid: {
+        icon: Check,
+        iconBgColor: "bg-emerald-500",
+        textColor: "text-emerald-700",
+        borderColor: "border-emerald-200",
+        bgColor: "bg-emerald-50",
+        defaultText: "Paid",
+    },
     inactive: {
         icon: Minus,
         iconBgColor: "bg-red-500",
-        textColor: "text-gray-700",
+        textColor: "text-red-700",
         borderColor: "border-red-200",
         bgColor: "bg-red-50",
         defaultText: "Archived",
@@ -62,7 +71,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     approved: {
         icon: Check,
         iconBgColor: "bg-emerald-500",
-        textColor: "text-gray-500",
+        textColor: "text-emerald-700",
         borderColor: "border-emerald-200",
         bgColor: "bg-emerald-50",
         defaultText: "Approved",
@@ -70,7 +79,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     completed: {
         icon: Check,
         iconBgColor: "bg-emerald-500",
-        textColor: "text-gray-500",
+        textColor: "text-emerald-700",
         borderColor: "border-emerald-200",
         bgColor: "bg-emerald-50",
         defaultText: "Completed",
@@ -78,7 +87,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     pending: {
         icon: Clock,
         iconBgColor: "bg-amber-500",
-        textColor: "text-gray-500",
+        textColor: "text-amber-700",
         borderColor: "border-amber-200",
         bgColor: "bg-amber-50",
         defaultText: "Pending",
@@ -86,7 +95,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     review: {
         icon: Clock,
         iconBgColor: "bg-amber-500",
-        textColor: "text-gray-500",
+        textColor: "text-amber-700",
         borderColor: "border-amber-200",
         bgColor: "bg-amber-50",
         defaultText: "In Review",
@@ -94,7 +103,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     rejected: {
         icon: X,
         iconBgColor: "bg-red-500",
-        textColor: "text-gray-500",
+        textColor: "text-red-700",
         borderColor: "border-red-200",
         bgColor: "bg-red-50",
         defaultText: "Rejected",
@@ -102,7 +111,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     cancelled: {
         icon: Ban,
         iconBgColor: "bg-gray-500",
-        textColor: "text-gray-500",
+        textColor: "text-gray-700",
         borderColor: "border-gray-200",
         bgColor: "bg-gray-50",
         defaultText: "Cancelled",
@@ -110,7 +119,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     warning: {
         icon: AlertTriangle,
         iconBgColor: "bg-orange-500",
-        textColor: "text-gray-500",
+        textColor: "text-orange-700",
         borderColor: "border-orange-200",
         bgColor: "bg-orange-50",
         defaultText: "Warning",
@@ -118,7 +127,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     success: {
         icon: Check,
         iconBgColor: "bg-emerald-500",
-        textColor: "text-gray-500",
+        textColor: "text-emerald-700",
         borderColor: "border-emerald-200",
         bgColor: "bg-emerald-50",
         defaultText: "Success",
@@ -126,7 +135,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     current: {
         icon: Check,
         iconBgColor: "bg-emerald-500",
-        textColor: "text-gray-500",
+        textColor: "text-emerald-700",
         borderColor: "border-emerald-200",
         bgColor: "bg-emerald-50",
         defaultText: "Current",
@@ -134,7 +143,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     past: {
         icon: Minus,
         iconBgColor: "bg-slate-500",
-        textColor: "text-gray-500",
+        textColor: "text-slate-700",
         borderColor: "border-slate-200",
         bgColor: "bg-slate-50",
         defaultText: "Past",
@@ -142,7 +151,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     draft: {
         icon: Clock,
         iconBgColor: "bg-blue-500",
-        textColor: "text-gray-500",
+        textColor: "text-blue-700",
         borderColor: "border-blue-200",
         bgColor: "bg-blue-50",
         defaultText: "Draft",
@@ -150,7 +159,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     closed: {
         icon: X,
         iconBgColor: "bg-red-500",
-        textColor: "text-gray-500",
+        textColor: "text-red-700",
         borderColor: "border-red-200",
         bgColor: "bg-red-50",
         defaultText: "Closed",
@@ -158,7 +167,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     info: {
         icon: Clock,
         iconBgColor: "bg-blue-500",
-        textColor: "text-gray-500",
+        textColor: "text-blue-700",
         borderColor: "border-blue-200",
         bgColor: "bg-blue-50",
         defaultText: "Info",
@@ -166,7 +175,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     error: {
         icon: X,
         iconBgColor: "bg-red-500",
-        textColor: "text-gray-500",
+        textColor: "text-red-700",
         borderColor: "border-red-200",
         bgColor: "bg-red-50",
         defaultText: "Error",
@@ -174,7 +183,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     default: {
         icon: Minus,
         iconBgColor: "bg-gray-500",
-        textColor: "text-gray-500",
+        textColor: "text-gray-700",
         borderColor: "border-gray-200",
         bgColor: "bg-gray-50",
         defaultText: "",
@@ -182,7 +191,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     view: {
         icon: Minus,
         iconBgColor: "bg-gray-500",
-        textColor: "text-gray-500",
+        textColor: "text-gray-700",
         borderColor: "border-gray-200",
         bgColor: "bg-gray-50",
         defaultText: "View Details",
@@ -190,7 +199,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     ongoing: {
         icon: Play,
         iconBgColor: "bg-green-500",
-        textColor: "text-gray-500",
+        textColor: "text-green-700",
         borderColor: "border-green-200",
         bgColor: "bg-green-50",
         defaultText: "Ongoing",
@@ -198,7 +207,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     ended: {
         icon: Check,
         iconBgColor: "bg-slate-500",
-        textColor: "text-gray-500",
+        textColor: "text-slate-700",
         borderColor: "border-slate-200",
         bgColor: "bg-slate-50",
         defaultText: "Ended",
@@ -206,7 +215,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     published: {
         icon: Check,
         iconBgColor: "bg-emerald-500",
-        textColor: "text-gray-500",
+        textColor: "text-emerald-700",
         borderColor: "border-emerald-200",
         bgColor: "bg-emerald-50",
         defaultText: "Published",
@@ -214,7 +223,7 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     upcoming: {
         icon: Calendar,
         iconBgColor: "bg-blue-500",
-        textColor: "text-gray-500",
+        textColor: "text-blue-700",
         borderColor: "border-blue-200",
         bgColor: "bg-blue-50",
         defaultText: "Upcoming",
@@ -229,10 +238,10 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     },
     admin: {
         icon: ShieldCheck,
-        iconBgColor: "bg-[#DAA520]",
-        textColor: "text-[#DAA520]",
-        borderColor: "border-[#DAA520]/20",
-        bgColor: "bg-[#DAA520]/5",
+        iconBgColor: "bg-primary-500",
+        textColor: "text-primary-600",
+        borderColor: "border-primary/20",
+        bgColor: "bg-primary/5",
         defaultText: "Admin",
     },
     member: {
@@ -245,18 +254,18 @@ const statusConfigs: Record<StatusVariant, StatusConfig> = {
     },
     rsvp: {
         icon: User,
-        iconBgColor: "bg-blue-500",
-        textColor: "text-blue-700",
-        borderColor: "border-blue-200",
-        bgColor: "bg-blue-50",
+        iconBgColor: "bg-accent-500",
+        textColor: "text-accent-600",
+        borderColor: "border-accent/20",
+        bgColor: "bg-accent/5",
         defaultText: "RSVP Holder",
     },
     cardholder: {
         icon: CreditCard,
-        iconBgColor: "bg-purple-500",
-        textColor: "text-purple-700",
-        borderColor: "border-purple-200",
-        bgColor: "bg-purple-50",
+        iconBgColor: "bg-secondary-500",
+        textColor: "text-secondary-600",
+        borderColor: "border-secondary/20",
+        bgColor: "bg-secondary/5",
         defaultText: "Digital Card",
     },
 }
@@ -291,7 +300,7 @@ export function StatusBadge({
     variant,
     text,
     className,
-    showIcon = true,
+    showIcon = false,
     size = 'sm'
 }: StatusBadgeProps): React.ReactElement {
     const normalizedVariant = variant.toLowerCase().replace(/ /g, "_") as StatusVariant
@@ -303,7 +312,7 @@ export function StatusBadge({
     return (
         <span
             className={cn(
-                "inline-flex w-fit gap-1.5 items-center rounded-full border font-semibold transition-colors tracking-tight",
+                "inline-flex w-fit gap-1.5 items-center rounded border font-medium transition-colors tracking-tight",
                 config.textColor,
                 config.borderColor,
                 config.bgColor,
@@ -312,7 +321,7 @@ export function StatusBadge({
             )}
         >
             {showIcon && (
-                <span className={cn("rounded-full flex items-center justify-center text-white shrink-0", config.iconBgColor, sizeConfig.iconPadding)}>
+                <span className={cn("rounded flex items-center justify-center text-white shrink-0", config.iconBgColor, sizeConfig.iconPadding)}>
                     <Icon className={cn(sizeConfig.icon, "stroke-[3]")} />
                 </span>
             )}

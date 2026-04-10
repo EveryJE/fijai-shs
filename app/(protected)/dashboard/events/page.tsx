@@ -12,7 +12,7 @@ export default async function EventsPage() {
     const events = await getAllEvents();
 
     return (
-        <div className="mx-auto max-w-6xl p-6 lg:p-10">
+        <div className="max-w-7xl p-6 lg:p-10">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Events Management</h1>
@@ -24,8 +24,8 @@ export default async function EventsPage() {
             </div>
 
             <div className="grid gap-6">
-                <Card className="border-none shadow-md overflow-hidden">
-                    <CardHeader className="bg-muted/30 pb-4">
+                <Card className="overflow-hidden pt-0">
+                    <CardHeader className="bg-primary/10 rounded-none pt-3 pb-4">
                         <div className="flex items-center gap-2">
                              <CalendarDaysIcon className="h-5 w-5 text-primary" />
                              <CardTitle className="text-xl">All Events</CardTitle>

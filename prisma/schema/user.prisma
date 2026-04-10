@@ -6,6 +6,7 @@ model Profile {
     phone      String?  @unique
     roles      String[] @default([]) // e.g. ["admin", "rsvp", "cardholder"]
     aliasName  String?  // school-era nickname or 'aka'
+    classYear  String?  // graduation year
     uniqueCode String?  @unique // for RSVP/cardholder invite/identification
 
     contactPersons ContactPerson[]

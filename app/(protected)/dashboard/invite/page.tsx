@@ -20,29 +20,29 @@ export default async function ParticipantsPage() {
                          <div className="p-2 bg-[#730303]/10 rounded-md text-[#730303]">
                             <ShieldCheckIcon className="h-6 w-6" />
                          </div>
-                         <h1 className="text-4xl font-black tracking-tighter text-[#730303] uppercase">
+                         <h1 className="text-4xl font-bold uppercase tracking-tighter text-[#730303] ">
                              Institutional Access
                          </h1>
                     </div>
-                    <p className="text-muted-foreground mt-2 text-lg font-medium">
+                    <p className="text-muted-foreground mt-2 text-sm font-normal">
                         Establish official alumni participation roles and system identities.
                     </p>
                 </div>
                 <CreateUserForm events={events} />
             </div>
 
-            <Card className="border-none shadow-2xl overflow-hidden bg-white text-black/90 group">
+            <Card className=" overflow-hidden bg-white text-black/90 gap-y-0 group">
                 <CardHeader className="bg-muted/5 pb-8 border-b">
                      <div className="flex items-center gap-2">
                         <UsersIcon className="h-5 w-5 text-[#DAA520]" />
-                        <CardTitle className="text-xl font-black uppercase tracking-tight text-[#730303]">Active Member Roster</CardTitle>
+                        <CardTitle className="text-xl font-semibold  tracking-tight text-[#730303]">Active Member Roster</CardTitle>
                      </div>
-                     <CardDescription className="text-xs font-bold uppercase tracking-[2px] opacity-60">Complete registry of verified alumni participants and administrators.</CardDescription>
+                     <CardDescription className="text-sm font-normal opacity-60">Complete registry of verified alumni participants and administrators.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                     <Table>
                         <TableHeader>
-                            <TableRow className="bg-muted/30 hover:bg-muted/30">
+                            <TableRow className="bg-primary-50/50 hover:bg-primary-50/50">
                                 <TableHead className="w-[200px]">Full Name</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Roles</TableHead>

@@ -1,31 +1,43 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
 const PAYSTACK_SECRET = Deno.env.get("PAYSTACK_SECRET_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
+
+function isValidSubaccountCode(value: string | null | undefined): value is string {
+    return typeof value === "string" && /^ACCT_[A-Za-z0-9]+$/.test(value);
+}
 
 function toPesewas(ghs: number): number {
     return Math.round(ghs * 100);
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
     if (req.method === "OPTIONS") {
         return new Response("ok", { headers: corsHeaders });
     }
 
     try {
+        if (!PAYSTACK_SECRET || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+            return new Response(
+                JSON.stringify({ error: "Missing payment configuration" }),
+                { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
         // Authenticate the caller (optional — donors may be anonymous)
         const authHeader = req.headers.get("Authorization");
         const supabase = createClient(
-            Deno.env.get("SUPABASE_URL"),
-            Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
+            SUPABASE_URL,
+            SUPABASE_SERVICE_ROLE_KEY
         );
 
         let userId: string | null = null;
-        if (authHeader) {
+        if (authHeader && SUPABASE_ANON_KEY) {
             const anonClient = createClient(
-                Deno.env.get("SUPABASE_URL"),
-                Deno.env.get("SUPABASE_ANON_KEY"),
+                SUPABASE_URL,
+                SUPABASE_ANON_KEY,
                 { global: { headers: { Authorization: authHeader } } }
             );
             const { data: { user } } = await anonClient.auth.getUser();
@@ -55,71 +67,72 @@ serve(async (req) => {
             );
         }
 
-        // Generate unique reference
-        const reference = `DON-${crypto.randomUUID().substring(0, 12)}`;
+        // Generate unique reference and temporary donationId
+        const donationId = crypto.randomUUID();
+        const reference = `DON-${crypto.randomUUID().substring(0, 12).toUpperCase()}`;
 
-        // Create pending donation record
-        const { data: donation, error: dbError } = await supabase
-            .from("donations")
-            .insert({
-                reference,
-                donor_email: email,
-                donor_name: donorName,
-                phone,
-                amount,
-                currency,
-                status: "pending",
-                payment_method: "paystack",
-                event_id: eventId,
-                contact_person_id: contactPersonId || null,
-                digital_card_id: digitalCardId || null,
-                donation_item_id: donationItemId || null,
-                moment_file_url: momentFileUrl || null,
-                moment_caption: momentCaption || null,
-                user_id: userId,
-                metadata: { ...metadata, txn_type: "donation" },
-            })
-            .select("id")
-            .single();
+        // Fetch the organization's subaccount code for split payment (limit 1 for now)
+        const { data: org, error: orgError } = await supabase
+            .from("organizations")
+            .select("subaccountCode")
+            .limit(1)
+            .maybeSingle();
 
-        if (dbError) {
-            console.error("DB insert error:", dbError);
+        if (orgError) {
+            console.error("Organization lookup error:", orgError);
+        }
+
+        const subaccountCode = org?.subaccountCode;
+
+        if (subaccountCode && !isValidSubaccountCode(subaccountCode)) {
+            console.error("Invalid organization subaccount code:", subaccountCode);
             return new Response(
-                JSON.stringify({ error: "Failed to create donation record" }),
-                { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+                JSON.stringify({
+                    error: "Organization payout account is misconfigured. Please reconnect the payout account from the dashboard.",
+                }),
+                { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
         }
 
-        // Fetch the organization's subaccount code for split payment
-        const { data: org } = await supabase
-            .from("organizations")
-            .select("subaccount_code")
-            .limit(1)
-            .single();
+        // Format phone number for Paystack if provided
+        const formattedPhone = phone?.startsWith("0") ? "+233" + phone.slice(1) : phone;
 
-        const subaccountCode = org?.subaccount_code;
-
-        // Build Paystack init payload
+        // Build Paystack init payload (skip DB insert - record will be created in webhook)
         const paystackBody: Record<string, unknown> = {
             email,
-            amount: toPesewas(amount),
+            amount: toPesewas(Number(amount)),
             currency,
             reference,
             metadata: {
-                donation_id: donation.id,
+                ...metadata,
+                donation_id: donationId,
+                donor_email: email,
                 donor_name: donorName,
+                donor_phone: phone,
+                amount: amount,
+                currency: currency,
                 event_id: eventId,
                 contact_person_id: contactPersonId,
                 digital_card_id: digitalCardId,
                 donation_item_id: donationItemId,
+                moment_file_url: momentFileUrl,
+                moment_caption: momentCaption,
+                user_id: userId,
+                txn_type: "donation",
                 custom_fields: [
                     { display_name: "Donor", variable_name: "donor_name", value: donorName || "Anonymous" },
+                    { display_name: "Phone", variable_name: "donor_phone", value: phone || "Not provided" },
                 ],
             },
         };
 
+        if (formattedPhone) {
+            paystackBody.phone = formattedPhone;
+            paystackBody.customer = { email, phone: formattedPhone };
+        }
+
         // If the org has a verified subaccount, route 100% to them
-        if (subaccountCode) {
+        if (isValidSubaccountCode(subaccountCode)) {
             paystackBody.subaccount = subaccountCode;
             paystackBody.bearer = "subaccount"; // org bears Paystack fees
         }
@@ -139,7 +152,8 @@ serve(async (req) => {
 
         const paystackData = await paystackRes.json();
 
-        if (!paystackData.status) {
+        if (!paystackRes.ok || !paystackData.status) {
+            console.error("Paystack initialization failed:", paystackData);
             return new Response(
                 JSON.stringify({ error: paystackData.message || "Paystack initialization failed" }),
                 { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -148,8 +162,8 @@ serve(async (req) => {
 
         return new Response(
             JSON.stringify({
-                donationId: donation.id,
-                reference,
+                donationId: donationId,
+                reference: reference,
                 authorizationUrl: paystackData.data.authorization_url,
                 accessCode: paystackData.data.access_code,
             }),

@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../../lib/generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../../lib/generated/prisma"
+  previewFeatures = ["prismaSchemaFolder"]
 }
 
 datasource db {
@@ -211,6 +212,7 @@ model Profile {
   phone      String?  @unique
   roles      String[] @default([]) // e.g. ["admin", "rsvp", "cardholder"]
   aliasName  String? // school-era nickname or 'aka'
+  classYear  String? // graduation year
   uniqueCode String?  @unique // for RSVP/cardholder invite/identification
 
   contactPersons ContactPerson[]

@@ -33,7 +33,7 @@ export const getOrganization = cache(async () => {
 });
 
 export const getRecentTransactions = cache(async (limit = 10) => {
-    return prisma.donation.findMany({
+    const transactions = await prisma.donation.findMany({
         take: limit,
         orderBy: { createdAt: "desc" },
         include: {
@@ -43,6 +43,15 @@ export const getRecentTransactions = cache(async (limit = 10) => {
             event: true
         }
     });
+
+    return transactions.map(tx => ({
+        ...tx,
+        amount: Number(tx.amount),
+        donationItem: tx.donationItem ? {
+            ...tx.donationItem,
+            targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
+        } : null
+    }));
 });
 
 export const getMostImpactUser = cache(async () => {

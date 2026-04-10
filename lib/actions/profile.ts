@@ -11,6 +11,7 @@ export async function updateProfile(id: string, data: any) {
       aliasName: data.aliasName,
       phone: data.phone,
       avatarUrl: data.avatarUrl,
+      classYear: data.classYear,
     },
   });
   revalidatePath("/dashboard/profile");

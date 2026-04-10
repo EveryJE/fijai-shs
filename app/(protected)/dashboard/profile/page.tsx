@@ -2,7 +2,8 @@ import { createClient } from "@/utils/supabase/server";
 import { getProfileByEmail } from "@/lib/dal";
 import { 
     getDonationsByContactPerson, 
-    getDonationsByDigitalCard 
+    getDonationsByDigitalCard,
+    getDonationsByUser
 } from "@/lib/dal/donations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileGeneralSettings } from "@/components/dashboard/ProfileGeneralSettings";
@@ -24,13 +25,34 @@ export default async function ProfilePage() {
     const isRSVP = profile.roles.includes("rsvp");
     const isCardholder = profile.roles.includes("cardholder");
 
-    // Fetch impact donations
-    let donations: any[] = [];
-    if (isRSVP && profile.contactPersons?.[0]) {
-        donations = await getDonationsByContactPerson(profile.contactPersons[0].id);
-    } else if (isCardholder && profile.digitalCards?.[0]) {
-        donations = await getDonationsByDigitalCard(profile.digitalCards[0].id);
-    }
+    // Aggregate all impact donations for the user
+    // 1. Donations raised via Referral Link (RSVP)
+    // 2. Donations raised via Digital Card
+    // 3. Donations made personally by the user (userId match)
+    const [referralDonations, cardDonations, personalDonations] = await Promise.all([
+        isRSVP && profile.contactPersons?.[0] 
+            ? getDonationsByContactPerson(profile.contactPersons[0].id) 
+            : Promise.resolve([]),
+        isCardholder && profile.digitalCards?.[0] 
+            ? getDonationsByDigitalCard(profile.digitalCards[0].id) 
+            : Promise.resolve([]),
+        getDonationsByUser(profile.id)
+    ]);
+
+    // Combine and deduplicate if necessary (though usually they are distinct)
+    const allImpactDonations = [...referralDonations, ...cardDonations, ...personalDonations];
+    
+    // Use a Map to deduplicate by ID just in case and serialize Decimals for Client Components
+    const uniqueDonations = Array.from(
+        new Map(allImpactDonations.map(d => [d.id, {
+            ...d,
+            amount: Number(d.amount), // Serialize Decimal to Number
+            donationItem: d.donationItem ? {
+                ...d.donationItem,
+                targetAmount: d.donationItem.targetAmount ? Number(d.donationItem.targetAmount) : null
+            } : null
+        }])).values()
+    );
 
     return (
         <div className="max-w-6xl p-6 lg:p-10 space-y-12">
@@ -51,17 +73,17 @@ export default async function ProfilePage() {
             </div>
 
             <Tabs defaultValue="general" className="space-y-10">
-                <TabsList className="bg-muted/50 p-1 w-full sm:w-auto overflow-x-auto ring-1 ring-muted mb-8">
-                    <TabsTrigger value="general" className="px-8 py-2 font-black uppercase tracking-widest text-[11px] data-active:shadow-lg">
+                <TabsList variant="institutional" className="p-1">
+                    <TabsTrigger value="general" className="px-10 py-2.5 font-black uppercase tracking-[2px] text-[10px]">
                         <UserCircleIcon className="mr-2 h-4 w-4" />
                         General
                     </TabsTrigger>
-                    <TabsTrigger value="security" className="px-8 py-2 font-black uppercase tracking-widest text-[11px] data-active:shadow-lg">
+                    <TabsTrigger value="security" className="px-10 py-2.5 font-black uppercase tracking-[2px] text-[10px]">
                         <KeyIcon className="mr-2 h-4 w-4" />
                         Security
                     </TabsTrigger>
                     {(isRSVP || isCardholder) && (
-                        <TabsTrigger value="impact" className="px-8 py-2 font-black uppercase tracking-widest text-[11px] data-active:shadow-lg">
+                        <TabsTrigger value="impact" className="px-10 py-2.5 font-black uppercase tracking-[2px] text-[10px]">
                             <HeartHandshakeIcon className="mr-2 h-4 w-4" />
                             My Impact
                         </TabsTrigger>
@@ -79,9 +101,10 @@ export default async function ProfilePage() {
                 {(isRSVP || isCardholder) && (
                     <TabsContent value="impact" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
                         <ImpactTabContent 
-                            donations={donations} 
+                            donations={uniqueDonations} 
                             digitalCard={profile.digitalCards?.[0]}
                             rsvp={profile.contactPersons?.[0]}
+                            profile={profile}
                         />
                     </TabsContent>
                 )}

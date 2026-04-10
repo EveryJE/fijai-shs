@@ -17,6 +17,7 @@ import { createEvent, updateEvent } from "@/lib/actions/events";
 import { CalendarIcon, PlusIcon, PencilIcon } from "lucide-react";
 import { Combobox } from "@/components/ui/combobox";
 import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface Event {
   id: string;
@@ -84,7 +85,7 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={setOpen} modal={false}>
       <div onClick={() => setOpen(true)} className="cursor-pointer">
         {trigger || (
           <Button variant={isEditing ? "outline" : "default"} size={isEditing ? "sm" : "default"}>
@@ -106,7 +107,7 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
           </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-6 py-4">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form id="event-form" onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="title">Event Title</Label>
               <Input
@@ -131,17 +132,19 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
 
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
-              <Combobox
-                options={[
-                  { value: "draft", label: "Draft" },
-                  { value: "active", label: "Active" },
-                  { value: "closed", label: "Closed" },
-                ]}
-                value={formData.status}
-                onChange={(val) => setFormData({ ...formData, status: val })}
-                placeholder="Select status"
-                className="w-full"
-              />
+             <Select 
+                value={formData.status} 
+                onValueChange={(value) => setFormData({ ...formData, status: value })}
+              >
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="closed">Closed</SelectItem>
+              </SelectContent>
+             </Select>
             </div>
 
             <div className="grid grid-cols-1 gap-4">

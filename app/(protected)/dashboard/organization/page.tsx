@@ -21,7 +21,7 @@ export default async function OrgSettingsPage() {
                 <h1 className="text-4xl font-black tracking-tighter text-[#730303] uppercase">
                     Institution Settings
                 </h1>
-                <p className="text-muted-foreground mt-2 text-lg">
+                <p className="text-muted-foreground mt-2 text-sm">
                     Manage Fijai SHS branding and financial payout credentials.
                 </p>
             </div>

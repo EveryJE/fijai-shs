@@ -1,8 +1,10 @@
 "use client";
 
+import { useTransition, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CreditCardIcon, HeartHandshakeIcon, Share2Icon } from "lucide-react";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { HeartHandshakeIcon, Share2Icon, SparklesIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { formatAmount } from "@/lib/utils";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -12,12 +14,16 @@ interface ImpactTabContentProps {
   donations: any[];
   digitalCard?: any;
   rsvp?: any;
+  profile?: any;
 }
 
-export function ImpactTabContent({ donations, digitalCard, rsvp }: ImpactTabContentProps) {
+export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: ImpactTabContentProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  
   const totalAmount = donations.reduce((sum, d) => sum + Number(d.amount), 0);
   const shareLink = digitalCard 
-    ? `${window.location.origin}/card/${digitalCard.cardCode}`
+    ? `${window.location.origin}/donate/${digitalCard.cardCode}`
     : rsvp 
     ? `${window.location.origin}/contact/${rsvp.uniqueCode}`
     : "";
@@ -27,88 +33,162 @@ export function ImpactTabContent({ donations, digitalCard, rsvp }: ImpactTabCont
     toast.success("Link copied to clipboard");
   };
 
+  // Pagination Logic
+  const totalPages = Math.ceil(donations.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedDonations = donations.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border-none shadow-md bg-[#730303] text-white">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-[10px] font-black uppercase tracking-widest text-white/70">Total Individual Impact</CardTitle>
-            <HeartHandshakeIcon className="h-4 w-4 text-white/50" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="bg-primary text-primary-foreground overflow-hidden relative group border-none ">
+          <div className="absolute top-0 right-0 p-6 opacity-10 rotate-12 group-hover:scale-110 transition-transform duration-500">
+             <HeartHandshakeIcon className="w-32 h-32" />
+          </div>
+          <CardHeader className="pb-2 relative">
+            <CardTitle className="text-sm font-medium opacity-80">Total Impact Generated</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-black tracking-tight">{formatAmount(totalAmount)}</div>
-            <p className="text-[10px] text-white/60 mt-1 font-semibold uppercase">Shared across {donations.length} donors</p>
+          <CardContent className="relative pt-4 pb-8">
+            <div className="text-4xl font-bold tracking-tight">{formatAmount(totalAmount)}</div>
+            <div className="flex items-center gap-2 mt-4">
+                <div className="bg-white/10 px-3 py-1 rounded-md border border-white/5 flex items-center gap-1.5">
+                    <SparklesIcon className="h-3.5 w-3.5 text-secondary" />
+                    <p className="text-xs font-semibold">{donations.length} Contributions</p>
+                </div>
+            </div>
           </CardContent>
         </Card>
 
         {shareLink && (
-           <Card className="border-none shadow-md bg-white border border-muted ring-1 ring-muted shadow-primary/5">
-              <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">My Referral Link</CardTitle>
-                <Share2Icon className="h-4 w-4 text-primary/50" />
+           <Card className="lg:col-span-2 border-none  bg-card">
+              <CardHeader className="pb-4 border-b">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <CardTitle className="text-lg font-semibold text-primary">Your Influence Link</CardTitle>
+                        <CardDescription>Share this link to track your fundraising impact</CardDescription>
+                    </div>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex gap-2">
-                    <div className="flex-1 bg-muted p-2 rounded text-xs truncate font-mono text-muted-foreground">
+              <CardContent className="space-y-6 pt-6">
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex-1 bg-muted border p-3 py-2 rounded-md text-sm flex items-center font-mono text-muted-foreground select-all">
                         {shareLink}
                     </div>
-                    <Button size="sm" variant="outline" className="h-8 font-bold uppercase tracking-widest text-[10px]" onClick={copyToClipboard}>
+                    <Button className="font-semibold " onClick={copyToClipboard}>
                         Copy link
                     </Button>
                 </div>
-                <p className="text-[10px] text-muted-foreground font-semibold uppercase leading-relaxed">
-                    Personalized link for donation tracking. Every donation through this link is credited to your impact dashboard.
-                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <a href={shareLink} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 bg-muted hover:bg-muted/80 transition-all rounded-md border flex items-center justify-center text-sm font-medium text-foreground">
+                    Open Page →
+                  </a>
+                  <a href={`https://wa.me/?text=${encodeURIComponent('Support the Fijai SHS Fundraiser! Donate through my link here: ' + shareLink)}`} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 bg-emerald-600 hover:bg-emerald-700  transition-all rounded-md flex items-center justify-center text-sm font-semibold text-white">
+                    Share on WhatsApp
+                  </a>
+                </div>
               </CardContent>
            </Card>
         )}
       </div>
 
-      <Card className="border-none shadow-md overflow-hidden bg-white">
-        <CardHeader className="bg-muted/30 pb-4">
-             <div className="flex items-center gap-2">
-                 <CreditCardIcon className="h-5 w-5 text-primary" />
-                 <CardTitle className="text-xl">Your Referral Network</CardTitle>
+      <Card className="border-none  gap-y-0 overflow-hidden pt-0 bg-card">
+        <CardHeader className="pb-6 border-b rounded-t-none border-t-0 bg-accent-50/50">
+             <div className="flex items-center gap-3">
+                 <div className="bg-primary/5 p-2 rounded-md">
+                    <SparklesIcon className="h-5 w-5 text-primary" />
+                 </div>
+                 <div>
+                    <CardTitle className="text-xl font-bold">Your Network Impact</CardTitle>
+                    <CardDescription>Verified transactions credited to your referral efforts.</CardDescription>
+                 </div>
              </div>
-             <CardDescription>Transactions credited to your efforts.</CardDescription>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader className="bg-muted/10">
+        </CardHeader> 
+        <CardContent className="p-0 ">
+          <Table >
+            <TableHeader className="bg-muted/50 uppercase">
               <TableRow>
-                <TableHead className="font-bold uppercase tracking-widest text-[10px]">Donor</TableHead>
-                <TableHead className="font-bold uppercase tracking-widest text-[10px]">Amount</TableHead>
-                <TableHead className="font-bold uppercase tracking-widest text-[10px]">Event</TableHead>
-                <TableHead className="font-bold uppercase tracking-widest text-[10px]">Date</TableHead>
+                <TableHead>Donor Name</TableHead>
+                <TableHead>Contribution</TableHead>
+                <TableHead>Fund Allocation</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Verification</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {donations.length === 0 ? (
                   <TableRow>
-                     <TableCell colSpan={4} className="h-32 text-center text-muted-foreground text-xs uppercase tracking-widest font-bold opacity-30">
-                        No referrals captured yet
+                     <TableCell colSpan={5} className="py-20 text-center text-muted-foreground">
+                        <div className="flex flex-col items-center gap-2 opacity-50">
+                            <HeartHandshakeIcon className="h-10 w-10 mb-2" />
+                            <p className="text-sm font-medium">No impact captured yet</p>
+                        </div>
                      </TableCell>
                   </TableRow>
               ) : (
-                donations.map((d: any) => (
-                  <TableRow key={d.id} className="hover:bg-muted/30 transition-colors">
-                    <TableCell className="font-bold text-foreground">
-                       {d.donorName || "Anonymous Donor"}
+                paginatedDonations.map((d: any) => (
+                  <TableRow key={d.id} className="hover:bg-muted/50 transition-colors">
+                    <TableCell className="font-semibold text-foreground">
+                       <div className="flex flex-col">
+                          <span>{d.donorName || (d.userId === profile?.id ? profile?.fullName : "Anonymous Donor")}</span>
+                          <span className="text-xs font-normal text-muted-foreground">{d.donorEmail}</span>
+                       </div>
                     </TableCell>
-                    <TableCell className="font-black text-emerald-600">
-                       {formatAmount(d.amount)}
+                    <TableCell>
+                        <span className="text-sm font-medium text-emerald-600">
+                            {formatAmount(d.amount)}
+                        </span>
                     </TableCell>
-                    <TableCell className="text-xs text-muted-foreground font-semibold uppercase tracking-tight">
-                       {d.event?.title}
+                    <TableCell className="text-sm text-muted-foreground">
+                        {d.event?.title || "Fijai Fundraiser"}
                     </TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground uppercase font-bold">
-                       {format(new Date(d.createdAt), "MMM d, yyyy")}
+                    <TableCell className="text-xs text-muted-foreground">
+                        {format(new Date(d.createdAt), "MMM dd, yyyy")}
+                    </TableCell>
+                    <TableCell className="text-right">
+                        <StatusBadge variant={d.status} />
                     </TableCell>
                   </TableRow>
                 ))
               )}
             </TableBody>
           </Table>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/20">
+              <p className="text-xs text-muted-foreground">
+                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, donations.length)} of {donations.length} contributions
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8 p-0"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-xs font-medium">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8 p-0"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

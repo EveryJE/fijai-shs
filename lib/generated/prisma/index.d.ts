@@ -11443,6 +11443,7 @@ export namespace Prisma {
     avatarUrl: string | null
     phone: string | null
     aliasName: string | null
+    classYear: string | null
     uniqueCode: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -11455,6 +11456,7 @@ export namespace Prisma {
     avatarUrl: string | null
     phone: string | null
     aliasName: string | null
+    classYear: string | null
     uniqueCode: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -11468,6 +11470,7 @@ export namespace Prisma {
     phone: number
     roles: number
     aliasName: number
+    classYear: number
     uniqueCode: number
     createdAt: number
     updatedAt: number
@@ -11482,6 +11485,7 @@ export namespace Prisma {
     avatarUrl?: true
     phone?: true
     aliasName?: true
+    classYear?: true
     uniqueCode?: true
     createdAt?: true
     updatedAt?: true
@@ -11494,6 +11498,7 @@ export namespace Prisma {
     avatarUrl?: true
     phone?: true
     aliasName?: true
+    classYear?: true
     uniqueCode?: true
     createdAt?: true
     updatedAt?: true
@@ -11507,6 +11512,7 @@ export namespace Prisma {
     phone?: true
     roles?: true
     aliasName?: true
+    classYear?: true
     uniqueCode?: true
     createdAt?: true
     updatedAt?: true
@@ -11593,6 +11599,7 @@ export namespace Prisma {
     phone: string | null
     roles: string[]
     aliasName: string | null
+    classYear: string | null
     uniqueCode: string | null
     createdAt: Date
     updatedAt: Date
@@ -11623,6 +11630,7 @@ export namespace Prisma {
     phone?: boolean
     roles?: boolean
     aliasName?: boolean
+    classYear?: boolean
     uniqueCode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11639,6 +11647,7 @@ export namespace Prisma {
     phone?: boolean
     roles?: boolean
     aliasName?: boolean
+    classYear?: boolean
     uniqueCode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11652,6 +11661,7 @@ export namespace Prisma {
     phone?: boolean
     roles?: boolean
     aliasName?: boolean
+    classYear?: boolean
     uniqueCode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11665,12 +11675,13 @@ export namespace Prisma {
     phone?: boolean
     roles?: boolean
     aliasName?: boolean
+    classYear?: boolean
     uniqueCode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "fullName" | "avatarUrl" | "phone" | "roles" | "aliasName" | "uniqueCode" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "fullName" | "avatarUrl" | "phone" | "roles" | "aliasName" | "classYear" | "uniqueCode" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
   export type ProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contactPersons?: boolean | Profile$contactPersonsArgs<ExtArgs>
     digitalCards?: boolean | Profile$digitalCardsArgs<ExtArgs>
@@ -11693,6 +11704,7 @@ export namespace Prisma {
       phone: string | null
       roles: string[]
       aliasName: string | null
+      classYear: string | null
       uniqueCode: string | null
       createdAt: Date
       updatedAt: Date
@@ -12128,6 +12140,7 @@ export namespace Prisma {
     readonly phone: FieldRef<"Profile", 'String'>
     readonly roles: FieldRef<"Profile", 'String[]'>
     readonly aliasName: FieldRef<"Profile", 'String'>
+    readonly classYear: FieldRef<"Profile", 'String'>
     readonly uniqueCode: FieldRef<"Profile", 'String'>
     readonly createdAt: FieldRef<"Profile", 'DateTime'>
     readonly updatedAt: FieldRef<"Profile", 'DateTime'>
@@ -12758,6 +12771,7 @@ export namespace Prisma {
     phone: 'phone',
     roles: 'roles',
     aliasName: 'aliasName',
+    classYear: 'classYear',
     uniqueCode: 'uniqueCode',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -13685,6 +13699,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Profile"> | string | null
     roles?: StringNullableListFilter<"Profile">
     aliasName?: StringNullableFilter<"Profile"> | string | null
+    classYear?: StringNullableFilter<"Profile"> | string | null
     uniqueCode?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
@@ -13700,6 +13715,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     roles?: SortOrder
     aliasName?: SortOrderInput | SortOrder
+    classYear?: SortOrderInput | SortOrder
     uniqueCode?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13719,6 +13735,7 @@ export namespace Prisma {
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
     roles?: StringNullableListFilter<"Profile">
     aliasName?: StringNullableFilter<"Profile"> | string | null
+    classYear?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     contactPersons?: ContactPersonListRelationFilter
@@ -13733,6 +13750,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     roles?: SortOrder
     aliasName?: SortOrderInput | SortOrder
+    classYear?: SortOrderInput | SortOrder
     uniqueCode?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13752,6 +13770,7 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     roles?: StringNullableListFilter<"Profile">
     aliasName?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    classYear?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     uniqueCode?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
@@ -14641,6 +14660,7 @@ export namespace Prisma {
     phone?: string | null
     roles?: ProfileCreaterolesInput | string[]
     aliasName?: string | null
+    classYear?: string | null
     uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14656,6 +14676,7 @@ export namespace Prisma {
     phone?: string | null
     roles?: ProfileCreaterolesInput | string[]
     aliasName?: string | null
+    classYear?: string | null
     uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14671,6 +14692,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: ProfileUpdaterolesInput | string[]
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14686,6 +14708,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: ProfileUpdaterolesInput | string[]
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14701,6 +14724,7 @@ export namespace Prisma {
     phone?: string | null
     roles?: ProfileCreaterolesInput | string[]
     aliasName?: string | null
+    classYear?: string | null
     uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14714,6 +14738,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: ProfileUpdaterolesInput | string[]
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14727,6 +14752,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: ProfileUpdaterolesInput | string[]
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15486,6 +15512,7 @@ export namespace Prisma {
     phone?: SortOrder
     roles?: SortOrder
     aliasName?: SortOrder
+    classYear?: SortOrder
     uniqueCode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15498,6 +15525,7 @@ export namespace Prisma {
     avatarUrl?: SortOrder
     phone?: SortOrder
     aliasName?: SortOrder
+    classYear?: SortOrder
     uniqueCode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15510,6 +15538,7 @@ export namespace Prisma {
     avatarUrl?: SortOrder
     phone?: SortOrder
     aliasName?: SortOrder
+    classYear?: SortOrder
     uniqueCode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16430,6 +16459,7 @@ export namespace Prisma {
     phone?: string | null
     roles?: ProfileCreaterolesInput | string[]
     aliasName?: string | null
+    classYear?: string | null
     uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16444,6 +16474,7 @@ export namespace Prisma {
     phone?: string | null
     roles?: ProfileCreaterolesInput | string[]
     aliasName?: string | null
+    classYear?: string | null
     uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16575,6 +16606,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: ProfileUpdaterolesInput | string[]
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16589,6 +16621,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: ProfileUpdaterolesInput | string[]
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17540,6 +17573,7 @@ export namespace Prisma {
     phone?: string | null
     roles?: ProfileCreaterolesInput | string[]
     aliasName?: string | null
+    classYear?: string | null
     uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17554,6 +17588,7 @@ export namespace Prisma {
     phone?: string | null
     roles?: ProfileCreaterolesInput | string[]
     aliasName?: string | null
+    classYear?: string | null
     uniqueCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17685,6 +17720,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: ProfileUpdaterolesInput | string[]
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17699,6 +17735,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: ProfileUpdaterolesInput | string[]
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
+    classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
