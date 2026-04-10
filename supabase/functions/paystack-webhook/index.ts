@@ -6,10 +6,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 function getSupabaseClient() {
-    return createClient(
-        SUPABASE_URL,
-        SUPABASE_SERVICE_ROLE_KEY
-    );
+    return createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 }
 
 async function signPayload(secret: string, payload: string): Promise<string> {
@@ -37,134 +34,147 @@ Deno.serve(async (req) => {
         return new Response("ok", { headers: corsHeaders });
     }
 
-    if (!PAYSTACK_SECRET || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-        return new Response("Missing payment configuration", { status: 500 });
-    }
+    try {
+        console.log("--- Paystack Webhook Interaction Start ---");
 
-    const rawBody = await req.text();
+        if (!PAYSTACK_SECRET || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+            console.error("Critical Error: Missing configuration keys");
+            return new Response("Internal configuration error", { status: 500 });
+        }
 
-    // 1. Verify HMAC SHA-512 signature
-    const signature = req.headers.get("x-paystack-signature") ?? "";
-    const expectedSig = await signPayload(PAYSTACK_SECRET, rawBody);
+        const rawBody = await req.text();
+        const signature = req.headers.get("x-paystack-signature") ?? "";
+        const expectedSig = await signPayload(PAYSTACK_SECRET, rawBody);
 
-    if (signature !== expectedSig) {
-        console.error("Invalid signature from Paystack");
-        return new Response("Invalid signature", { status: 401 });
-    }
+        if (signature !== expectedSig) {
+            console.error("Security Alert: Invalid signature received");
+            return new Response("Unauthorized", { status: 401 });
+        }
 
-    const event = JSON.parse(rawBody);
+        const event = JSON.parse(rawBody);
+        const { event: eventType, data } = event;
+        const reference = data?.reference;
 
-    // 2. Only handle charge.success
-    if (event.event !== "charge.success") {
-        return new Response("Event ignored", { status: 200 });
-    }
+        console.log(`Processing Event: ${eventType} | Reference: ${reference}`);
 
-    const reference = event.data?.reference;
-    if (!reference) return new Response("Missing reference", { status: 400 });
+        if (eventType !== "charge.success") {
+            console.log(`Ignoring event type: ${eventType}`);
+            return new Response("Event type ignored", { status: 200 });
+        }
 
-    const supabase = getSupabaseClient();
+        if (!reference) {
+            console.error("Error: Payload missing transaction reference");
+            return new Response("Missing reference", { status: 400 });
+        }
 
-    // 3. Find if the donation record already exists
-    const { data: donation, error: donationError } = await supabase
-        .from("donations")
-        .select("*")
-        .eq("reference", reference)
-        .maybeSingle();
+        // --- Robust Metadata Extraction ---
+        let metadata = data.metadata || {};
+        if (typeof metadata === "string" && metadata.trim() !== "") {
+            try {
+                metadata = JSON.parse(metadata);
+            } catch (e) {
+                console.error("Metadata parsing failed (string format detected):", e);
+                metadata = {};
+            }
+        }
+        
+        const paystackMetadata = metadata;
+        console.log("Extracted Metadata:", JSON.stringify(paystackMetadata));
 
-    if (donationError) {
-        console.error("Failed to fetch donation during webhook:", donationError);
-        return new Response("Lookup failed", { status: 500 });
-    }
+        const supabase = getSupabaseClient();
+        const now = new Date().toISOString();
+        const paidAt = data.paid_at || now;
+        const paidAmount = Number(data.amount ?? 0) / 100;
 
-    // 4. Idempotency check
-    if (donation && donation.status === "paid") {
-        return new Response("Already processed", { status: 200 });
-    }
-
-    // 5. Extract metadata and details
-    const paystackMetadata = event.data.metadata || {};
-    const customer = event.data.customer;
-    const auth = event.data.authorization;
-    const now = new Date().toISOString();
-    const paidAt = event.data.paid_at || now;
-    const paidAmount = Number(event.data.amount ?? 0) / 100;
-
-    // Build the final metadata object for our database
-    const finalMetadata = {
-        ...(typeof paystackMetadata === "object" ? paystackMetadata : {}),
-        card_brand: auth?.brand,
-        card_last4: auth?.last4,
-        card_bank: auth?.bank,
-        card_type: auth?.card_type,
-        card_exp_month: auth?.exp_month,
-        card_exp_year: auth?.exp_year,
-        card_account_name: auth?.account_name,
-        channel: event.data.channel,
-        ip_address: event.data.ip_address,
-        fees: (event.data.fees || 0) / 100,
-    };
-
-    if (!donation) {
-        // OPTIMIZED FLOW: Record doesn't exist yet, insert it now on successful payment
-        // This ensures no "junk" pending records exist for failed/cancelled attempts.
-        const { error: insertError } = await supabase
+        // Check for existing record (legacy/idempotency)
+        const { data: existingDonation } = await supabase
             .from("donations")
-            .insert({
+            .select("id, status")
+            .eq("reference", reference)
+            .maybeSingle();
+
+        if (existingDonation?.status === "paid") {
+            console.log("Transaction already processed as paid.");
+            return new Response("OK", { status: 200 });
+        }
+
+        const finalMetadata = {
+            ...paystackMetadata,
+            raw_gateway_id: data.id,
+            gateway_channel: data.channel,
+            card_last4: data.authorization?.last4,
+            card_brand: data.authorization?.brand,
+            fees: (data.fees || 0) / 100,
+        };
+
+        if (!existingDonation) {
+            // FLOW: Record creation upon successful payment
+            console.log("Inserting new successful donation record...");
+            
+            // VALIDATION: eventId is REQUIRED by the database schema
+            const eventId = paystackMetadata.event_id || paystackMetadata.eventId;
+            if (!eventId) {
+                console.error("CRITICAL: event_id is missing from metadata. Insert will fail.");
+            }
+
+            const insertData = {
                 id: paystackMetadata.donation_id || crypto.randomUUID(),
                 reference: reference,
-                donorEmail: paystackMetadata.donor_email || customer?.email || "",
-                donorName: paystackMetadata.donor_name || 
-                        (customer?.first_name ? `${customer.first_name} ${customer.last_name || ""}`.trim() : null) || 
-                        auth?.account_name || null,
-                phone: paystackMetadata.donor_phone || customer?.phone || null,
-                amount: paidAmount, // use the actual amount from Paystack
-                currency: paystackMetadata.currency || event.data.currency || "GHS",
+                donorEmail: paystackMetadata.donor_email || data.customer?.email || "anonymous@fijai-shs.org",
+                donorName: paystackMetadata.donor_name || data.authorization?.account_name || "Alumni Donor",
+                phone: paystackMetadata.donor_phone || data.customer?.phone || null,
+                amount: paidAmount,
+                currency: paystackMetadata.currency || data.currency || "GHS",
                 status: "paid",
                 paymentMethod: "paystack",
-                eventId: paystackMetadata.event_id,
-                contactPersonId: paystackMetadata.contact_person_id || null,
-                digitalCardId: paystackMetadata.digital_card_id || null,
-                donationItemId: paystackMetadata.donation_item_id || null,
-                momentFileUrl: paystackMetadata.moment_file_url || null,
-                momentCaption: paystackMetadata.moment_caption || null,
-                userId: paystackMetadata.user_id || null,
+                eventId: eventId,
+                contactPersonId: paystackMetadata.contact_person_id || paystackMetadata.contactPersonId || null,
+                digitalCardId: paystackMetadata.digital_card_id || paystackMetadata.digitalCardId || null,
+                donationItemId: paystackMetadata.donation_item_id || paystackMetadata.donationItemId || null,
+                userId: paystackMetadata.user_id || paystackMetadata.userId || null,
                 metadata: finalMetadata,
-                providerReference: String(event.data.id || ""),
-                providerResponse: event.data,
+                providerReference: String(data.id || ""),
                 verifiedAt: now,
                 paidAt: paidAt,
                 donatedAt: paidAt,
                 createdAt: now,
                 updatedAt: now,
-            });
+            };
 
-        if (insertError) {
-            console.error("Failed to insert donation from webhook:", insertError);
-            return new Response("Insert failed", { status: 500 });
-        }
-        console.log(`Donation created and paid: ${reference} (${paidAmount} ${event.data.currency})`);
-    } else {
-        // CLASSIC FLOW: Update existing record (for backward compatibility if some are still pending)
-        const { error: updateError } = await supabase
-            .from("donations")
-            .update({
-                status: "paid",
-                metadata: finalMetadata,
-                providerReference: String(event.data.id || ""),
-                providerResponse: event.data,
-                verifiedAt: now,
-                paidAt: paidAt,
-                donatedAt: paidAt,
-                updatedAt: now,
-            })
-            .eq("id", donation.id);
+            const { error: insertError } = await supabase.from("donations").insert(insertData);
 
-        if (updateError) {
-            console.error("Failed to update donation from webhook:", updateError);
-            return new Response("Update failed", { status: 500 });
+            if (insertError) {
+                console.error("Database Insert Error:", JSON.stringify(insertError, null, 2));
+                return new Response("Record creation failed", { status: 500 });
+            }
+            console.log("Donation record created successfully.");
+        } else {
+            // FLOW: Update legacy pending record
+            console.log(`Updating legacy record ${existingDonation.id} to paid...`);
+            const { error: updateError } = await supabase
+                .from("donations")
+                .update({
+                    status: "paid",
+                    metadata: finalMetadata,
+                    providerReference: String(data.id || ""),
+                    verifiedAt: now,
+                    paidAt: paidAt,
+                    donatedAt: paidAt,
+                    updatedAt: now,
+                })
+                .eq("id", existingDonation.id);
+
+            if (updateError) {
+                console.error("Database Update Error:", JSON.stringify(updateError, null, 2));
+                return new Response("Update failed", { status: 500 });
+            }
+            console.log("Donation record updated successfully.");
         }
-        console.log(`Donation ${donation.id} updated to paid via webhook.`);
+
+        return new Response("OK", { status: 200 });
+
+    } catch (err) {
+        console.error("Fatal Webhook Runtime Error:", err);
+        return new Response("Internal Server Error", { status: 500 });
     }
-
-    return new Response("OK", { status: 200 });
 });

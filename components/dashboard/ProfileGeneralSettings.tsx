@@ -155,7 +155,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="pt-0 shadow-sm border">
+                <Card className="pt-0 ">
                     <CardHeader className="pb-4 border-b rounded-t-none border-t-0 bg-primary/5 py-3">
                         <div className="flex items-center gap-2">
                              <UserCircleIcon className="h-5 w-5 text-primary" />

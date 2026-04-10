@@ -5,13 +5,11 @@ import { DonateFormClient } from "@/components/donate/DonateFormClient";
 
 
 interface DonatePageProps {
-  readonly params: { readonly cardCode: string };
+  readonly params: Promise<{ readonly cardCode: string }>;
 }
 
 export default async function DonatePage({ params }: DonatePageProps) {
-    // Next.js app router sometimes passes params as a Promise
-    const resolvedParams = typeof params.then === "function" ? await params : params;
-    const { cardCode } = resolvedParams;
+    const { cardCode } = await params;
     if (!cardCode) {
         notFound();
     }

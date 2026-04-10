@@ -57,7 +57,6 @@ export default async function DashboardPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 pb-2">
                 <div>
-                    <p className="text-[10px] font-black uppercase tracking-[3px] text-muted-foreground mb-1">Overview</p>
                     <h1 className="text-3xl font-black tracking-tight">
                         Dashboard
                     </h1>
@@ -81,26 +80,24 @@ export default async function DashboardPage() {
                         {activeEvents.map((event: any) => (
                             <Link key={event.id} href={`/dashboard/events/${event.id}`}>
                                 <Card className=" hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer group h-full">
-                                    <CardContent className="p-3 flex flex-col justify-between h-full gap-2">
+                                    <CardContent className="px-3 flex flex-col justify-between h-full gap-2">
                                         <div className="space-y-1.5">
                                             <div className="flex items-center justify-between">
                                                 <StatusBadge variant="active" size="sm" />
-                                                <CalendarIcon className="h-3 w-3 text-muted-foreground/30" />
+                                                <div className="flex items-center gap-2">
+                                                    <CalendarIcon className="h-3 w-3 text-muted-foreground/30" />
+                                                    <span>
+                                                        {event.startDate
+                                                            ? format(new Date(event.startDate), "MMM d, yyyy")
+                                                            : "No date"}
+                                                    </span>
+                                                </div>
                                             </div>
                                             <h3 className="font-bold text-[13px] leading-tight group-hover:text-primary transition-colors line-clamp-1">
                                                 {event.title}
                                             </h3>
                                         </div>
-                                        <div className="flex items-center justify-between text-[9px] text-muted-foreground pt-1.5 border-t">
-                                            <span>
-                                                {event.startDate
-                                                    ? format(new Date(event.startDate), "MMM d, yyyy")
-                                                    : "No date"}
-                                            </span>
-                                            <span className="font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
-                                                Manage <ArrowRightIcon className="h-2 w-2" />
-                                            </span>
-                                        </div>
+                                      
                                     </CardContent>
                                 </Card>
                             </Link>

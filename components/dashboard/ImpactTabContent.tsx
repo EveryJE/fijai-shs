@@ -98,7 +98,7 @@ export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: Impa
       </div>
 
       <Card className="border-none  gap-y-0 overflow-hidden pt-0 bg-card">
-        <CardHeader className="pb-6 border-b rounded-t-none border-t-0 bg-accent-50/50">
+        <CardHeader className="pb-6 border-b rounded-t-none border-t-0 ">
              <div className="flex items-center gap-3">
                  <div className="bg-primary/5 p-2 rounded-md">
                     <SparklesIcon className="h-5 w-5 text-primary" />
@@ -111,7 +111,7 @@ export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: Impa
         </CardHeader> 
         <CardContent className="p-0 ">
           <Table >
-            <TableHeader className="bg-muted/50 uppercase">
+            <TableHeader className="bg-accent-50/50 uppercase">
               <TableRow>
                 <TableHead>Donor Name</TableHead>
                 <TableHead>Contribution</TableHead>

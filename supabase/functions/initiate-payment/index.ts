@@ -20,26 +20,23 @@ Deno.serve(async (req) => {
     }
 
     try {
+        console.log("Initializing donation payment...");
         if (!PAYSTACK_SECRET || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+            console.error("Missing configuration keys");
             return new Response(
                 JSON.stringify({ error: "Missing payment configuration" }),
                 { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
         }
-        // Authenticate the caller (optional — donors may be anonymous)
+
         const authHeader = req.headers.get("Authorization");
-        const supabase = createClient(
-            SUPABASE_URL,
-            SUPABASE_SERVICE_ROLE_KEY
-        );
+        const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
         let userId: string | null = null;
         if (authHeader && SUPABASE_ANON_KEY) {
-            const anonClient = createClient(
-                SUPABASE_URL,
-                SUPABASE_ANON_KEY,
-                { global: { headers: { Authorization: authHeader } } }
-            );
+            const anonClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                global: { headers: { Authorization: authHeader } }
+            });
             const { data: { user } } = await anonClient.auth.getUser();
             userId = user?.id ?? null;
         }
@@ -60,6 +57,8 @@ Deno.serve(async (req) => {
             metadata = {},
         } = body;
 
+        console.log(`Donation request for ${email} - Amount: ${amount} ${currency}`);
+
         if (!email || !amount || !eventId) {
             return new Response(
                 JSON.stringify({ error: "email, amount, and eventId are required" }),
@@ -67,98 +66,78 @@ Deno.serve(async (req) => {
             );
         }
 
-        // Generate unique reference and temporary donationId
         const donationId = crypto.randomUUID();
         const reference = `DON-${crypto.randomUUID().substring(0, 12).toUpperCase()}`;
 
-        // Fetch the organization's subaccount code for split payment (limit 1 for now)
+        // Fetch organization payout details
         const { data: org, error: orgError } = await supabase
             .from("organizations")
             .select("subaccountCode")
             .limit(1)
             .maybeSingle();
 
-        if (orgError) {
-            console.error("Organization lookup error:", orgError);
-        }
-
+        if (orgError) console.error("Organization lookup error:", orgError);
         const subaccountCode = org?.subaccountCode;
 
-        if (subaccountCode && !isValidSubaccountCode(subaccountCode)) {
-            console.error("Invalid organization subaccount code:", subaccountCode);
-            return new Response(
-                JSON.stringify({
-                    error: "Organization payout account is misconfigured. Please reconnect the payout account from the dashboard.",
-                }),
-                { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-            );
-        }
+        // Build metadata to pass to Paystack (and back to our webhook)
+        const paystackMetadata = {
+            ...metadata,
+            donation_id: donationId,
+            donor_email: email,
+            donor_name: donorName,
+            donor_phone: phone,
+            amount: amount,
+            currency: currency,
+            event_id: eventId,
+            contact_person_id: contactPersonId,
+            digital_card_id: digitalCardId,
+            donation_item_id: donationItemId,
+            moment_file_url: momentFileUrl,
+            moment_caption: momentCaption,
+            user_id: userId,
+            txn_type: "donation",
+        };
 
-        // Format phone number for Paystack if provided
-        const formattedPhone = phone?.startsWith("0") ? "+233" + phone.slice(1) : phone;
-
-        // Build Paystack init payload (skip DB insert - record will be created in webhook)
         const paystackBody: Record<string, unknown> = {
             email,
             amount: toPesewas(Number(amount)),
             currency,
             reference,
-            metadata: {
-                ...metadata,
-                donation_id: donationId,
-                donor_email: email,
-                donor_name: donorName,
-                donor_phone: phone,
-                amount: amount,
-                currency: currency,
-                event_id: eventId,
-                contact_person_id: contactPersonId,
-                digital_card_id: digitalCardId,
-                donation_item_id: donationItemId,
-                moment_file_url: momentFileUrl,
-                moment_caption: momentCaption,
-                user_id: userId,
-                txn_type: "donation",
-                custom_fields: [
-                    { display_name: "Donor", variable_name: "donor_name", value: donorName || "Anonymous" },
-                    { display_name: "Phone", variable_name: "donor_phone", value: phone || "Not provided" },
-                ],
-            },
+            metadata: paystackMetadata,
+            callback_url: `${req.headers.get("origin") || ""}/dashboard/donations`,
         };
 
+        const formattedPhone = phone?.startsWith("0") ? "+233" + phone.slice(1) : phone;
         if (formattedPhone) {
             paystackBody.phone = formattedPhone;
             paystackBody.customer = { email, phone: formattedPhone };
         }
 
-        // If the org has a verified subaccount, route 100% to them
         if (isValidSubaccountCode(subaccountCode)) {
             paystackBody.subaccount = subaccountCode;
-            paystackBody.bearer = "subaccount"; // org bears Paystack fees
+            paystackBody.bearer = "subaccount";
         }
 
-        // Initialize Paystack transaction
-        const paystackRes = await fetch(
-            "https://api.paystack.co/transaction/initialize",
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${PAYSTACK_SECRET}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(paystackBody),
-            }
-        );
+        const paystackRes = await fetch("https://api.paystack.co/transaction/initialize", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${PAYSTACK_SECRET}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(paystackBody),
+        });
 
         const paystackData = await paystackRes.json();
 
         if (!paystackRes.ok || !paystackData.status) {
-            console.error("Paystack initialization failed:", paystackData);
+            console.error("Paystack API Error:", paystackData);
             return new Response(
                 JSON.stringify({ error: paystackData.message || "Paystack initialization failed" }),
                 { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
         }
+
+        console.log(`Payment initialized. Reference: ${reference}`);
 
         return new Response(
             JSON.stringify({
@@ -170,7 +149,7 @@ Deno.serve(async (req) => {
             { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
     } catch (err) {
-        console.error("initiate-payment error:", err);
+        console.error("Fatal initiate-payment error:", err);
         return new Response(
             JSON.stringify({ error: "Internal server error" }),
             { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

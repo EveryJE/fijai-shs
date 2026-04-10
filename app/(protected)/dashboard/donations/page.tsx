@@ -17,7 +17,6 @@ export default async function DonationsPage() {
         <div className="max-w-7xl p-6 lg:p-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Header */}
             <div>
-                <p className="text-[10px] font-black uppercase tracking-[3px] text-muted-foreground mb-1">Financial Records</p>
                 <h1 className="text-3xl font-black tracking-tight">Donations</h1>
                 <p className="text-sm text-muted-foreground mt-1">Manage all contributions — both online payments and cash donations.</p>
             </div>

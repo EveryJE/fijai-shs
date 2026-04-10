@@ -6,13 +6,12 @@ import { getProfileByEmail } from "@/lib/dal";
 import { Separator } from "@/components/ui/separator";
 import { RouteGuard } from "@/components/RouteGuard";
 
-export default async function ProtectedLayout({
-    children,
-    params
-}: {
+export default async function ProtectedLayout(props: {
     children: React.ReactNode;
-    params?: { slug?: string[] }
+    params: Promise<{ slug?: string[] }>;
 }) {
+    const params = await props.params;
+    const children = props.children;
     const supabase = await createClient();
     const {
         data: { user },
