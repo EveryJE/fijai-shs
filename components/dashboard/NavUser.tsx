@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar"
 import { createClient } from "@/utils/supabase/client"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { getPublicUrlSync } from "@/lib/storage-utils"
 
 export function NavUser({
   user,
@@ -48,6 +49,10 @@ export function NavUser({
     router.refresh()
   }
 
+  const avatarUrl = user.avatar?.startsWith("http") 
+    ? user.avatar 
+    : getPublicUrlSync("avatars", user.avatar);
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -59,7 +64,7 @@ export function NavUser({
                     className="rounded-lg border bg-card/50 hover:bg-accent transition-colors data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
                 >
                     <Avatar className="h-8 w-8 rounded-lg shadow-sm border-[#DAA520]/20">
-                        <AvatarImage src={user.avatar || ""} alt={user.name} />
+                        <AvatarImage src={avatarUrl || ""} alt={user.name} />
                         <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-black text-[10px]">
                             {(user.name || "A").charAt(0)}
                         </AvatarFallback>
@@ -82,7 +87,7 @@ export function NavUser({
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={user.avatar || ""} alt={user.name} />
+                    <AvatarImage src={avatarUrl || ""} alt={user.name} />
                     <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-black text-[10px]">
                         {(user.name || "A").charAt(0)}
                     </AvatarFallback>

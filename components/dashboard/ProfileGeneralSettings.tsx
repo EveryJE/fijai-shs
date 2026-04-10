@@ -1,14 +1,14 @@
 "use client";
 
-import { useTransition, useState, useRef } from "react";
+import { useTransition, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { updateProfile } from "@/lib/actions/profile";
-import { uploadImage } from "@/lib/actions/upload-image";
+import { useImageUpload } from "@/lib/hooks/use-image-upload";
 import { getPublicUrlSync } from "@/lib/storage-utils";
 import { toast } from "sonner";
 import { 
@@ -17,7 +17,6 @@ import {
     PhoneIcon, 
     AtSignIcon, 
     CameraIcon,
-    ShieldCheckIcon,
     CheckCircle2Icon,
     SparklesIcon,
     Loader2
@@ -32,8 +31,14 @@ interface ProfileGeneralSettingsProps {
 
 export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSettingsProps) {
     const [isPending, startTransition] = useTransition();
-    const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    
+    // Initialize the advanced image upload hook for Fijai institutional storage
+    const { isUploading, upload: performUpload } = useImageUpload({
+        bucket: "avatars",
+        folder: "profiles",
+        convertOptions: { quality: 0.8, maxWidth: 400, maxHeight: 400, maxSizeMB: 0.5 }
+    });
     
     const { register, handleSubmit, watch, setValue } = useForm({
         defaultValues: {
@@ -65,6 +70,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
         : (getPublicUrlSync("avatars", watchAvatar) || "");
 
     async function handleAvatarClick() {
+        if (isUploading) return;
         fileInputRef.current?.click();
     }
 
@@ -72,28 +78,16 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
         const file = e.target.files?.[0];
         if (!file) return;
 
-        setIsUploading(true);
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            
-            const result = await uploadImage(formData, {
-                bucket: "avatars",
-                folder: "profiles",
-                oldPath: watchAvatar
-            });
-
-            if (result.success) {
-                setValue("avatarUrl", result.data.path);
-                toast.success("Photo uploaded");
-            } else {
-                toast.error(result.error || "Upload failed");
-            }
-        } catch (err) {
-            toast.error("Failed to upload image");
-        } finally {
-            setIsUploading(false);
+        // Execute optimized upload via institutional hook
+        const path = await performUpload(file, watchAvatar);
+        
+        if (path) {
+            setValue("avatarUrl", path);
+            toast.success("Identity photo updated");
         }
+        
+        // Clear input to allow re-uploading same file if needed
+        if (fileInputRef.current) fileInputRef.current.value = "";
     }
 
     return (
@@ -113,14 +107,17 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                             </AvatarFallback>
                         </Avatar>
                         
-                        {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        {/* High-fidelity Hover Overlay */}
+                        <div className={cn(
+                            "absolute inset-0 bg-black/60 flex flex-col items-center justify-center transition-opacity duration-200",
+                            isUploading ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        )}>
                             {isUploading ? (
                                 <Loader2 className="h-8 w-8 text-white animate-spin" />
                             ) : (
                                 <>
                                     <CameraIcon className="h-8 w-8 text-white mb-1" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-white">Update</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-white">Update Identity</span>
                                 </>
                             )}
                         </div>
@@ -143,91 +140,94 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
 
                 <div className="flex-1 space-y-1">
                     <div className="flex items-center gap-2">
-                        <h2 className="text-2xl font-bold text-foreground">Identity Profile</h2>
-                        <div className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold border border-emerald-200 uppercase">
+                        <h2 className="text-2xl font-black text-[#730303] uppercase tracking-tighter">Identity Profile</h2>
+                        <div className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-black border border-emerald-200 uppercase tracking-widest">
                              Verified
                         </div>
                     </div>
                     <p className="text-muted-foreground text-sm max-w-xl font-medium leading-relaxed">
-                        Manage your Fijai SHS alumni identity. Classes recognize you faster with a professional profile photo.
+                        Manage your Fijai SHS alumni identity. Profiles with professional photos receive 4x more engagement within the institutional network.
                     </p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="pt-0 ">
-                    <CardHeader className="pb-4 border-b rounded-t-none border-t-0 bg-primary/5 py-3">
+                <Card className="pt-0 border-none shadow-xl shadow-gray-200/50">
+                    <CardHeader className="pb-4 border-b rounded-t-xl border-t-0 bg-primary/5 py-4">
                         <div className="flex items-center gap-2">
                              <UserCircleIcon className="h-5 w-5 text-primary" />
-                             <CardTitle className="text-lg">Personal Identity</CardTitle>
+                             <h3 className="font-black uppercase tracking-widest text-xs text-primary">Personal Identity</h3>
                         </div>
                     </CardHeader>
-                    <CardContent className="space-y-4 pt-6">
-                        <div className="space-y-1.5">
-                            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Full Legal Name</Label>
+                    <CardContent className="space-y-6 pt-6">
+                        <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Full Legal Name</Label>
                             <Input 
                                 {...register("fullName")} 
                                 disabled={!isAdmin} 
-                                className={cn(!isAdmin && "bg-muted font-medium opacity-80")} 
+                                className={cn("h-12 border-muted-foreground/10", !isAdmin && "bg-muted font-bold opacity-80")} 
+                                placeholder="Formal name"
                             />
                             {!isAdmin && (
-                                <p className="text-[10px] text-muted-foreground font-medium italic">
+                                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
                                     Official name is locked. Contact admin for updates.
                                 </p>
                             )}
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-1.5">
-                                <Label className="text-xs font-semibold flex items-center gap-1.5">
-                                    <GraduationCapIcon className="h-3.5 w-3.5" />
+                            <div className="space-y-2">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                                    <GraduationCapIcon className="h-3.5 w-3.5 text-primary" />
                                     Class Year
                                 </Label>
                                 <Input 
                                     {...register("classYear")} 
+                                    className="h-12 border-muted-foreground/10"
                                     placeholder="e.g. 2008" 
                                 />
                             </div>
-                            <div className="space-y-1.5">
-                                <Label className="text-xs font-semibold flex items-center gap-1.5">
-                                    <SparklesIcon className="h-3.5 w-3.5" />
-                                    Nickname / AKA
+                            <div className="space-y-2">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                                    <SparklesIcon className="h-3.5 w-3.5 text-primary" />
+                                    Nickname
                                 </Label>
                                 <Input 
                                     {...register("aliasName")} 
-                                    placeholder="e.g. Master P" 
+                                    className="h-12 border-muted-foreground/10"
+                                    placeholder="School alias" 
                                 />
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="pt-0">
-                    <CardHeader className="pb-4 border-b rounded-t-none border-t-0 bg-primary/5 py-2">
+                <Card className="pt-0 border-none shadow-xl shadow-gray-200/50">
+                    <CardHeader className="pb-4 border-b rounded-t-xl border-t-0 bg-primary/5 py-4">
                         <div className="flex items-center gap-2">
                              <PhoneIcon className="h-5 w-5 text-primary" />
-                             <CardTitle className="text-lg">Communication</CardTitle>
+                             <h3 className="font-black uppercase tracking-widest text-xs text-primary">Communication</h3>
                         </div>
                     </CardHeader>
-                    <CardContent className="space-y-4 pt-6">
-                        <div className="space-y-1.5">
-                            <Label className="text-xs font-semibold flex items-center gap-1.5">
-                                <AtSignIcon className="h-3.5 w-3.5" />
+                    <CardContent className="space-y-6 pt-6">
+                        <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                                <AtSignIcon className="h-3.5 w-3.5 text-primary" />
                                 Primary Email
                             </Label>
-                            <Input value={profile.email} disabled className="bg-muted text-muted-foreground" />
+                            <Input value={profile.email} disabled className="h-12 bg-muted text-muted-foreground font-bold border-muted-foreground/5" />
                         </div>
                         
-                        <div className="space-y-1.5">
-                            <Label className="text-xs font-semibold flex items-center gap-1.5">
-                                <PhoneIcon className="h-3.5 w-3.5" />
+                        <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                                <PhoneIcon className="h-3.5 w-3.5 text-primary" />
                                 Contact Number
                             </Label>
-                            <Input {...register("phone")} placeholder="+233 XX XXX XXXX" />
+                            <Input {...register("phone")} className="h-12 border-muted-foreground/10" placeholder="+233 XX XXX XXXX" />
                         </div>
 
-                        <div className="space-y-2 pt-2">
-                            <Label className="text-xs font-semibold">Assigned Roles</Label>
+                        <div className="space-y-3 pt-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Assigned Institutional Roles</Label>
                             <div className="flex flex-wrap gap-2">
                                 {profile?.roles?.map((role: string) => (
                                    <StatusBadge
@@ -235,21 +235,21 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                                       key={role}
                                       variant={role || "Cardholder"}
                                       text={role || "Cardholder"}
-                                      className=""
+                                      className="font-black"
                                    />
                                 ))}
                             </div>
                         </div>
 
                         {(isRSVP || isCardholder) && (
-                            <div className="mt-4 p-4 bg-primary/5 rounded-lg border border-primary/10 relative overflow-hidden group">
+                            <div className="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 p-2 opacity-5 scale-150 rotate-12 group-hover:scale-[1.7] transition-transform duration-500">
-                                    <CheckCircle2Icon className="h-12 w-12 text-primary" />
+                                    <CheckCircle2Icon className="h-12 w-12 text-emerald-600" />
                                 </div>
                                 <div className="relative">
-                                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Impact Tracking Active</p>
-                                    <p className="text-xs text-muted-foreground leading-relaxed">
-                                        As an active {isRSVP ? "referral partner" : "cardholder"}, your contributions are tracked across the institutional network.
+                                    <p className="text-[9px] font-black text-emerald-800 uppercase tracking-[2px] mb-1">Impact Tracking Active</p>
+                                    <p className="text-[11px] text-emerald-900/60 font-medium leading-relaxed">
+                                        As an active {isRSVP ? "referral partner" : "cardholder"}, your contributions are tracked across the Fijai institutional network.
                                     </p>
                                 </div>
                             </div>
@@ -258,13 +258,13 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                 </Card>
             </div>
 
-            <div className="flex justify-end pt-4 border-t">
+            <div className="flex justify-end pt-8 mt-4 border-t border-muted-foreground/10">
                 <Button 
                     type="submit" 
-                    disabled={isPending} 
-                    className="min-w-[200px] h-11 font-semibold"
+                    disabled={isPending || isUploading} 
+                    className="min-w-[240px] h-14 font-black uppercase tracking-[2px] text-xs shadow-2xl shadow-primary/20"
                 >
-                    {isPending ? "Updating..." : "Save Changes"}
+                    {isPending ? "Syncing Identity..." : "Commit Profile Changes"}
                 </Button>
             </div>
         </form>
