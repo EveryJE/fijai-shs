@@ -55,9 +55,57 @@ export async function createManualDonation(formData: FormData) {
         },
     });
 
+    revalidatePath("/dashboard/donations");
     revalidatePath("/dashboard");
     return donation;
 }
+
+/**
+ * Update a manual donation (only manual donations can be edited).
+ */
+export async function updateManualDonation(id: string, data: {
+    donorName?: string;
+    donorEmail?: string;
+    phone?: string;
+    amount?: number;
+    donationItemId?: string | null;
+    contactPersonId?: string | null;
+    momentCaption?: string | null;
+}) {
+    const existing = await prisma.donation.findUnique({ where: { id } });
+    if (!existing || existing.paymentMethod !== "manual") {
+        throw new Error("Can only edit manual donations");
+    }
+
+    const donation = await prisma.donation.update({
+        where: { id },
+        data: {
+            ...data,
+            amount: data.amount !== undefined ? data.amount : undefined,
+        },
+    });
+
+    revalidatePath("/dashboard/donations");
+    revalidatePath("/dashboard");
+    return { success: true, donation };
+}
+
+/**
+ * Delete a manual donation (only manual donations can be deleted).
+ */
+export async function deleteManualDonation(id: string) {
+    const existing = await prisma.donation.findUnique({ where: { id } });
+    if (!existing || existing.paymentMethod !== "manual") {
+        throw new Error("Can only delete manual donations");
+    }
+
+    await prisma.donation.delete({ where: { id } });
+
+    revalidatePath("/dashboard/donations");
+    revalidatePath("/dashboard");
+    return { success: true };
+}
+
 
 /**
  * Update profile avatar / logo for the logged-in user.

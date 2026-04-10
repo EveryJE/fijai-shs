@@ -40,9 +40,9 @@ export async function savePayoutAccount(
     (await prisma.organization.findFirst({ select: { id: true } }))?.id ||
     "singleton-org";
 
-  await prisma.organization.update({
+  await prisma.organization.upsert({
     where: { id: targetId },
-    data: {
+    update: {
       bankCode,
       bankName,
       accountNumber,
@@ -51,6 +51,17 @@ export async function savePayoutAccount(
       settlementBank,
       currency: "GHS",
     },
+    create: {
+      id: targetId,
+      name: "Fijai SHS",
+      bankCode,
+      bankName,
+      accountNumber,
+      accountName,
+      subaccountCode,
+      settlementBank,
+      currency: "GHS",
+    }
   });
   
   revalidatePath("/dashboard/organization");

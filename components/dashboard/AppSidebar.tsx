@@ -54,7 +54,7 @@ export function AppSidebar({
                 />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight ml-2">
-                <span className="truncate font-bold text-base tracking-tight text-[#730303]">Fijai SHS</span>
+                <span className="truncate font-bold text-base tracking-tight text-[#730303]">Fosa 96</span>
                 <span className="truncate text-[10px] uppercase font-semibold text-muted-foreground/60 tracking-wider">Alumni Fundraising</span>
               </div>
             </SidebarMenuButton>

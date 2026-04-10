@@ -32,6 +32,28 @@ export const getOrganization = cache(async () => {
     return prisma.organization.findFirst();
 });
 
+export const getDonationBreakdown = cache(async () => {
+    const [paystackAgg, manualAgg, paystackCount, manualCount] = await Promise.all([
+        prisma.donation.aggregate({
+            _sum: { amount: true },
+            where: { status: "paid", paymentMethod: "paystack" },
+        }),
+        prisma.donation.aggregate({
+            _sum: { amount: true },
+            where: { status: "paid", paymentMethod: "manual" },
+        }),
+        prisma.donation.count({ where: { status: "paid", paymentMethod: "paystack" } }),
+        prisma.donation.count({ where: { status: "paid", paymentMethod: "manual" } }),
+    ]);
+
+    return {
+        paystackTotal: Number(paystackAgg._sum?.amount || 0),
+        manualTotal: Number(manualAgg._sum?.amount || 0),
+        paystackCount,
+        manualCount,
+    };
+});
+
 export const getRecentTransactions = cache(async (limit = 10) => {
     const transactions = await prisma.donation.findMany({
         take: limit,
@@ -52,6 +74,36 @@ export const getRecentTransactions = cache(async (limit = 10) => {
             targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
         } : null
     }));
+});
+
+export const getDonationsByMethod = cache(async (method: "paystack" | "manual", limit = 50) => {
+    const donations = await prisma.donation.findMany({
+        where: { paymentMethod: method },
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: {
+            contactPerson: true,
+            digitalCard: true,
+            donationItem: true,
+            event: true
+        }
+    });
+
+    return donations.map(tx => ({
+        ...tx,
+        amount: Number(tx.amount),
+        donationItem: tx.donationItem ? {
+            ...tx.donationItem,
+            targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
+        } : null
+    }));
+});
+
+export const getActiveEvents = cache(async () => {
+    return prisma.event.findMany({
+        where: { status: "active" },
+        orderBy: { createdAt: "desc" },
+    });
 });
 
 export const getMostImpactUser = cache(async () => {
@@ -151,3 +203,31 @@ export const getDigitalCardImpact = cache(async (limit = 5) => {
         };
     });
 });
+
+export const getDonationByItemCategory = cache(async () => {
+    const categories = await prisma.category.findMany({
+        include: {
+            donationItems: {
+                include: {
+                    donations: {
+                        where: { status: "paid" },
+                        select: { amount: true }
+                    }
+                }
+            }
+        }
+    });
+
+    return categories.map(cat => {
+        const total = cat.donationItems.reduce((sum, item) => {
+            return sum + item.donations.reduce((s, d) => s + Number(d.amount), 0);
+        }, 0);
+
+        return {
+            name: cat.name,
+            value: total,
+            fill: cat.color || "#730303"
+        };
+    }).filter(c => c.value > 0);
+});
+

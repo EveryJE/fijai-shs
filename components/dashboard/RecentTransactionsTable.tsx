@@ -76,12 +76,12 @@ export function RecentTransactionsTable({ transactions }: RecentTransactionsTabl
                     <TableBody>
                         {paginatedTransactions.map((tx) => {
                             const cardHolderName = tx.metadata?.card_account_name || tx.metadata?.card_name || null;
-                            
+
                             return (
                                 <TableRow key={tx.id} className="group hover:bg-muted/30 transition-colors">
                                     <TableCell>
                                         <div className="flex items-center gap-3">
-                                            <Avatar className="h-9 w-9 border shadow-sm">
+                                            <Avatar className="h-9 w-9 ">
                                                 <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
                                                     {(tx.donorName || tx.donorEmail || "A").charAt(0)}
                                                 </AvatarFallback>
@@ -136,7 +136,7 @@ export function RecentTransactionsTable({ transactions }: RecentTransactionsTabl
                         })}
                     </TableBody>
                 </Table>
-                
+
                 {totalPages > 1 && (
                     <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/20">
                         <p className="text-xs text-muted-foreground">

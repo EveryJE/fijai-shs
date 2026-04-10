@@ -1,63 +1,109 @@
 "use client";
 
+import {
+    ResponsiveContainer,
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+} from "recharts";
+import {
+    ChartContainer,
+    ChartTooltipContent,
+    type ChartConfig,
+} from "@/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { formatAmount } from "@/lib/utils";
-import { TrendingUpIcon, CalendarIcon } from "lucide-react";
+import { TrendingUpIcon } from "lucide-react";
 
 interface RevenueChartProps {
     data: { month: string; revenue: number }[];
 }
 
-export function RevenueChart({ data }: RevenueChartProps) {
-    if (!data.length) return null;
+const chartConfig: ChartConfig = {
+    revenue: {
+        label: "Revenue",
+        color: "#730303",
+    },
+};
 
-    const maxRevenue = Math.max(...data.map(d => d.revenue), 1000);
-    const chartHeight = 200;
+export function RevenueChart({ data }: RevenueChartProps) {
+    const hasData = data.some((d) => d.revenue > 0);
 
     return (
-        <Card className="border-none shadow-xl bg-white overflow-hidden group">
-            <CardHeader className="border-b bg-muted/10 pb-4">
+        <Card className=" overflow-hidden">
+            <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                         <div className="flex items-center gap-2">
                             <TrendingUpIcon className="h-4 w-4 text-emerald-600" />
-                            <CardTitle className="text-sm font-black uppercase tracking-widest text-[#730303]">
-                                Financial Performance
-                            </CardTitle>
+                            <CardTitle className="text-sm font-bold">Revenue Trend</CardTitle>
                         </div>
-                        <CardDescription className="text-[10px] font-bold uppercase tracking-wider">
-                            Alumni Revenue Growth (Last 6 Months)
+                        <CardDescription className="text-[10px] uppercase tracking-wider">
+                            Last 6 Months
                         </CardDescription>
                     </div>
-                    <div className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full flex items-center gap-1.5 border border-emerald-200">
-                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                         <span className="text-[10px] font-black tracking-widest uppercase">Live Trends</span>
+                    <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-100">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Live</span>
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="pt-10">
-                <div className="h-[200px] w-full flex items-end justify-between gap-4 px-2">
-                    {data.map((item, i) => {
-                        const barHeight = (item.revenue / maxRevenue) * chartHeight;
-                        return (
-                            <div key={item.month} className="flex-1 flex flex-col items-center gap-3 group/bar">
-                                <div className="relative w-full flex flex-col items-center">
-                                    {/* Tooltip on hover */}
-                                    <div className="absolute -top-10 opacity-0 group-hover/bar:opacity-100 transition-all scale-90 group-hover/bar:scale-100 bg-[#730303] text-white text-[10px] font-black px-2 py-1 rounded shadow-xl pointer-events-none z-10 whitespace-nowrap">
-                                        {formatAmount(item.revenue)}
-                                    </div>
-                                    <div 
-                                        className="w-full max-w-[40px] bg-gradient-to-t from-[#730303] via-[#730303]/80 to-[#DAA520] rounded-t-lg transition-all duration-700 ease-out group-hover/bar:shadow-[0_-8px_20px_rgba(218,165,32,0.3)] group-hover/bar:opacity-90"
-                                        style={{ height: `${barHeight}px` }}
-                                    />
-                                </div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover/bar:text-primary transition-colors">
-                                    {item.month}
-                                </span>
-                            </div>
-                        );
-                    })}
-                </div>
+            <CardContent className="pt-4">
+                {hasData ? (
+                    <ChartContainer config={chartConfig} className="h-[220px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={data} margin={{ top: 5, right: 10, bottom: 0, left: -20 }}>
+                                <defs>
+                                    <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#730303" stopOpacity={0.25} />
+                                        <stop offset="95%" stopColor="#730303" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                <XAxis
+                                    dataKey="month"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    fontSize={11}
+                                />
+                                <YAxis
+                                    tickLine={false}
+                                    axisLine={false}
+                                    fontSize={11}
+                                    tickFormatter={(v) =>
+                                        v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)
+                                    }
+                                />
+                                <Tooltip
+                                    content={
+                                        <ChartTooltipContent
+                                            formatter={(value) =>
+                                                Number(value).toLocaleString(undefined, {
+                                                    style: "currency",
+                                                    currency: "GHS",
+                                                    minimumFractionDigits: 0,
+                                                })
+                                            }
+                                        />
+                                    }
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="revenue"
+                                    stroke="#730303"
+                                    strokeWidth={2}
+                                    fill="url(#revenueGrad)"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </ChartContainer>
+                ) : (
+                    <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
+                        No revenue data yet
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

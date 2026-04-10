@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { updateProfile } from "@/lib/actions/profile";
 import { uploadImage } from "@/lib/actions/upload-image";
 import { getPublicUrlSync } from "@/lib/storage-utils";
-import { ImageDropzone } from "@/components/shared/ImageDropzone";
 import { toast } from "sonner";
 import { 
     UserCircleIcon, 
@@ -20,7 +19,8 @@ import {
     CameraIcon,
     ShieldCheckIcon,
     CheckCircle2Icon,
-    SparklesIcon
+    SparklesIcon,
+    Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "../ui/status-badge";
@@ -32,6 +32,8 @@ interface ProfileGeneralSettingsProps {
 
 export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSettingsProps) {
     const [isPending, startTransition] = useTransition();
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     
     const { register, handleSubmit, watch, setValue } = useForm({
         defaultValues: {
@@ -58,20 +60,85 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
     };
 
     const watchAvatar = watch("avatarUrl");
+    const avatarDisplayUrl = watchAvatar?.startsWith("http") 
+        ? watchAvatar 
+        : (getPublicUrlSync("avatars", watchAvatar) || "");
+
+    async function handleAvatarClick() {
+        fileInputRef.current?.click();
+    }
+
+    async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            const result = await uploadImage(formData, {
+                bucket: "avatars",
+                folder: "profiles",
+                oldPath: watchAvatar
+            });
+
+            if (result.success) {
+                setValue("avatarUrl", result.data.path);
+                toast.success("Photo uploaded");
+            } else {
+                toast.error(result.error || "Upload failed");
+            }
+        } catch (err) {
+            toast.error("Failed to upload image");
+        } finally {
+            setIsUploading(false);
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="flex flex-col lg:flex-row gap-8 items-start">
-                <div className="relative">
-                    <Avatar className="h-32 w-32 border shadow-lg ring-4 ring-background">
-                        <AvatarImage src={watchAvatar?.startsWith("http") ? watchAvatar : getPublicUrlSync("avatars", watchAvatar) || ""} />
-                        <AvatarFallback className="bg-primary text-primary-foreground text-3xl font-bold">
-                            {(profile?.fullName || "U").charAt(0)}
-                        </AvatarFallback>
-                    </Avatar>
-                    <div className="absolute -bottom-2 -right-2 bg-background p-2 rounded-lg shadow border">
-                        <CameraIcon className="h-4 w-4 text-primary" />
-                    </div>
+                <div className="relative group">
+                    <button
+                        type="button"
+                        onClick={handleAvatarClick}
+                        className="relative overflow-hidden rounded-full border shadow-lg ring-4 ring-background transition-all hover:ring-primary/20"
+                        disabled={isUploading}
+                    >
+                        <Avatar className="h-32 w-32 border-none ring-0">
+                            <AvatarImage src={avatarDisplayUrl} className="object-cover" />
+                            <AvatarFallback className="bg-primary text-primary-foreground text-3xl font-bold">
+                                {(profile?.fullName || "U").charAt(0)}
+                            </AvatarFallback>
+                        </Avatar>
+                        
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            {isUploading ? (
+                                <Loader2 className="h-8 w-8 text-white animate-spin" />
+                            ) : (
+                                <>
+                                    <CameraIcon className="h-8 w-8 text-white mb-1" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-white">Update</span>
+                                </>
+                            )}
+                        </div>
+                    </button>
+                    
+                    <input 
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarChange}
+                        className="hidden"
+                    />
+
+                    {!isUploading && (
+                        <div className="absolute -bottom-1 -right-1 bg-primary p-2 rounded-full shadow-lg border border-background z-10">
+                            <CameraIcon className="h-3.5 w-3.5 text-white" />
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex-1 space-y-1">
@@ -81,15 +148,15 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                              Verified
                         </div>
                     </div>
-                    <p className="text-muted-foreground text-sm max-w-xl">
-                        Manage how you are identified across the Fijai SHS alumni network. Your details help classmates recognize you.
+                    <p className="text-muted-foreground text-sm max-w-xl font-medium leading-relaxed">
+                        Manage your Fijai SHS alumni identity. Classes recognize you faster with a professional profile photo.
                     </p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="pt-0">
-                    <CardHeader className="pb-4 border-b rounded-t-none border-t-0 bg-primary/5 py-2">
+                <Card className="pt-0 shadow-sm border">
+                    <CardHeader className="pb-4 border-b rounded-t-none border-t-0 bg-primary/5 py-3">
                         <div className="flex items-center gap-2">
                              <UserCircleIcon className="h-5 w-5 text-primary" />
                              <CardTitle className="text-lg">Personal Identity</CardTitle>
@@ -97,51 +164,17 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                     </CardHeader>
                     <CardContent className="space-y-4 pt-6">
                         <div className="space-y-1.5">
-                            <Label className="text-xs font-semibold">Full Legal Name</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Full Legal Name</Label>
                             <Input 
                                 {...register("fullName")} 
                                 disabled={!isAdmin} 
-                                className={cn(!isAdmin && "bg-muted")} 
+                                className={cn(!isAdmin && "bg-muted font-medium opacity-80")} 
                             />
                             {!isAdmin && (
-                                <p className="text-[10px] text-muted-foreground italic">
+                                <p className="text-[10px] text-muted-foreground font-medium italic">
                                     Official name is locked. Contact admin for updates.
                                 </p>
                             )}
-                        </div>
-
-                        <div className="space-y-3">
-                            <Label className="text-xs font-semibold">Profile Picture</Label>
-                            <ImageDropzone 
-                                maxFiles={1}
-                                gridCols="grid-cols-1"
-                                className="w-full"
-                                description="Classmates recognize you faster with a photo. Max 5MB."
-                                uploadLabel="Institutional Asset Upload"
-                                uploadSubLabel="Drag your profile photo here"
-                                initialFiles={watchAvatar ? [{
-                                    id: watchAvatar,
-                                    url: getPublicUrlSync("avatars", watchAvatar) || watchAvatar
-                                }] : []}
-                                getDisplayUrl={(path) => getPublicUrlSync("avatars", path)}
-                                onDropFile={async (file) => {
-                                    const formData = new FormData();
-                                    formData.append("file", file);
-                                    
-                                    const result = await uploadImage(formData, {
-                                        bucket: "avatars",
-                                        folder: "profiles",
-                                        oldPath: watchAvatar
-                                    });
-
-                                    if (result.success) {
-                                        setValue("avatarUrl", result.data.path);
-                                        return { status: "success", result: result.data.path };
-                                    }
-                                    return { status: "error", error: result.error };
-                                }}
-                                onRemoveInitialFile={() => setValue("avatarUrl", "")}
-                            />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">

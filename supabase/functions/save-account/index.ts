@@ -38,23 +38,16 @@ serve(async (req) => {
             );
         }
 
-        // 3. Validate account number format (basic check)
-        if (accountNumber.length < 5 || accountNumber.length > 20) {
-            return new Response(
-                JSON.stringify({ error: "Invalid account number" }),
-                { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-            );
-        }
-
-        // 4. Check admin role from client (basic authorization)
-        if (!Array.isArray(userRoles) || !userRoles.includes("admin")) {
+        // 3. Authorization check
+        const isAdmin = Array.isArray(userRoles) && (userRoles.includes("admin") || userRoles.includes("owner"));
+        if (!isAdmin) {
             return new Response(
                 JSON.stringify({ error: "Only admins can update payout account" }),
                 { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
         }
 
-        // 5. Get current org data
+        // 4. Get current org data
         const { data: org } = await supabase
             .from("organizations")
             .select("subaccountCode")
@@ -63,6 +56,7 @@ serve(async (req) => {
 
         let subaccountCode: string;
 
+        // 5. Create or Update Paystack Subaccount
         if (isValidSubaccountCode(org?.subaccountCode)) {
             // Update existing Paystack subaccount
             const paystackRes = await fetch(
@@ -127,7 +121,29 @@ serve(async (req) => {
             }
         }
 
-        // 6. Return success - DB save handled by server action
+        // 6. Upsert database record using the service role client
+        const { error: dbError } = await supabase
+            .from("organizations")
+            .upsert({
+                id: organizationId,
+                name: "Fijai SHS", // Default name if creating
+                bankCode,
+                bankName,
+                accountNumber,
+                accountName,
+                subaccountCode,
+                currency: "GHS"
+            });
+
+        if (dbError) {
+            console.error("DB upsert error:", dbError);
+            return new Response(
+                JSON.stringify({ error: "Paystack account setup, but failed to save to database. Please contact support." }),
+                { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
+
+        // 7. Return success
         return new Response(
             JSON.stringify({
                 success: true,

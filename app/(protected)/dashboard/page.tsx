@@ -1,215 +1,181 @@
 import { createClient } from "@/utils/supabase/server";
 import { getProfileByEmail } from "@/lib/dal";
-import { 
-    getOrgStats, 
-    getRecentTransactions, 
-    getMostImpactUser, 
-    getMonthlyRevenue, 
-    getActiveEvent,
-    getDigitalCardImpact
+import {
+    getOrgStats,
+    getMostImpactUser,
+    getMonthlyRevenue,
+    getActiveEvents,
+    getDigitalCardImpact,
+    getDonationBreakdown,
+    getDonationByItemCategory
 } from "@/lib/dal/stats";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { 
-    UsersIcon, 
-    UserCheckIcon, 
-    CreditCardIcon, 
-    HeartHandshakeIcon, 
-    Building2Icon,
+import {
+    CreditCardIcon,
+    HeartHandshakeIcon,
+    CalendarIcon,
+    ArrowRightIcon,
     WalletIcon,
-    FlameIcon,
-    TrendingUpIcon,
-    CalendarIcon
+    HandCoinsIcon
 } from "lucide-react";
 import { formatAmount, cn } from "@/lib/utils";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { DigitalImpactChart } from "@/components/dashboard/DigitalImpactChart";
 import { MostImpactUserCard } from "@/components/dashboard/MostImpactUserCard";
-import { RecentTransactionsTable } from "@/components/dashboard/RecentTransactionsTable";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CategoryPieChart } from "@/components/dashboard/CategoryPieChart";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { format } from "date-fns";
 
 export default async function DashboardPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    const [profile, stats, transactions, topDonor, revenueData, activeEvent, digitalImpact] = await Promise.all([
+    const [
+        profile,
+        stats,
+        topDonor,
+        revenueData,
+        activeEvents,
+        digitalImpact,
+        donationBreakdown,
+        categoryData
+    ] = await Promise.all([
         user?.email ? getProfileByEmail(user.email) : null,
         getOrgStats(),
-        getRecentTransactions(8),
         getMostImpactUser(),
         getMonthlyRevenue(),
-        getActiveEvent(),
-        getDigitalCardImpact(6)
+        getActiveEvents(),
+        getDigitalCardImpact(6),
+        getDonationBreakdown(),
+        getDonationByItemCategory()
     ]);
 
-    const isAdmin = profile?.roles.includes("admin");
-
     return (
-        <div className="max-w-7xl p-6 lg:p-10 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            
-            {/* Header / Active Event Banner */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                <div className="lg:col-span-3 space-y-4">
-                     <div className="flex flex-col md:flex-row items-baseline justify-between gap-4 border-b pb-8">
-                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-[3px] text-[#730303] mb-1">Administrative Intelligence</p>
-                            <h1 className="text-5xl font-black tracking-tighter text-[#730303] uppercase">
-                                Institutional Pulse
-                            </h1>
-                            <p className="text-muted-foreground mt-2 text-lg font-medium">
-                                Monitoring Fijai SHS Alumni Philanthropy & Impact
-                            </p>
-                         </div>
-                         <div className="flex items-center gap-4 bg-muted/30 p-2 rounded-full px-6 border border-muted-foreground/10 shadow-inner">
-                            <div className="flex -space-x-2">
-                                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center border-2 border-background ring-2 ring-emerald-500/10">
-                                    <span className="text-[10px] font-black text-emerald-700">{stats.totalUsers}</span>
-                                </div>
-                            </div>
-                            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">
-                                Global Membership
-                            </span>
-                         </div>
+        <div className="max-w-7xl p-6 lg:p-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+
+            {/* Header */}
+            <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 pb-2">
+                <div>
+                    <p className="text-[10px] font-black uppercase tracking-[3px] text-muted-foreground mb-1">Overview</p>
+                    <h1 className="text-3xl font-black tracking-tight">
+                        Dashboard
+                    </h1>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="font-medium">Welcome, {profile?.fullName?.split(" ")[0] || "User"}</span>
+                </div>
+            </div>
+
+            {/* Active Events - MOVED TO TOP */}
+            {activeEvents.length > 0 && (
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xs font-bold uppercase tracking-[2px] text-muted-foreground">Active Events</h2>
+                        <Link href="/dashboard/events" className="text-xs font-medium text-primary hover:underline flex items-center gap-1">
+                            View All <ArrowRightIcon className="h-3 w-3" />
+                        </Link>
                     </div>
-
-                    {activeEvent ? (
-                        <Card className="border-none shadow-2xl bg-white overflow-hidden relative group min-h-[220px] flex flex-col justify-center">
-                            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
-                                <FlameIcon className="w-64 h-64 text-[#730303]" />
-                            </div>
-                            <CardHeader className="relative px-10">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-700 rounded-full border border-amber-200 mb-4 w-fit shadow-sm">
-                                     <FlameIcon className="h-3 w-3 animate-pulse" />
-                                     <span className="text-[10px] font-black uppercase tracking-widest">Active Campaign</span>
-                                </div>
-                                <CardTitle className="text-4xl font-black tracking-tight text-[#730303] uppercase max-w-2xl">{activeEvent.title}</CardTitle>
-                                <CardDescription className="text-base font-medium max-w-xl line-clamp-2 mt-2">{activeEvent.description}</CardDescription>
-                            </CardHeader>
-                            <CardContent className="relative px-10 pb-0">
-                                <div className="flex items-center gap-8 pt-4">
-                                     <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#DAA520]">
-                                        <TrendingUpIcon className="h-4 w-4" />
-                                        Performance Tracking Active
-                                     </div>
-                                     <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground">
-                                        <CalendarIcon className="h-4 w-4" />
-                                        Campaign Ongoing
-                                     </div>
-                                </div>
-                                <Link 
-                                    href={`/dashboard/events/${activeEvent.id}`}
-                                    className="absolute bottom-6 right-10 text-[10px] font-black uppercase tracking-[3px] text-muted-foreground hover:text-primary transition-colors border-b border-muted-foreground/20 pb-1"
-                                >
-                                    Manage Event Details →
-                                </Link>
-                            </CardContent>
-                        </Card>
-                    ) : (
-                        <Card className="border-2 border-dashed border-muted-foreground/10 bg-muted/10 h-40 flex flex-col items-center justify-center p-10 text-center">
-                             <CalendarIcon className="h-8 w-8 text-muted-foreground/20 mb-3" />
-                             <p className="text-[10px] font-black uppercase tracking-[2px] text-muted-foreground/40">No ongoing fundraising campaigns found</p>
-                             <Link href="/dashboard/events" className="text-[10px] font-black uppercase tracking-widest text-primary mt-2">Initialize Campaign →</Link>
-                        </Card>
-                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {activeEvents.map((event: any) => (
+                            <Link key={event.id} href={`/dashboard/events/${event.id}`}>
+                                <Card className=" hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer group h-full">
+                                    <CardContent className="p-3 flex flex-col justify-between h-full gap-2">
+                                        <div className="space-y-1.5">
+                                            <div className="flex items-center justify-between">
+                                                <StatusBadge variant="active" size="sm" />
+                                                <CalendarIcon className="h-3 w-3 text-muted-foreground/30" />
+                                            </div>
+                                            <h3 className="font-bold text-[13px] leading-tight group-hover:text-primary transition-colors line-clamp-1">
+                                                {event.title}
+                                            </h3>
+                                        </div>
+                                        <div className="flex items-center justify-between text-[9px] text-muted-foreground pt-1.5 border-t">
+                                            <span>
+                                                {event.startDate
+                                                    ? format(new Date(event.startDate), "MMM d, yyyy")
+                                                    : "No date"}
+                                            </span>
+                                            <span className="font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
+                                                Manage <ArrowRightIcon className="h-2 w-2" />
+                                            </span>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
+            )}
 
-                <div className="space-y-6">
-                    {/* Logged in user info card */}
-                    <Card className="border-none shadow-xl bg-white overflow-hidden text-center h-full flex flex-col justify-center p-8 bg-[radial-gradient(circle_at_top_right,rgba(115,3,3,0.05),transparent_60%)]">
-                        <div className="mx-auto relative mb-6">
-                            <Avatar className="h-24 w-24 border-4 border-[#DAA520]/20 mx-auto shadow-2xl transition-transform hover:scale-105 duration-500">
-                                <AvatarImage src={profile?.avatarUrl || ""} />
-                                <AvatarFallback className="bg-[#730303] text-white text-2xl font-black">
-                                    {(profile?.fullName || "A").charAt(0)}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="absolute -bottom-1 -right-1 bg-primary text-white p-1.5 rounded-full border-2 border-white shadow-lg">
-                                <Building2Icon className="h-3 w-3" />
-                            </div>
-                        </div>
-                        <div className="space-y-1">
-                             <p className="text-[10px] font-black uppercase tracking-widest text-[#DAA520]">Access Level</p>
-                             <h3 className="text-xl font-black tracking-tight text-[#730303] leading-tight">{profile?.fullName || "User Account"}</h3>
-                        </div>
-                        <div className="flex flex-wrap gap-1.5 justify-center mt-6">
-                             {profile?.roles.map((role:any) => (
-                                <div key={role} className="bg-muted px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border shadow-sm">
-                                    {role}
-                                </div>
-                             ))}
-                        </div>
-                        <div className="pt-8 mt-auto border-t border-muted-foreground/5 py-3">
-                             <Link href="/dashboard/profile" className="text-[10px] font-black uppercase tracking-[3px] text-muted-foreground hover:text-primary transition-colors">
-                                Identity & Security →
-                             </Link>
-                        </div>
-                    </Card>
-                </div>
-            </div>
-
-            {/* Quick Stats Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard 
-                    title="Total Donations" 
-                    value={formatAmount(stats.totalDonated)} 
-                    icon={HeartHandshakeIcon} 
-                    color="text-emerald-600"
-                    trend="+12% from last week"
+            {/* Stats Row */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <StatCard
+                    title="Total Raised"
+                    value={formatAmount(stats.totalDonated)}
+                    icon={HeartHandshakeIcon}
+                    accent="emerald"
                 />
-                <StatCard 
-                    title="Alumni Members" 
-                    value={stats.totalUsers.toString()} 
-                    icon={UsersIcon} 
-                    color="text-blue-600"
-                    trend="Institutional reach"
+                <StatCard
+                    title="Paystack"
+                    value={formatAmount(donationBreakdown.paystackTotal)}
+                    icon={WalletIcon}
+                    accent="blue"
                 />
-                <StatCard 
-                    title="RSVP Referrals" 
-                    value={stats.rsvpUsers.toString()} 
-                    icon={UserCheckIcon} 
-                    color="text-[#730303]"
-                    trend="Contact influence"
+                <StatCard
+                    title="Manual"
+                    value={formatAmount(donationBreakdown.manualTotal)}
+                    icon={HandCoinsIcon}
+                    accent="amber"
                 />
-                <StatCard 
-                    title="Digital Cards" 
-                    value={stats.cardholders.toString()} 
-                    icon={CreditCardIcon} 
-                    color="text-[#DAA520]"
-                    trend="Campaign adoption"
+                <StatCard
+                    title="Digital Cards"
+                    value={stats.cardholders.toString()}
+                    icon={CreditCardIcon}
+                    accent="violet"
                 />
             </div>
 
-            {/* Charts and Impact Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            {/* Charts Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <RevenueChart data={revenueData} />
+                <CategoryPieChart data={categoryData} />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Keep these as well but maybe in a lower section */}
                 <DigitalImpactChart data={digitalImpact} />
                 <MostImpactUserCard user={topDonor} />
-            </div>
-
-            {/* Transactions Section */}
-            <div className="space-y-6">
-                <RecentTransactionsTable transactions={transactions} />
             </div>
 
         </div>
     );
 }
 
-function StatCard({ title, value, icon: Icon, color, trend }: any) {
+function StatCard({ title, value, icon: Icon, accent }: {
+    title: string;
+    value: string;
+    icon: any;
+    accent: "emerald" | "blue" | "amber" | "violet";
+}) {
+    const accentMap = {
+        emerald: { bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-100" },
+        blue: { bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-100" },
+        amber: { bg: "bg-amber-50", text: "text-amber-600", border: "border-amber-100" },
+        violet: { bg: "bg-violet-50", text: "text-violet-600", border: "border-violet-100" },
+    };
+    const a = accentMap[accent];
+
     return (
-        <Card className="border-none shadow-xl overflow-hidden bg-white hover:bg-muted/5 transition-all duration-300 relative group">
-            <div className="absolute top-0 left-0 w-1 h-full bg-muted-foreground/10 group-hover:bg-primary transition-colors" />
-            <CardHeader className="pb-4 flex flex-row items-center justify-between">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-[#730303]/60">{title}</CardTitle>
-                <div className={cn("p-2 rounded-md bg-muted/50 border border-muted ring-4 ring-muted/20", color)}>
-                    <Icon className="h-4 w-4" />
+        <Card className=" hover:shadow-md transition-shadow duration-200">
+            <CardContent className="p-4 flex items-start justify-between gap-3">
+                <div className="space-y-1 min-w-0">
+                    <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide truncate">{title}</p>
+                    <p className="text-xl font-black tracking-tight truncate">{value}</p>
                 </div>
-            </CardHeader>
-            <CardContent>
-                <div className="text-3xl font-black tracking-tighter text-[#730303]">{value}</div>
-                <div className="flex items-center gap-1.5 mt-3 opacity-60">
-                     <p className="text-[10px] font-bold uppercase tracking-widest">{trend}</p>
+                <div className={cn("p-2 rounded-lg shrink-0", a.bg, a.border, "border")}>
+                    <Icon className={cn("h-4 w-4", a.text)} />
                 </div>
             </CardContent>
         </Card>

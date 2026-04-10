@@ -288,7 +288,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                 {/* Overview Tab */}
                 <TabsContent value="overview">
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                        <Card className="border-none shadow-md">
+                        <Card className="border-none ">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Categories</CardTitle>
                                 <LayoutGrid className="h-4 w-4 text-muted-foreground" />
@@ -297,7 +297,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 <div className="text-2xl font-bold">{event.categories.length}</div>
                             </CardContent>
                         </Card>
-                        <Card className="border-none shadow-md">
+                        <Card className="border-none ">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Donation Items</CardTitle>
                                 <Package className="h-4 w-4 text-muted-foreground" />
@@ -308,7 +308,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="border-none shadow-md">
+                        <Card className="border-none ">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Total Raised</CardTitle>
                                 <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -317,7 +317,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 <div className="text-2xl font-bold">GHS 0</div>
                             </CardContent>
                         </Card>
-                        <Card className="border-none shadow-md">
+                        <Card className="border-none ">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Total Donors</CardTitle>
                                 <Users className="h-4 w-4 text-muted-foreground" />
@@ -331,7 +331,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
 
                 {/* Categories & Items Tab */}
                 <TabsContent value="categories">
-                    <Card className="border-none shadow-md">
+                    <Card className="border-none ">
                         <CardHeader className="bg-muted/30 pb-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
