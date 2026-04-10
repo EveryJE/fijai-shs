@@ -276,7 +276,10 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                 </div>
                 <h1 className="text-3xl font-bold tracking-tight">{event.title}</h1>
                 {event.description && (
-                    <p className="text-muted-foreground mt-2">{event.description}</p>
+                    <div 
+                        className="text-muted-foreground mt-2 prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{ __html: event.description }}
+                    />
                 )}
             </div>
 

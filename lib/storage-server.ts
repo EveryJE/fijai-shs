@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 
 /**
  * Delete a file from institutional Supabase storage.
@@ -13,7 +13,7 @@ export async function deleteStorageFile(
     if (!path) return { success: true };
 
     try {
-        const supabase = await createClient();
+        const supabase = createAdminClient();
         const { error } = await supabase.storage.from(bucket).remove([path]);
 
         if (error) {

@@ -28,9 +28,10 @@ export function DonateHeader({ eventTitle, eventDescription, eventImage, digital
 
                 <div className="space-y-2">
                     {eventDescription && (
-                        <p className="text-sm text-[#202124] leading-relaxed font-medium">
-                            {eventDescription}
-                        </p>
+                        <div 
+                            className="text-sm text-[#202124] leading-relaxed font-medium prose prose-sm max-w-none"
+                            dangerouslySetInnerHTML={{ __html: eventDescription }}
+                        />
                     )}
                 </div>
 

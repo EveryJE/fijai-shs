@@ -137,10 +137,8 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
         minHeight: '100vh',
       }}
     >
-      <div className="max-w-2xl shad mx-auto px-4 md:px-6 pt-4 min-h-screen bg-white/50 backdrop-blur-sm">
-        <div className="h-48 bg-[url('/school-gate.jpg')] mb-4 bg-cover bg-center rounded-t-xl">
-        
-        </div>
+      <div className="max-w-3xl shad mx-auto px-4 md:px-6 pt-4 min-h-screen bg-white/50 backdrop-blur-sm">
+        <div className="h-48 bg-[url('/school-gate.jpg')] bg-cover bg-center rounded-t-xl"/>
         {/* Header with Google Form Aesthetic */}
         <DonateHeader
           eventTitle={event.title}

@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { toast } from "sonner";
 import { createEvent, updateEvent } from "@/lib/actions/events";
 import { CalendarIcon, PlusIcon, PencilIcon } from "lucide-react";
@@ -127,12 +127,10 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
 
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(content) => setFormData({ ...formData, description: content })}
                 placeholder="Tell us more about the event..."
-                className="min-h-[100px]"
               />
             </div>
 

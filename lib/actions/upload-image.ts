@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import {
     STORAGE_BUCKETS,
     normalizeToPath,
@@ -34,16 +34,7 @@ export async function uploadImage(
     formData: FormData,
     options: UploadImageOptions = {}
 ): Promise<ActionResult<{ path: string }>> {
-    const supabase = await createClient();
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    // Ensure user is authenticated for institutional data integrity
-    if (!user) {
-        return { success: false, error: "Administrative authentication required" };
-    }
+    const supabase = createAdminClient();
 
     const file = formData.get("file") as File | null;
     if (!file) {
@@ -80,7 +71,7 @@ export async function uploadImage(
         const folder = options.folder ?? "uploads";
         // Convert filename to WebP as client-side processing should ensure this
         const filename = `${Date.now()}.webp`;
-        const ownerId = user?.id ?? "public";
+        const ownerId = "public";
         const filePath = `${ownerId}/${folder}/${filename}`;
 
         // ── Institutional Storage Upload ─────────────────────────────────────

@@ -207,7 +207,7 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
           </div>
       )}
 
-      <div className="flex justify-start">
+      <div className="flex justify-end">
         <Button 
             type="submit" 
             size='default'
