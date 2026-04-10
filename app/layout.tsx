@@ -35,7 +35,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col font-sans">
+      <body suppressHydrationWarning className="min-h-full font-geist flex flex-col ">
         <TooltipProvider>
           {children}
         </TooltipProvider>

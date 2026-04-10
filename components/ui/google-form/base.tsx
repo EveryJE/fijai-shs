@@ -99,7 +99,7 @@ export const GoogleFormCard = ({ children, className, title, description, requir
 }) => {
   return (
     <div className={cn(
-        "border border-[#dadce0]  bg-white/85 hover:border-primary-100 p-4 md:p-4 transition-all font-poppins",
+        "border border-[#dadce0]  bg-white/85 hover:border-primary-100 p-4 md:p-4 transition-all ",
         className
     )}>
         {(title || description) && (

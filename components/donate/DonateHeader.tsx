@@ -16,7 +16,7 @@ interface DonateHeaderProps {
  */
 export function DonateHeader({ eventTitle, eventDescription, eventImage, digitalCodeUserName, organizationName = "Fosa 26 Fund raising" }: DonateHeaderProps) {
     return (
-        <div className="bg-white  border border-gray-200 overflow-hidden  mb-6">
+        <div className="bg-white   border border-gray-200 overflow-hidden  mb-6">
             <div className="h-0.55 bg-[#730303] w-full" />
             <div className="p-6 md:p-8 space-y-4">
                 <div className="flex items-center gap-3">
