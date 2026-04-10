@@ -36,11 +36,7 @@ export function DonateHeader({ eventTitle, eventDescription, eventImage, digital
                         </div>
 
                         <div className="space-y-2">
-                             {organizationName && (
-                                <p className="text-[10px] text-[#730303] font-black uppercase tracking-[0.2em] mb-1">
-                                    Organized by {organizationName}
-                                </p>
-                            )}
+                          
                             {eventDescription && (
                                 <div 
                                     className="text-sm text-[#202124] leading-relaxed font-medium prose prose-sm max-w-none text-gray-700"

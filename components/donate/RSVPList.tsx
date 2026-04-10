@@ -24,7 +24,7 @@ export const RSVPList: React.FC<RSVPListProps> = ({ rsvps, organizationName, id 
   return (
     <div id={id} className="space-y-6 sticky top-4">
       <GoogleFormCard 
-        title={organizationName || "Institutional Representatives"} 
+        title={"RSVP List"} 
         description="Connect with registered alumni and project leads for this campaign."
       >
         <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary/20">
@@ -84,11 +84,6 @@ export const RSVPList: React.FC<RSVPListProps> = ({ rsvps, organizationName, id 
           )}
         </div>
       </GoogleFormCard>
-      
-      {/* Branding / Disclaimer */}
-      <div className="px-4 text-[10px] text-muted-foreground/60 uppercase tracking-widest font-medium">
-        Verification: All listed representatives are verified members of the Fijai SHS Alumni network.
-      </div>
     </div>
   );
 };
