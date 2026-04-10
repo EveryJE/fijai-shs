@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { createUserRecord } from "@/lib/actions/auth";
 import { UserPlusIcon, UsersIcon } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const ROLES = [
   { value: "rsvp", label: "RSVP (Contact Person)" },
@@ -16,8 +17,8 @@ const ROLES = [
 ];
 
 interface Event {
-    id: string;
-    title: string;
+  id: string;
+  title: string;
 }
 
 export function CreateUserForm({ events }: { events: Event[] }) {
@@ -58,25 +59,25 @@ export function CreateUserForm({ events }: { events: Event[] }) {
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={setOpen} modal={false}>
       <SheetTrigger asChild>
         <Button variant="default" className="shadow-md flex items-center gap-2">
-            <UserPlusIcon className="h-4 w-4" />
-            Establish Member
+          <UserPlusIcon className="h-4 w-4" />
+          Establish Member
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-full sm:w-[500px] p-8">
-        <SheetHeader className="pb-6 border-b">
+        <SheetHeader className=" border-b">
           <div className="flex items-center gap-3">
-               <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                    <UsersIcon className="h-6 w-6" />
-               </div>
-               <SheetTitle className="text-xl font-bold">Institutional Intake</SheetTitle>
+            <div className="bg-primary/10 p-2 rounded-lg text-primary">
+              <UsersIcon className="h-6 w-6" />
+            </div>
+            <SheetTitle className="text-xl font-bold">Institutional Intake</SheetTitle>
           </div>
-          <p className="text-muted-foreground text-sm">Create and establish new alumni participant records directly in the system.</p>
+          <p className="text-sm">Create and establish new alumni participant records directly in the system.</p>
         </SheetHeader>
-        
-        <form onSubmit={handleCreate} className="space-y-6 mt-8 overflow-y-auto max-h-[calc(100vh-200px)] pr-2">
+
+        <form onSubmit={handleCreate} className="space-y-6 overflow-y-auto max-h-[calc(100vh-200px)] pr-2">
           <div className="space-y-1.5">
             <Label htmlFor="fullName" className="text-sm font-semibold text-primary">Member Full Name</Label>
             <Input
@@ -87,7 +88,7 @@ export function CreateUserForm({ events }: { events: Event[] }) {
               placeholder="e.g. John Fiifi Atta"
             />
           </div>
-          
+
           <div className="space-y-1.5">
             <Label htmlFor="email" className="text-sm font-semibold text-primary">Official Email Identifier</Label>
             <Input
@@ -101,31 +102,30 @@ export function CreateUserForm({ events }: { events: Event[] }) {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="event" className="text-sm font-semibold text-primary">Event Context</Label>
-                <select
-                    id="event"
-                    value={eventId}
-                    onChange={e => setEventId(e.target.value)}
-                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    required
-                >
-                    <option value="">Select Reference</option>
-                    {events.map(event => (
-                        <option key={event.id} value={event.id}>{event.title}</option>
-                    ))}
-                </select>
-              </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="event" className="text-sm font-semibold text-primary">Event Context</Label>
+              <Select value={eventId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Reference" />
+                </SelectTrigger>
+                <SelectContent>                     
+                   <SelectItem disabled>Select Reference</SelectItem>
+                  {events.map(event => (
+                    <SelectItem key={event.id} value={event.title}>{event.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="classYear" className="text-sm font-semibold text-primary">Alumni Class Year</Label>
-                <Input
-                  id="classYear"
-                  value={classYear}
-                  onChange={e => setClassYear(e.target.value)}
-                  placeholder="e.g. 2008"
-                />
-              </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="classYear" className="text-sm font-semibold text-primary">Alumni Class Year</Label>
+              <Input
+                id="classYear"
+                value={classYear}
+                onChange={e => setClassYear(e.target.value)}
+                placeholder="e.g. 2008"
+              />
+            </div>
           </div>
 
           <div className="space-y-3">
@@ -148,16 +148,16 @@ export function CreateUserForm({ events }: { events: Event[] }) {
               ))}
             </div>
           </div>
-          
+
           <div className="pt-6 border-t flex flex-col gap-4">
-              <div className="bg-emerald-50 p-3 rounded border border-emerald-100">
-                <p className="text-[10px] text-emerald-800 leading-relaxed font-medium">
-                    Note: Creating a record will automatically provision platform identity. The member will receive authentication credentials via email.
-                </p>
-              </div>
-              <Button type="submit" className="w-full h-12 font-bold" disabled={loading}>
-                {loading ? "Establishing Identity..." : "Commit Record"}
-              </Button>
+            <div className="bg-emerald-50 p-3 rounded border border-emerald-100">
+              <p className="text-[10px] text-emerald-800 leading-relaxed font-medium">
+                Note: Creating a record will automatically provision platform identity. The member will receive authentication credentials via email.
+              </p>
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Establishing Identity..." : "Commit Record"}
+            </Button>
           </div>
         </form>
       </SheetContent>

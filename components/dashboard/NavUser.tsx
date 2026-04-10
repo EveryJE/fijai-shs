@@ -61,7 +61,7 @@ export function NavUser({
             render={
                 <SidebarMenuButton
                     size="lg"
-                    className="rounded-lg border bg-card/50 hover:bg-accent transition-colors data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
+                    className="rounded-lg border bg-card/10  hover:bg-primary/10 transition-colors data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
                 >
                     <Avatar className="h-8 w-8 rounded-lg shadow-sm border-[#DAA520]/20">
                         <AvatarImage src={avatarUrl || ""} alt={user.name} />

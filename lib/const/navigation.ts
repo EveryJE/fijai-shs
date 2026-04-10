@@ -33,12 +33,8 @@ export const navMain: NavItem[] = [
         roles: ["admin"],
         items: [
             {
-                title: "Institutional Intake",
-                url: "/dashboard/participants",
-            },
-            {
                 title: "Member Registry",
-                url: "/dashboard/participants",
+                url: "/dashboard/invite",
             },
         ],
     },

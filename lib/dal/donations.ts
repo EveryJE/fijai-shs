@@ -62,7 +62,7 @@ export const getDonationsByContactPerson = cache(async (contactPersonId: string)
 export const getDonationsByDigitalCard = cache(async (digitalCardId: string) => {
     return prisma.donation.findMany({
         where: { digitalCardId, status: "paid" },
-        include: { donationItem: true, event: true },
+        include: { donationItem: true, event: true, contactPerson: true },
         orderBy: { createdAt: "desc" },
     });
 });

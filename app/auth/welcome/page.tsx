@@ -1,12 +1,13 @@
 "use client"
 
+import { Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { ShieldCheck, Mail, Key } from "lucide-react"
 
-export default function WelcomePage() {
+function WelcomeContent() {
     const searchParams = useSearchParams()
     const email = searchParams.get("email") || ""
 
@@ -73,5 +74,13 @@ export default function WelcomePage() {
                 </CardFooter>
             </Card>
         </div>
+    )
+}
+
+export default function WelcomePage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <WelcomeContent />
+        </Suspense>
     )
 }

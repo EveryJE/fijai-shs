@@ -373,7 +373,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                                         style={{ backgroundColor: category.color }}
                                                     />
                                                     <span className="font-semibold">{category.name}</span>
-                                                    <Badge variant="outline" className="ml-2">
+                                                    <Badge variant="outline" className="ml-2" style={{ backgroundColor: `${category.color}10`,borderColor:`${category.color}` }}>
                                                         {category.donationItems.length} items
                                                     </Badge>
                                                 </div>

@@ -1,7 +1,8 @@
 
 import { notFound } from "next/navigation";
-import { getDigitalCardByCardCode } from "@/lib/dal/donations";
+import { getDigitalCardByCardCode, getDonationsByDigitalCard } from "@/lib/dal/donations";
 import { DonateFormClient } from "@/components/donate/DonateFormClient";
+import { prisma } from "@/lib/prisma";
 
 
 interface DonatePageProps {
@@ -18,7 +19,7 @@ export default async function DonatePage({ params }: DonatePageProps) {
         notFound();
     }
     const event = digitalCard.event;
-    // Pass full details for categories and items
+    
     const categories = (event.categories || []).map((cat: any) => ({
       id: cat.id,
       name: cat.name,
@@ -34,11 +35,29 @@ export default async function DonatePage({ params }: DonatePageProps) {
       })),
     }));
 
+    const donations = await getDonationsByDigitalCard(digitalCard.id);
+    
+    const rsvps = donations.map(d => ({
+        id: d.id,
+        name: d.donorName || "Anonymous",
+        email: d.donorEmail || undefined,
+        phone: d.phone || undefined,
+        amount: Number(d.amount),
+        reference: d.reference,
+        position: (d.contactPerson?.name) || (d.metadata as any)?.position || null,
+        avatarUrl: d.contactPerson?.profilePictureUrl || (d.metadata as any)?.avatarUrl || null,
+        classYear: d.contactPerson?.classYear || (d.metadata as any)?.classYear || null,
+    }));
+
+    const totalRevenue = donations.reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
+
     return (
       <DonateFormClient
         digitalCard={digitalCard}
         event={event}
         categories={categories}
+        rsvps={rsvps}
+        totalRevenue={totalRevenue}
       />
     );
 }
