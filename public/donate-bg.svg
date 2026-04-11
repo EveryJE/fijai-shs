@@ -1,7 +1,7 @@
 <svg opacity='.3' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 1500'>
     <rect fill='none' width='2000' height='1500' />
     <defs>
-        <rect stroke='#E5DFD3' stroke-width='.5' width='1' height='1' id='s' />
+        <rect stroke='#F8F7F1' stroke-width='.5' width='1' height='1' id='s' />
         <pattern id='a' width='3' height='3' patternUnits='userSpaceOnUse'
             patternTransform='scale(50) translate(-980 -735)'>
             <use fill='#fcfcfc' href='#s' y='2' />
