@@ -11445,6 +11445,7 @@ export namespace Prisma {
     aliasName: string | null
     classYear: string | null
     uniqueCode: string | null
+    isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11458,6 +11459,7 @@ export namespace Prisma {
     aliasName: string | null
     classYear: string | null
     uniqueCode: string | null
+    isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11472,6 +11474,7 @@ export namespace Prisma {
     aliasName: number
     classYear: number
     uniqueCode: number
+    isActive: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11487,6 +11490,7 @@ export namespace Prisma {
     aliasName?: true
     classYear?: true
     uniqueCode?: true
+    isActive?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11500,6 +11504,7 @@ export namespace Prisma {
     aliasName?: true
     classYear?: true
     uniqueCode?: true
+    isActive?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11514,6 +11519,7 @@ export namespace Prisma {
     aliasName?: true
     classYear?: true
     uniqueCode?: true
+    isActive?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11601,6 +11607,7 @@ export namespace Prisma {
     aliasName: string | null
     classYear: string | null
     uniqueCode: string | null
+    isActive: boolean
     createdAt: Date
     updatedAt: Date
     _count: ProfileCountAggregateOutputType | null
@@ -11632,6 +11639,7 @@ export namespace Prisma {
     aliasName?: boolean
     classYear?: boolean
     uniqueCode?: boolean
+    isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     contactPersons?: boolean | Profile$contactPersonsArgs<ExtArgs>
@@ -11649,6 +11657,7 @@ export namespace Prisma {
     aliasName?: boolean
     classYear?: boolean
     uniqueCode?: boolean
+    isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["profile"]>
@@ -11663,6 +11672,7 @@ export namespace Prisma {
     aliasName?: boolean
     classYear?: boolean
     uniqueCode?: boolean
+    isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["profile"]>
@@ -11677,11 +11687,12 @@ export namespace Prisma {
     aliasName?: boolean
     classYear?: boolean
     uniqueCode?: boolean
+    isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "fullName" | "avatarUrl" | "phone" | "roles" | "aliasName" | "classYear" | "uniqueCode" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "fullName" | "avatarUrl" | "phone" | "roles" | "aliasName" | "classYear" | "uniqueCode" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
   export type ProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contactPersons?: boolean | Profile$contactPersonsArgs<ExtArgs>
     digitalCards?: boolean | Profile$digitalCardsArgs<ExtArgs>
@@ -11706,6 +11717,7 @@ export namespace Prisma {
       aliasName: string | null
       classYear: string | null
       uniqueCode: string | null
+      isActive: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["profile"]>
@@ -12142,6 +12154,7 @@ export namespace Prisma {
     readonly aliasName: FieldRef<"Profile", 'String'>
     readonly classYear: FieldRef<"Profile", 'String'>
     readonly uniqueCode: FieldRef<"Profile", 'String'>
+    readonly isActive: FieldRef<"Profile", 'Boolean'>
     readonly createdAt: FieldRef<"Profile", 'DateTime'>
     readonly updatedAt: FieldRef<"Profile", 'DateTime'>
   }
@@ -12773,6 +12786,7 @@ export namespace Prisma {
     aliasName: 'aliasName',
     classYear: 'classYear',
     uniqueCode: 'uniqueCode',
+    isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -13701,6 +13715,7 @@ export namespace Prisma {
     aliasName?: StringNullableFilter<"Profile"> | string | null
     classYear?: StringNullableFilter<"Profile"> | string | null
     uniqueCode?: StringNullableFilter<"Profile"> | string | null
+    isActive?: BoolFilter<"Profile"> | boolean
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     contactPersons?: ContactPersonListRelationFilter
@@ -13717,6 +13732,7 @@ export namespace Prisma {
     aliasName?: SortOrderInput | SortOrder
     classYear?: SortOrderInput | SortOrder
     uniqueCode?: SortOrderInput | SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     contactPersons?: ContactPersonOrderByRelationAggregateInput
@@ -13736,6 +13752,7 @@ export namespace Prisma {
     roles?: StringNullableListFilter<"Profile">
     aliasName?: StringNullableFilter<"Profile"> | string | null
     classYear?: StringNullableFilter<"Profile"> | string | null
+    isActive?: BoolFilter<"Profile"> | boolean
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     contactPersons?: ContactPersonListRelationFilter
@@ -13752,6 +13769,7 @@ export namespace Prisma {
     aliasName?: SortOrderInput | SortOrder
     classYear?: SortOrderInput | SortOrder
     uniqueCode?: SortOrderInput | SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProfileCountOrderByAggregateInput
@@ -13772,6 +13790,7 @@ export namespace Prisma {
     aliasName?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     classYear?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     uniqueCode?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    isActive?: BoolWithAggregatesFilter<"Profile"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
   }
@@ -14662,6 +14681,7 @@ export namespace Prisma {
     aliasName?: string | null
     classYear?: string | null
     uniqueCode?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     contactPersons?: ContactPersonCreateNestedManyWithoutProfileInput
@@ -14678,6 +14698,7 @@ export namespace Prisma {
     aliasName?: string | null
     classYear?: string | null
     uniqueCode?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     contactPersons?: ContactPersonUncheckedCreateNestedManyWithoutProfileInput
@@ -14694,6 +14715,7 @@ export namespace Prisma {
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
     classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contactPersons?: ContactPersonUpdateManyWithoutProfileNestedInput
@@ -14710,6 +14732,7 @@ export namespace Prisma {
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
     classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contactPersons?: ContactPersonUncheckedUpdateManyWithoutProfileNestedInput
@@ -14726,6 +14749,7 @@ export namespace Prisma {
     aliasName?: string | null
     classYear?: string | null
     uniqueCode?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14740,6 +14764,7 @@ export namespace Prisma {
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
     classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14754,6 +14779,7 @@ export namespace Prisma {
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
     classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15514,6 +15540,7 @@ export namespace Prisma {
     aliasName?: SortOrder
     classYear?: SortOrder
     uniqueCode?: SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15527,6 +15554,7 @@ export namespace Prisma {
     aliasName?: SortOrder
     classYear?: SortOrder
     uniqueCode?: SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15540,6 +15568,7 @@ export namespace Prisma {
     aliasName?: SortOrder
     classYear?: SortOrder
     uniqueCode?: SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16461,6 +16490,7 @@ export namespace Prisma {
     aliasName?: string | null
     classYear?: string | null
     uniqueCode?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     contactPersons?: ContactPersonCreateNestedManyWithoutProfileInput
@@ -16476,6 +16506,7 @@ export namespace Prisma {
     aliasName?: string | null
     classYear?: string | null
     uniqueCode?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     contactPersons?: ContactPersonUncheckedCreateNestedManyWithoutProfileInput
@@ -16608,6 +16639,7 @@ export namespace Prisma {
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
     classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contactPersons?: ContactPersonUpdateManyWithoutProfileNestedInput
@@ -16623,6 +16655,7 @@ export namespace Prisma {
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
     classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contactPersons?: ContactPersonUncheckedUpdateManyWithoutProfileNestedInput
@@ -17575,6 +17608,7 @@ export namespace Prisma {
     aliasName?: string | null
     classYear?: string | null
     uniqueCode?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     digitalCards?: DigitalCardCreateNestedManyWithoutProfileInput
@@ -17590,6 +17624,7 @@ export namespace Prisma {
     aliasName?: string | null
     classYear?: string | null
     uniqueCode?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     digitalCards?: DigitalCardUncheckedCreateNestedManyWithoutProfileInput
@@ -17722,6 +17757,7 @@ export namespace Prisma {
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
     classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     digitalCards?: DigitalCardUpdateManyWithoutProfileNestedInput
@@ -17737,6 +17773,7 @@ export namespace Prisma {
     aliasName?: NullableStringFieldUpdateOperationsInput | string | null
     classYear?: NullableStringFieldUpdateOperationsInput | string | null
     uniqueCode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     digitalCards?: DigitalCardUncheckedUpdateManyWithoutProfileNestedInput
