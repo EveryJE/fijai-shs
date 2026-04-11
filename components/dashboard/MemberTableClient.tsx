@@ -54,7 +54,7 @@ export function MemberTableClient({ profiles, events }: MemberTableClientProps) 
                 </div>
             </Tabs>
 
-            <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+            <div className=" overflow-hidden">
                 <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between px-6 py-4 bg-muted/20 border-b">
                     <div className="relative w-full lg:w-96">
                         <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
