@@ -165,7 +165,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                             <Input 
                                 {...register("fullName")} 
                                 disabled={!isAdmin} 
-                                className={cn("h-12 border-muted-foreground/10", !isAdmin && "bg-muted font-bold opacity-80")} 
+                                className={cn("", !isAdmin && "bg-muted font-bold opacity-80")} 
                                 placeholder="Formal name"
                             />
                             {!isAdmin && (
@@ -183,7 +183,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                                 </Label>
                                 <Input 
                                     {...register("classYear")} 
-                                    className="h-12 border-muted-foreground/10"
+                                    className=""
                                     placeholder="e.g. 2008" 
                                 />
                             </div>

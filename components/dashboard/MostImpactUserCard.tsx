@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TrophyIcon, StarIcon, HeartHandshakeIcon } from "lucide-react";
+import { getPublicUrlSync } from "@/lib/storage-utils";
 
 interface MostImpactUserCardProps {
     user: {
@@ -14,6 +15,10 @@ interface MostImpactUserCardProps {
 
 export function MostImpactUserCard({ user }: MostImpactUserCardProps) {
     if (!user) return null;
+
+    const avatarSrc = user.avatarUrl?.startsWith("http")
+        ? user.avatarUrl
+        : getPublicUrlSync("avatars", user.avatarUrl) || "";
 
     return (
         <Card className="border-none shadow-lg bg-primary text-primary-foreground overflow-hidden relative group">
@@ -33,7 +38,7 @@ export function MostImpactUserCard({ user }: MostImpactUserCardProps) {
                 <div className="flex items-center gap-4">
                     <div className="relative">
                         <Avatar className="h-16 w-16 border-2 border-white/20 shadow-xl">
-                            <AvatarImage src={user.avatarUrl || ""} />
+                            <AvatarImage src={avatarSrc} />
                             <AvatarFallback className="bg-white/10 text-xl font-bold">
                                 {(user.fullName || "A").charAt(0)}
                             </AvatarFallback>
