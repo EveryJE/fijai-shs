@@ -52,7 +52,7 @@ export async function sendContactPersonDetails(contact: {
     classYear?: string;
     loginLink?: string;
 }) {
-    const profileLink = `${BASE_URL}/contact/${contact.uniqueCode}`;
+    const profileLink = `${BASE_URL}/donate/${contact.uniqueCode}`;
     const loginLink = contact.loginLink || `${BASE_URL}/auth/welcome?email=${encodeURIComponent(contact.email)}`;
 
     const html = await render(

@@ -25,7 +25,7 @@ export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: Impa
   const shareLink = digitalCard 
     ? `${window.location.origin}/donate/${digitalCard.cardCode}`
     : rsvp 
-    ? `${window.location.origin}/contact/${rsvp.uniqueCode}`
+    ? `${window.location.origin}/donate/${rsvp.uniqueCode}`
     : "";
 
   const copyToClipboard = () => {

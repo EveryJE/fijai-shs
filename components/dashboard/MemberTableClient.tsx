@@ -16,11 +16,17 @@ interface MemberTableClientProps {
 }
 
 export function MemberTableClient({ profiles, events }: MemberTableClientProps) {
+    const [statusTab, setStatusTab] = useState("active");
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("all");
 
+    const activeCount = profiles.filter(p => p.isActive !== false).length;
+    const inactiveCount = profiles.filter(p => p.isActive === false).length;
+
     const filteredProfiles = useMemo(() => {
         return profiles.filter((profile) => {
+            const matchesStatus = statusTab === "active" ? (profile.isActive !== false) : (profile.isActive === false);
+            
             const matchesSearch = 
                 profile.fullName?.toLowerCase().includes(search.toLowerCase()) ||
                 profile.email.toLowerCase().includes(search.toLowerCase());
@@ -29,38 +35,52 @@ export function MemberTableClient({ profiles, events }: MemberTableClientProps) 
                 roleFilter === "all" || 
                 profile.roles.includes(roleFilter);
 
-            return matchesSearch && matchesRole;
+            return matchesStatus && matchesSearch && matchesRole;
         });
-    }, [profiles, search, roleFilter]);
+    }, [profiles, search, roleFilter, statusTab]);
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between px-6 py-4 bg-muted/20 border-b">
-                <div className="relative w-full lg:w-96">
-                    <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        placeholder="Search by name or email..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="pl-10 h-10 border-transparent bg-white/50 focus:bg-white transition-all"
-                    />
+        <div className="space-y-4 animate-in fade-in duration-500">
+            <Tabs value={statusTab} onValueChange={setStatusTab} className="w-full">
+                <div className="flex items-center justify-between mb-2">
+                    <TabsList className="bg-muted/50 p-1">
+                        <TabsTrigger value="active" className="px-6 font-bold uppercase text-[10px] tracking-widest">
+                            Active Members ({activeCount})
+                        </TabsTrigger>
+                        <TabsTrigger value="inactive" className="px-6 font-bold uppercase text-[10px] tracking-widest data-[state=active]:text-red-600">
+                            Archive / Past ({inactiveCount})
+                        </TabsTrigger>
+                    </TabsList>
                 </div>
-                
-                <div className="flex items-center gap-4 w-full lg:w-auto">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">
-                        <FilterIcon className="h-3 w-3" />
-                        Role Filter:
+            </Tabs>
+
+            <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between px-6 py-4 bg-muted/20 border-b">
+                    <div className="relative w-full lg:w-96">
+                        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search by name or email..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="pl-10 h-10 border-transparent bg-white/50 focus:bg-white transition-all text-sm"
+                        />
                     </div>
-                    <Tabs value={roleFilter} onValueChange={setRoleFilter} className="w-full lg:w-auto">
-                        <TabsList className="bg-white/50 border">
-                            <TabsTrigger value="all" className="text-[10px] uppercase font-bold tracking-wider">All Records</TabsTrigger>
-                            <TabsTrigger value="admin" className="text-[10px] uppercase font-bold tracking-wider">Admins</TabsTrigger>
-                            <TabsTrigger value="rsvp" className="text-[10px] uppercase font-bold tracking-wider">RSVP</TabsTrigger>
-                            <TabsTrigger value="cardholder" className="text-[10px] uppercase font-bold tracking-wider">Cards</TabsTrigger>
-                        </TabsList>
-                    </Tabs>
+                    
+                    <div className="flex items-center gap-4 w-full lg:w-auto">
+                        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">
+                            <FilterIcon className="h-3 w-3" />
+                            By Role:
+                        </div>
+                        <Tabs value={roleFilter} onValueChange={setRoleFilter} className="w-full lg:w-auto">
+                            <TabsList className="bg-white border">
+                                <TabsTrigger value="all" className="text-[9px] uppercase font-bold tracking-wider">All</TabsTrigger>
+                                <TabsTrigger value="admin" className="text-[9px] uppercase font-bold tracking-wider">Admins</TabsTrigger>
+                                <TabsTrigger value="rsvp" className="text-[9px] uppercase font-bold tracking-wider">RSVP</TabsTrigger>
+                                <TabsTrigger value="cardholder" className="text-[9px] uppercase font-bold tracking-wider">Cards</TabsTrigger>
+                            </TabsList>
+                        </Tabs>
+                    </div>
                 </div>
-            </div>
 
             <Table>
                 <TableHeader>
@@ -122,6 +142,7 @@ export function MemberTableClient({ profiles, events }: MemberTableClientProps) 
                     )}
                 </TableBody>
             </Table>
+            </div>
         </div>
     );
 }

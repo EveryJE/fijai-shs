@@ -34,6 +34,12 @@ interface DonateDigitalCard {
   alias?: string;
 }
 
+interface DonateContactPerson {
+  id: string;
+  uniqueCode: string;
+  name: string;
+}
+
 interface DonateEvent {
   id: string;
   title: string;
@@ -46,6 +52,7 @@ interface DonateEvent {
 
 interface DonateFormClientProps {
   digitalCard?: DonateDigitalCard;
+  contactPerson?: DonateContactPerson;
   event: DonateEvent;
   categories: DonateCategory[];
   rsvps?: RSVP[];
@@ -59,6 +66,7 @@ interface DonateFormClientProps {
  */
 export const DonateFormClient: React.FC<DonateFormClientProps> = ({
   digitalCard,
+  contactPerson,
   event,
   categories,
   rsvps = [],
@@ -96,6 +104,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
           donorName: data.name,
           phone: data.phone,
           digitalCardId: digitalCard?.id,
+          contactPersonId: contactPerson?.id,
           donationItemId: data.item,
           momentFileUrl: data.momentFileUrl,
           momentCaption: data.momentCaption,
@@ -137,7 +146,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
            <DonateHeader
               eventTitle={event.title}
               eventDescription={event.description || "Establish your impact and contribute to the Fijai SHS Alumni Institutional Fund."}
-              digitalCodeUserName={digitalCard?.holderName || digitalCard?.alias || 'General Fund'}
+              digitalCodeUserName={digitalCard?.holderName || digitalCard?.alias || contactPerson?.name || 'General Fund'}
               organizationName={organizationName}
             />
           <div className="p-4 md:p-6">

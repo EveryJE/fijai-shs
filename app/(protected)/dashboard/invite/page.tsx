@@ -29,7 +29,7 @@ export default async function ParticipantsPage() {
                 <CreateUserForm events={events} />
             </div>
 
-            <Card className=" overflow-hidden bg-white text-black/90 gap-y-0 group border-none shadow-2xl">
+            <Card className=" overflow-hidden bg-white text-black/90 gap-y-0 group border-none ">
                 <CardHeader className="bg-muted/5 pb-8 border-b">
                     <div className="flex items-center justify-between">
                         <div className="space-y-1">

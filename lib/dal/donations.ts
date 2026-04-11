@@ -34,6 +34,33 @@ export const getDigitalCardByCardCode = cache(async (cardCode: string | undefine
     });
 });
 
+export const getContactPersonByUniqueCode = cache(async (uniqueCode: string | undefined) => {
+    if (!uniqueCode) return null;
+    return prisma.contactPerson.findUnique({
+        where: { uniqueCode },
+        include: {
+            event: {
+                include: {
+                    categories: {
+                        orderBy: { displayOrder: "asc" },
+                        include: {
+                            donationItems: {
+                                orderBy: { displayOrder: "asc" },
+                            },
+                        },
+                    },
+                    contactPersons: {
+                        include: {
+                            profile: true
+                        }
+                    },
+                },
+            },
+            profile: true,
+        },
+    });
+});
+
 export const getDonationsByUser = cache(async (userId: string) => {
     return prisma.donation.findMany({
         where: { userId },

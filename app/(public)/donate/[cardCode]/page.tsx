@@ -1,6 +1,6 @@
 
 import { notFound } from "next/navigation";
-import { getDigitalCardByCardCode, getDonationsByDigitalCard } from "@/lib/dal/donations";
+import { getDigitalCardByCardCode, getContactPersonByUniqueCode, getDonationsByDigitalCard, getDonationsByContactPerson } from "@/lib/dal/donations";
 import { DonateFormClient } from "@/components/donate/DonateFormClient";
 import { type RSVP } from "@/components/donate/RSVPList";
 import { prisma } from "@/lib/prisma";
@@ -15,13 +15,21 @@ export default async function DonatePage({ params }: DonatePageProps) {
     if (!cardCode) {
         notFound();
     }
+
+    // Try finding a digital card first, then an RSVP contact person
     const digitalCard = await getDigitalCardByCardCode(cardCode);
-    if (!digitalCard) {
+    const contactPerson = !digitalCard ? await getContactPersonByUniqueCode(cardCode) : null;
+
+    if (!digitalCard && !contactPerson) {
         notFound();
     }
-    const event = digitalCard.event;
+
+    const eventEntity = digitalCard?.event || contactPerson?.event;
+    if (!eventEntity) {
+        notFound();
+    }
     
-    const categories = (event.categories || []).map((cat: any) => ({
+    const categories = (eventEntity.categories || []).map((cat: any) => ({
       id: cat.id,
       name: cat.name,
       color: cat.color,
@@ -36,9 +44,12 @@ export default async function DonatePage({ params }: DonatePageProps) {
       })),
     }));
 
-    const donations = await getDonationsByDigitalCard(digitalCard.id);
+    // Get donations linked to this specific sharer
+    const donations = digitalCard 
+        ? await getDonationsByDigitalCard(digitalCard.id)
+        : await getDonationsByContactPerson(contactPerson!.id);
     
-    const rsvps: RSVP[] = (event.contactPersons || [])
+    const rsvps: RSVP[] = (eventEntity.contactPersons || [])
         .filter((cp: any) => cp.profile?.isActive !== false)
         .map((cp: any) => ({
             id: cp.id,
@@ -54,8 +65,9 @@ export default async function DonatePage({ params }: DonatePageProps) {
 
     return (
       <DonateFormClient
-        digitalCard={digitalCard}
-        event={event}
+        digitalCard={digitalCard || undefined}
+        contactPerson={contactPerson || undefined}
+        event={eventEntity}
         categories={categories}
         rsvps={rsvps}
         totalRevenue={totalRevenue}

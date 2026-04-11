@@ -241,19 +241,6 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                             </div>
                         </div>
 
-                        {(isRSVP || isCardholder) && (
-                            <div className="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 p-2 opacity-5 scale-150 rotate-12 group-hover:scale-[1.7] transition-transform duration-500">
-                                    <CheckCircle2Icon className="h-12 w-12 text-emerald-600" />
-                                </div>
-                                <div className="relative">
-                                    <p className="text-[9px] font-black text-emerald-800  tracking-[2px] mb-1">Impact Tracking Active</p>
-                                    <p className="text-[11px] text-emerald-900/60 font-medium leading-relaxed">
-                                        As an active {isRSVP ? "referral partner" : "cardholder"}, your contributions are tracked across the Fijai institutional network.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
                     </CardContent>
                 </Card>
             </div>
