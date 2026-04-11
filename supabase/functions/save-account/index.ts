@@ -132,7 +132,8 @@ serve(async (req) => {
                 accountNumber,
                 accountName,
                 subaccountCode,
-                currency: "GHS"
+                currency: "GHS",
+                updatedAt: new Date().toISOString(),
             });
 
         if (dbError) {
