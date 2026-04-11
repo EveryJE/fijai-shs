@@ -43,6 +43,7 @@ interface Donation {
     currency: string;
     status: string;
     paymentMethod: string;
+    userId: string | null;
     createdAt: string | Date;
     paidAt: string | Date | null;
     event?: { id: string; title: string } | null;
@@ -58,9 +59,10 @@ interface DonationsClientProps {
     paystackDonations: Donation[];
     manualDonations: Donation[];
     events: { id: string; title: string }[];
+    currentUserId?: string;
 }
 
-export function DonationsClient({ paystackDonations, manualDonations, events }: DonationsClientProps) {
+export function DonationsClient({ paystackDonations, manualDonations, events, currentUserId }: DonationsClientProps) {
     const [activeTab, setActiveTab] = useState<"all" | "paystack" | "manual">("all");
     const [sheetOpen, setSheetOpen] = useState(false);
     const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
@@ -359,27 +361,36 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
                                             <TableCell className="text-right actions-cell">
                                                 {d.paymentMethod === "manual" ? (
                                                     <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon-xs"
-                                                            onClick={(e) => handleEdit(e, d)}
-                                                            className="h-7 w-7"
-                                                        >
-                                                            <PencilIcon className="h-3 w-3" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon-xs"
-                                                            onClick={(e) => handleDelete(e, d.id)}
-                                                            disabled={deletingId === d.id}
-                                                            className="text-destructive hover:text-destructive h-7 w-7"
-                                                        >
-                                                            {deletingId === d.id ? (
-                                                                <Loader2 className="h-3 w-3 animate-spin" />
-                                                            ) : (
-                                                                <Trash2Icon className="h-3 w-3" />
-                                                            )}
-                                                        </Button>
+                                                        {d.userId === currentUserId ? (
+                                                            <>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon-xs"
+                                                                    onClick={(e) => handleEdit(e, d)}
+                                                                    className="h-7 w-7"
+                                                                >
+                                                                    <PencilIcon className="h-3 w-3" />
+                                                                </Button>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon-xs"
+                                                                    onClick={(e) => handleDelete(e, d.id)}
+                                                                    disabled={deletingId === d.id}
+                                                                    className="text-destructive hover:text-destructive h-7 w-7"
+                                                                >
+                                                                    {deletingId === d.id ? (
+                                                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                                                    ) : (
+                                                                        <Trash2Icon className="h-3 w-3" />
+                                                                    )}
+                                                                </Button>
+                                                            </>
+                                                        ) : (
+                                                            <div className="flex items-center gap-1.5 px-2 py-1 text-[9px] font-bold text-muted-foreground/60 bg-muted/20 rounded border border-muted/10">
+                                                                <EyeIcon className="h-2.5 w-2.5" />
+                                                                Read Only
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 ) : (
                                                     <div className="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end">

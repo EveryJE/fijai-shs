@@ -27,6 +27,7 @@ export async function sendDigitalCardDetails(card: {
             cardCode: card.cardCode,
             eventTitle: card.eventTitle,
             classYear: card.classYear,
+            email: card.email,
             cardLink,
             loginLink,
         })
@@ -60,6 +61,7 @@ export async function sendContactPersonDetails(contact: {
             uniqueCode: contact.uniqueCode,
             eventTitle: contact.eventTitle,
             classYear: contact.classYear,
+            email: contact.email,
             profileLink,
             loginLink,
         })

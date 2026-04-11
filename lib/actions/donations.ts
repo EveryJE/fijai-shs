@@ -72,9 +72,15 @@ export async function updateManualDonation(id: string, data: {
     contactPersonId?: string | null;
     momentCaption?: string | null;
 }) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
     const existing = await prisma.donation.findUnique({ where: { id } });
     if (!existing || existing.paymentMethod !== "manual") {
         throw new Error("Can only edit manual donations");
+    }
+    if (existing.userId !== user.id) {
+        throw new Error("Unauthorized: Only the creator can edit this manual donation.");
     }
 
     const donation = await prisma.donation.update({
@@ -94,9 +100,16 @@ export async function updateManualDonation(id: string, data: {
  * Delete a manual donation (only manual donations can be deleted).
  */
 export async function deleteManualDonation(id: string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
     const existing = await prisma.donation.findUnique({ where: { id } });
     if (!existing || existing.paymentMethod !== "manual") {
         throw new Error("Can only delete manual donations");
+    }
+    if (existing.userId !== user.id) {
+        throw new Error("Unauthorized: Only the creator can delete this manual donation.");
     }
 
     await prisma.donation.delete({ where: { id } });

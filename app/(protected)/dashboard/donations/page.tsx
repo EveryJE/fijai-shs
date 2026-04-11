@@ -5,7 +5,12 @@ import { HeartHandshakeIcon, WalletIcon, HandCoinsIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { DonationsClient } from "@/components/dashboard/DonationsClient";
 
+import { createClient } from "@/utils/supabase/server";
+
 export default async function DonationsPage() {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     const [paystackDonations, manualDonations, breakdown, events] = await Promise.all([
         getDonationsByMethod("paystack", 100),
         getDonationsByMethod("manual", 100),
@@ -63,6 +68,7 @@ export default async function DonationsPage() {
                 paystackDonations={paystackDonations}
                 manualDonations={manualDonations}
                 events={events}
+                currentUserId={user?.id}
             />
         </div>
     );
