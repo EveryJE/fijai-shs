@@ -46,8 +46,8 @@ interface RSVP {
   name: string;
   email?: string;
   phone?: string;
-  amount?: number;
-  reference?: string;
+  amount: number;
+  reference: string;
   position?: string | null;
   avatarUrl?: string | null;
   classYear?: string | null;
