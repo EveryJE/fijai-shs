@@ -160,7 +160,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
             />
 
             <div className="mt-8 text-center font-playfair animate-pulse opacity-40 text-[10px] uppercase tracking-widest">
-              Powered By KoalaKlick • Institutional Fundraising Modernized
+              Powered By KoalaKlick
             </div>
           </div>
         </div>

@@ -104,14 +104,15 @@ export function CreateUserForm({ events }: { events: Event[] }) {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="event" className="text-sm font-semibold text-primary">Event Context</Label>
-              <Select value={eventId}>
+              <Select value={eventId} onValueChange={(val) => setEventId(val || "")}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Reference" />
+                  <SelectValue placeholder="Select Reference">
+                    {eventId ? events.find(e => e.id === eventId)?.title : "Select Reference"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>                     
-                   <SelectItem disabled>Select Reference</SelectItem>
                   {events.map(event => (
-                    <SelectItem key={event.id} value={event.title}>{event.title}</SelectItem>
+                    <SelectItem key={event.id} value={event.id}>{event.title}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

@@ -37,16 +37,14 @@ export default async function DonatePage({ params }: DonatePageProps) {
 
     const donations = await getDonationsByDigitalCard(digitalCard.id);
     
-    const rsvps = donations.map(d => ({
-        id: d.id,
-        name: d.donorName || "Anonymous",
-        email: d.donorEmail || undefined,
-        phone: d.phone || undefined,
-        amount: Number(d.amount),
-        reference: d.reference,
-        position: (d.contactPerson?.name) || (d.metadata as any)?.position || null,
-        avatarUrl: d.contactPerson?.profilePictureUrl || (d.metadata as any)?.avatarUrl || null,
-        classYear: d.contactPerson?.classYear || (d.metadata as any)?.classYear || null,
+    const rsvps = (event.contactPersons || []).map((cp: any) => ({
+        id: cp.id,
+        name: cp.name,
+        email: cp.email || undefined,
+        phone: cp.phone || undefined,
+        position: (cp.metadata as any)?.position || "Project Lead",
+        avatarUrl: cp.profilePictureUrl || null,
+        classYear: cp.classYear || null,
     }));
 
     const totalRevenue = donations.reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
