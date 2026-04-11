@@ -9,7 +9,7 @@ import { Building2Icon, LandmarkIcon } from "lucide-react";
 export default async function OrgSettingsPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     const [org, profile] = await Promise.all([
         getOrganization(),
         user ? getProfileById(user.id) : Promise.resolve(null)
@@ -18,7 +18,7 @@ export default async function OrgSettingsPage() {
     return (
         <div className="max-w-7xl p-6 lg:p-10  space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div>
-                <h1 className="text-4xl font-black tracking-tighter text-[#730303] uppercase">
+                <h1 className="text-4xl font-black  text-[#730303] uppercase">
                     Institution Settings
                 </h1>
                 <p className="text-muted-foreground mt-2 text-sm">

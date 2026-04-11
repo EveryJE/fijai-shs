@@ -17,12 +17,12 @@ export default async function ParticipantsPage() {
             <div className="flex flex-col md:flex-row items-baseline md:items-center justify-between border-b pb-8 gap-6 group">
                 <div className="space-y-1">
                     <div className="flex items-center gap-3">
-                         <div className="p-2 bg-[#730303]/10 rounded-md text-[#730303]">
+                        <div className="p-2 bg-[#730303]/10 rounded-md text-[#730303]">
                             <ShieldCheckIcon className="h-6 w-6" />
-                         </div>
-                         <h1 className="text-4xl font-bold uppercase tracking-tighter text-[#730303] ">
-                             Institutional Access
-                         </h1>
+                        </div>
+                        <h1 className="text-4xl font-bold uppercase  text-[#730303] ">
+                            Institutional Access
+                        </h1>
                     </div>
                     <p className="text-muted-foreground mt-2 text-sm font-normal">
                         Establish official alumni participation roles and system identities.
@@ -33,11 +33,11 @@ export default async function ParticipantsPage() {
 
             <Card className=" overflow-hidden bg-white text-black/90 gap-y-0 group">
                 <CardHeader className="bg-muted/5 pb-8 border-b">
-                     <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                         <UsersIcon className="h-5 w-5 text-[#DAA520]" />
                         <CardTitle className="text-xl font-semibold  tracking-tight text-[#730303]">Active Member Roster</CardTitle>
-                     </div>
-                     <CardDescription className="text-sm font-normal opacity-60">Complete registry of verified alumni participants and administrators.</CardDescription>
+                    </div>
+                    <CardDescription className="text-sm font-normal opacity-60">Complete registry of verified alumni participants and administrators.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                     <Table>

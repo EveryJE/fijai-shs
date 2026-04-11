@@ -141,8 +141,8 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
       <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-start justify-center gap-8 pt-4">
         
         {/* Main Form Container - Preserving original max-w-3xl look */}
-        <div className="max-w-3xl w-full bg-white/50 backdrop-blur-sm shadow-2xl rounded-xl overflow-hidden shrink-0">
-          <div className="h-48 bg-[url('/school-gate.jpg')] bg-cover bg-center shadow-inner"/>
+        <div className="max-w-3xl w-full bg-white/50 backdrop-blur-sm overflow-hidden shrink-0">
+          <div className="h-48 bg-[url('/school-gate.jpg')] bg-cover bg-center rounded-t-xl"/>
           
           <div className="p-4 md:p-6">
             <DonateHeader

@@ -117,7 +117,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                             ) : (
                                 <>
                                     <CameraIcon className="h-8 w-8 text-white mb-1" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-white">Update Identity</span>
+                                    <span className="text-[10px] font-black   text-white">Update Identity</span>
                                 </>
                             )}
                         </div>
@@ -140,8 +140,8 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
 
                 <div className="flex-1 space-y-1">
                     <div className="flex items-center gap-2">
-                        <h2 className="text-2xl font-black text-[#730303] uppercase tracking-tighter">Identity Profile</h2>
-                        <div className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-black border border-emerald-200 uppercase tracking-widest">
+                        <h2 className="text-2xl font-semibold text-[#730303] ">Identity Profile</h2>
+                        <div className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-black border border-emerald-200  ">
                              Verified
                         </div>
                     </div>
@@ -153,15 +153,15 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="pt-0 border-none shadow-xl shadow-gray-200/50">
-                    <CardHeader className="pb-4 border-b rounded-t-xl border-t-0 bg-primary/5 py-4">
+                    <CardHeader className="border-b rounded-none border-t-0 bg-primary/5 py-4">
                         <div className="flex items-center gap-2">
                              <UserCircleIcon className="h-5 w-5 text-primary" />
-                             <h3 className="font-black uppercase tracking-widest text-xs text-primary">Personal Identity</h3>
+                             <h3 className="font-medium   text-base text-primary">Personal Identity</h3>
                         </div>
                     </CardHeader>
-                    <CardContent className="space-y-6 pt-6">
+                    <CardContent className="space-y-6">
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Full Legal Name</Label>
+                            <Label className="text-sm">Full Legal Name</Label>
                             <Input 
                                 {...register("fullName")} 
                                 disabled={!isAdmin} 
@@ -169,7 +169,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                                 placeholder="Formal name"
                             />
                             {!isAdmin && (
-                                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
+                                <p className="text-[10px] text-muted-foreground font-black   opacity-60">
                                     Official name is locked. Contact admin for updates.
                                 </p>
                             )}
@@ -177,7 +177,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                                <Label className="text-[10px] font-black   text-muted-foreground flex items-center gap-1.5">
                                     <GraduationCapIcon className="h-3.5 w-3.5 text-primary" />
                                     Class Year
                                 </Label>
@@ -188,7 +188,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                                <Label className="text-[10px] font-black   text-muted-foreground flex items-center gap-1.5">
                                     <SparklesIcon className="h-3.5 w-3.5 text-primary" />
                                     Nickname
                                 </Label>
@@ -203,15 +203,15 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                 </Card>
 
                 <Card className="pt-0 border-none shadow-xl shadow-gray-200/50">
-                    <CardHeader className="pb-4 border-b rounded-t-xl border-t-0 bg-primary/5 py-4">
+                    <CardHeader className="pb-4 border-b rounded-none border-t-0 bg-primary/5 py-4">
                         <div className="flex items-center gap-2">
                              <PhoneIcon className="h-5 w-5 text-primary" />
-                             <h3 className="font-black uppercase tracking-widest text-xs text-primary">Communication</h3>
+                             <h3 className="font-black   text-xs text-primary">Communication</h3>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-6 pt-6">
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                            <Label className="text-[10px] font-black   text-muted-foreground flex items-center gap-1.5">
                                 <AtSignIcon className="h-3.5 w-3.5 text-primary" />
                                 Primary Email
                             </Label>
@@ -219,7 +219,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                         </div>
                         
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                            <Label className="text-[10px] font-black   text-muted-foreground flex items-center gap-1.5">
                                 <PhoneIcon className="h-3.5 w-3.5 text-primary" />
                                 Contact Number
                             </Label>
@@ -227,7 +227,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                         </div>
 
                         <div className="space-y-3 pt-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Assigned Institutional Roles</Label>
+                            <Label className="text-[10px] font-black   text-muted-foreground">Assigned Institutional Roles</Label>
                             <div className="flex flex-wrap gap-2">
                                 {profile?.roles?.map((role: string) => (
                                    <StatusBadge
@@ -247,7 +247,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                                     <CheckCircle2Icon className="h-12 w-12 text-emerald-600" />
                                 </div>
                                 <div className="relative">
-                                    <p className="text-[9px] font-black text-emerald-800 uppercase tracking-[2px] mb-1">Impact Tracking Active</p>
+                                    <p className="text-[9px] font-black text-emerald-800  tracking-[2px] mb-1">Impact Tracking Active</p>
                                     <p className="text-[11px] text-emerald-900/60 font-medium leading-relaxed">
                                         As an active {isRSVP ? "referral partner" : "cardholder"}, your contributions are tracked across the Fijai institutional network.
                                     </p>
@@ -262,7 +262,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                 <Button 
                     type="submit" 
                     disabled={isPending || isUploading} 
-                    className="min-w-[240px] h-14 font-black uppercase tracking-[2px] text-xs shadow-2xl shadow-primary/20"
+                    className="min-w-[240px] h-14 font-black  tracking-[2px] text-xs shadow-2xl shadow-primary/20"
                 >
                     {isPending ? "Syncing Identity..." : "Commit Profile Changes"}
                 </Button>

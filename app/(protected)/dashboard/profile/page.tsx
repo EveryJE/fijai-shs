@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { getProfileByEmail } from "@/lib/dal";
-import { 
-    getDonationsByContactPerson, 
+import {
+    getDonationsByContactPerson,
     getDonationsByDigitalCard,
     getDonationsByUser
 } from "@/lib/dal/donations";
@@ -15,8 +15,8 @@ export default async function ProfilePage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    const profile = user?.email 
-        ? await getProfileByEmail(user.email) 
+    const profile = user?.email
+        ? await getProfileByEmail(user.email)
         : null;
 
     if (!profile) return <div>Profile not found</div>;
@@ -30,18 +30,18 @@ export default async function ProfilePage() {
     // 2. Donations raised via Digital Card
     // 3. Donations made personally by the user (userId match)
     const [referralDonations, cardDonations, personalDonations] = await Promise.all([
-        isRSVP && profile.contactPersons?.[0] 
-            ? getDonationsByContactPerson(profile.contactPersons[0].id) 
+        isRSVP && profile.contactPersons?.[0]
+            ? getDonationsByContactPerson(profile.contactPersons[0].id)
             : Promise.resolve([]),
-        isCardholder && profile.digitalCards?.[0] 
-            ? getDonationsByDigitalCard(profile.digitalCards[0].id) 
+        isCardholder && profile.digitalCards?.[0]
+            ? getDonationsByDigitalCard(profile.digitalCards[0].id)
             : Promise.resolve([]),
         getDonationsByUser(profile.id)
     ]);
 
     // Combine and deduplicate if necessary (though usually they are distinct)
     const allImpactDonations = [...referralDonations, ...cardDonations, ...personalDonations];
-    
+
     // Use a Map to deduplicate by ID just in case and serialize Decimals for Client Components
     const uniqueDonations = Array.from(
         new Map(allImpactDonations.map(d => [d.id, {
@@ -59,10 +59,10 @@ export default async function ProfilePage() {
             <div className="flex flex-col md:flex-row items-baseline justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-[#730303] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">
-                         <GraduationCapIcon className="w-10 h-10" />
+                        <GraduationCapIcon className="w-10 h-10" />
                     </div>
                     <div>
-                        <h1 className="text-4xl font-black tracking-tighter text-[#730303] uppercase">
+                        <h1 className="text-4xl font-black  text-[#730303] uppercase">
                             My Profile
                         </h1>
                         <p className="text-muted-foreground mt-0.5 text-lg font-medium">
@@ -100,8 +100,8 @@ export default async function ProfilePage() {
 
                 {(isRSVP || isCardholder) && (
                     <TabsContent value="impact" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                        <ImpactTabContent 
-                            donations={uniqueDonations} 
+                        <ImpactTabContent
+                            donations={uniqueDonations}
                             digitalCard={profile.digitalCards?.[0]}
                             rsvp={profile.contactPersons?.[0]}
                             profile={profile}

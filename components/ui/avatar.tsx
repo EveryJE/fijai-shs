@@ -36,7 +36,7 @@ const AvatarImage = React.forwardRef<
   React.ImgHTMLAttributes<HTMLImageElement>
 >(({ className, ...props }, ref) => {
   if (!props.src) return null;
-  
+
   return (
     <img
       ref={ref}
@@ -58,7 +58,7 @@ const AvatarFallback = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-2xl bg-[#730303]/10 text-[#730303] font-black uppercase tracking-tighter",
+      "flex h-full w-full items-center justify-center rounded-2xl bg-[#730303]/10 text-[#730303] font-black uppercase ",
       className
     )}
     {...props}
