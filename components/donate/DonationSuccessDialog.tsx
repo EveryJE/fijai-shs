@@ -35,7 +35,7 @@ export function DonationSuccessDialog({
     // Fallback if event info isn't provided (e.g. still loading or edge case)
     const title = eventTitle || "Support Fijai SHS Alumni Fund";
     const rawDescription = eventDescription ? eventDescription.replace(/<[^>]*>?/gm, '') : ""; // Strip HTML
-    const text = `I just contributed to ${title}! ${rawDescription.slice(0, 100)}${rawDescription.length > 100 ? '...' : ''} Join me in making an impact.`;
+    const text = `${title}\n\n${rawDescription}`;
 
     try {
       if (navigator.share) {

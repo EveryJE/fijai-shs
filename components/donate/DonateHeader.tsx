@@ -23,7 +23,7 @@ export function DonateHeader({ eventTitle, eventDescription, eventImage, digital
     };
 
     return (
-        <div className="bg-white border border-gray-200 overflow-hidden mb-6">
+        <div className="bg-white/85 border border-gray-200 overflow-hidden mb-6">
             <div className="h-0.55 bg-[#730303] w-full" />
             <div className="p-6 md:p-8">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">

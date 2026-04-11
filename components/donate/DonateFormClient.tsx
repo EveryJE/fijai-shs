@@ -46,8 +46,8 @@ interface RSVP {
   name: string;
   email?: string;
   phone?: string;
-  amount: number;
-  reference: string;
+  amount?: number;
+  reference?: string;
   position?: string | null;
   avatarUrl?: string | null;
   classYear?: string | null;
@@ -143,14 +143,14 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
         {/* Main Form Container - Preserving original max-w-3xl look */}
         <div className="max-w-3xl w-full bg-white/50 backdrop-blur-sm overflow-hidden shrink-0">
           <div className="h-48 bg-[url('/school-gate.jpg')] bg-cover bg-center rounded-t-xl"/>
-          
-          <div className="p-4 md:p-6">
-            <DonateHeader
+           <DonateHeader
               eventTitle={event.title}
               eventDescription={event.description || "Establish your impact and contribute to the Fijai SHS Alumni Institutional Fund."}
               digitalCodeUserName={digitalCard?.holderName || digitalCard?.alias || 'General Fund'}
               organizationName={organizationName}
             />
+          <div className="p-4 md:p-6">
+           
 
             <DonateForm
               categories={categories}

@@ -206,28 +206,28 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                     <CardHeader className="pb-4 border-b rounded-none border-t-0 bg-primary/5 py-4">
                         <div className="flex items-center gap-2">
                              <PhoneIcon className="h-5 w-5 text-primary" />
-                             <h3 className="font-black   text-xs text-primary">Communication</h3>
+                             <h3 className="font-medium  text-base text-primary">Communication</h3>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-6 pt-6">
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-black   text-muted-foreground flex items-center gap-1.5">
+                            <Label className="">
                                 <AtSignIcon className="h-3.5 w-3.5 text-primary" />
                                 Primary Email
                             </Label>
-                            <Input value={profile.email} disabled className="h-12 bg-muted text-muted-foreground font-bold border-muted-foreground/5" />
+                            <Input value={profile.email} disabled className="" />
                         </div>
                         
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-black   text-muted-foreground flex items-center gap-1.5">
+                            <Label className="">
                                 <PhoneIcon className="h-3.5 w-3.5 text-primary" />
                                 Contact Number
                             </Label>
-                            <Input {...register("phone")} className="h-12 border-muted-foreground/10" placeholder="+233 XX XXX XXXX" />
+                            <Input {...register("phone")} className="" placeholder="+233 XX XXX XXXX" />
                         </div>
 
                         <div className="space-y-3 pt-2">
-                            <Label className="text-[10px] font-black   text-muted-foreground">Assigned Institutional Roles</Label>
+                            <Label className="">Assigned Institutional Roles</Label>
                             <div className="flex flex-wrap gap-2">
                                 {profile?.roles?.map((role: string) => (
                                    <StatusBadge
@@ -235,7 +235,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                                       key={role}
                                       variant={role || "Cardholder"}
                                       text={role || "Cardholder"}
-                                      className="font-black"
+                                      className=""
                                    />
                                 ))}
                             </div>
@@ -262,7 +262,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                 <Button 
                     type="submit" 
                     disabled={isPending || isUploading} 
-                    className="min-w-[240px] h-14 font-black  tracking-[2px] text-xs shadow-2xl shadow-primary/20"
+                    className=""
                 >
                     {isPending ? "Syncing Identity..." : "Commit Profile Changes"}
                 </Button>

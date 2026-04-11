@@ -22,7 +22,7 @@ interface RSVPListProps {
 
 export const RSVPList: React.FC<RSVPListProps> = ({ rsvps, organizationName, id }) => {
   return (
-    <div id={id} className="space-y-6 sticky top-4">
+    <div id={id} className="space-y-6 @container  sticky top-4">
       <GoogleFormCard
       className='rounded-lg'
         title={"RSVP List"}
@@ -34,13 +34,14 @@ export const RSVPList: React.FC<RSVPListProps> = ({ rsvps, organizationName, id 
               No registered representatives yet.
             </p>
           ) : (
-            rsvps.map((rsvp) => {
+            <div className='grid grid-cols-1 gap-4 @md:grid-cols-2'>              
+            {rsvps.map((rsvp) => {
               const avatarSrc = rsvp.avatarUrl?.startsWith("http")
                 ? rsvp.avatarUrl
                 : getPublicUrlSync("avatars", rsvp.avatarUrl);
 
               return (
-                <div key={rsvp.id} className="flex gap-4 p-3 rounded-xl border border-gray-100 bg-[#E5DFD3c] hover:bg-gray-50 transition-colors group">
+                <div key={rsvp.id} className="flex gap-4 p-3 rounded-xl border border-gray-100 bg-[#E5DFD3]/50 hover:bg-[#E5DFD3]/80 transition-colors group">
                   <Avatar className="h-12 w-12 border-2 border-primary/10">
                     <AvatarImage src={avatarSrc || ""} />
                     <AvatarFallback className="bg-primary/5 text-primary">
@@ -81,7 +82,8 @@ export const RSVPList: React.FC<RSVPListProps> = ({ rsvps, organizationName, id 
                   </div>
                 </div>
               );
-            })
+            })}
+            </div>
           )}
         </div>
       </GoogleFormCard>
