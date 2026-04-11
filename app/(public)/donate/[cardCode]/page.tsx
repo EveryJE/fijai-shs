@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import { getDigitalCardByCardCode, getDonationsByDigitalCard } from "@/lib/dal/donations";
 import { DonateFormClient } from "@/components/donate/DonateFormClient";
+import { type RSVP } from "@/components/donate/RSVPList";
 import { prisma } from "@/lib/prisma";
 
 
@@ -37,7 +38,7 @@ export default async function DonatePage({ params }: DonatePageProps) {
 
     const donations = await getDonationsByDigitalCard(digitalCard.id);
     
-    const rsvps = (event.contactPersons || []).map((cp: any) => ({
+    const rsvps: RSVP[] = (event.contactPersons || []).map((cp: any) => ({
         id: cp.id,
         name: cp.name,
         email: cp.email || undefined,

@@ -6,7 +6,7 @@ import { usePaystack } from "@/hooks/usePaystack";
 import { DonateForm } from "./DonateForm";
 import { DonateHeader } from "./DonateHeader";
 import { DonationSuccessDialog } from "./DonationSuccessDialog";
-import { RSVPList } from "./RSVPList";
+import { RSVPList, type RSVP } from "./RSVPList";
 import { Users, ArrowDown, UsersIcon } from "lucide-react";
 
 interface DonateItem {
@@ -41,17 +41,7 @@ interface DonateEvent {
   endDate?: string | Date | null;
 }
 
-interface RSVP {
-  id: string;
-  name: string;
-  email?: string;
-  phone?: string;
-  amount: number;
-  reference: string;
-  position?: string | null;
-  avatarUrl?: string | null;
-  classYear?: string | null;
-}
+
 
 interface DonateFormClientProps {
   digitalCard?: DonateDigitalCard;

@@ -4,7 +4,7 @@ import { UserIcon, PhoneIcon, MailIcon, BriefcaseIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getPublicUrlSync } from "@/lib/storage-utils";
 
-interface RSVP {
+export interface RSVP {
   id: string;
   name: string;
   email?: string;
