@@ -40,7 +40,7 @@ export const RSVPList: React.FC<RSVPListProps> = ({ rsvps, organizationName, id 
                 : getPublicUrlSync("avatars", rsvp.avatarUrl);
 
               return (
-                <div key={rsvp.id} className="flex gap-4 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
+                <div key={rsvp.id} className="flex gap-4 p-3 rounded-xl border border-gray-100 bg-[#E5DFD3c] hover:bg-gray-50 transition-colors group">
                   <Avatar className="h-12 w-12 border-2 border-primary/10">
                     <AvatarImage src={avatarSrc || ""} />
                     <AvatarFallback className="bg-primary/5 text-primary">
