@@ -9,11 +9,11 @@ import { toast } from "sonner";
 import { createUserRecord } from "@/lib/actions/auth";
 import { UserPlusIcon, UsersIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { cn } from "@/lib/utils";
 
 const ROLES = [
   { value: "rsvp", label: "RSVP (Contact Person)" },
   { value: "cardholder", label: "Digital Card Holder" },
-  { value: "admin", label: "System Administrator" },
 ];
 
 interface Event {
@@ -28,6 +28,7 @@ export function CreateUserForm({ events }: { events: Event[] }) {
   const [eventId, setEventId] = useState("");
   const [classYear, setClassYear] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -39,7 +40,10 @@ export function CreateUserForm({ events }: { events: Event[] }) {
 
     setLoading(true);
     try {
-      await createUserRecord({ email, fullName, roles, eventId, classYear });
+      const allRoles = [...roles];
+      if (isAdmin) allRoles.push("admin");
+      
+      await createUserRecord({ email, fullName, roles: allRoles, eventId, classYear });
       toast.success("Participant record created successfully");
       setOpen(false);
       resetForm();
@@ -56,6 +60,7 @@ export function CreateUserForm({ events }: { events: Event[] }) {
     setEventId("");
     setClassYear("");
     setRoles([]);
+    setIsAdmin(false);
   };
 
   return (
@@ -129,24 +134,50 @@ export function CreateUserForm({ events }: { events: Event[] }) {
             </div>
           </div>
 
-          <div className="space-y-3">
-            <Label className="text-sm font-semibold text-primary">Designated Roles</Label>
-            <div className="grid grid-cols-1 gap-2 p-3 bg-muted/50 rounded-lg border">
-              {ROLES.map(role => (
-                <label key={role.value} className="flex items-center gap-3 cursor-pointer hover:bg-background p-2 rounded-md transition-colors">
-                  <input
-                    type="checkbox"
-                    value={role.value}
-                    checked={roles.includes(role.value)}
-                    onChange={e => {
-                      if (e.target.checked) setRoles([...roles, role.value]);
-                      else setRoles(roles.filter(r => r !== role.value));
-                    }}
-                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                  <span className="text-xs font-medium">{role.label}</span>
-                </label>
-              ))}
+          <div className="space-y-4">
+            <div className="space-y-3">
+                <Label className="text-sm font-semibold text-primary">Primary Role Type</Label>
+                <div className="grid grid-cols-2 gap-3">
+                {ROLES.map(role => (
+                    <label key={role.value} className={cn(
+                        "flex items-center gap-2 cursor-pointer p-3 rounded border transition-all",
+                        roles.includes(role.value) ? "bg-primary/5 border-primary shadow-sm" : "bg-muted/30 border-transparent hover:bg-muted/50"
+                    )}>
+                    <input
+                        type="checkbox"
+                        value={role.value}
+                        checked={roles.includes(role.value)}
+                        onChange={e => {
+                        if (e.target.checked) setRoles([...roles, role.value]);
+                        else setRoles(roles.filter(r => r !== role.value));
+                        }}
+                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <span className="text-[11px] font-bold uppercase tracking-wider">{role.label.split(' ')[0]}</span>
+                    </label>
+                ))}
+                </div>
+            </div>
+
+            <div className="p-4 bg-primary/5 rounded border border-primary/10 flex items-center justify-between">
+                <div className="space-y-0.5">
+                    <Label className="text-[11px] font-black uppercase tracking-widest text-[#730303]">Grant Admin Access</Label>
+                    <p className="text-[10px] text-muted-foreground leading-tight max-w-[200px]">Enables management of events, users, and overall system configuration.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={cn("text-[9px] font-bold uppercase tracking-widest", isAdmin ? "text-primary" : "text-muted-foreground")}>
+                        {isAdmin ? "Enabled" : "Disabled"}
+                    </span>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            className="sr-only peer"
+                            checked={isAdmin}
+                            onChange={(e) => setIsAdmin(e.target.checked)}
+                        />
+                        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                </div>
             </div>
           </div>
 

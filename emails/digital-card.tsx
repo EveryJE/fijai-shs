@@ -14,6 +14,7 @@ import {
 
 interface DigitalCardEmailProps {
     holderName: string;
+    email: string;
     cardCode: string;
     eventTitle: string;
     cardLink: string;
@@ -23,6 +24,7 @@ interface DigitalCardEmailProps {
 
 export default function DigitalCardEmail({
     holderName = "John Doe",
+    email = "alumni@example.com",
     cardCode = "CARD-ABC123",
     eventTitle = "2026 School Project",
     cardLink = "http://localhost:3000/card/CARD-ABC123",
@@ -66,30 +68,28 @@ export default function DigitalCardEmail({
 
                         <Section style={buttonContainer}>
                             <Link href={cardLink} style={button}>
-                                View Your Card
+                                View Your Donation Page
                             </Link>
                         </Section>
 
-                        <Text style={smallText}>
-                            When people donate through your card, it will be
-                            tracked under your name. You can view your donation
-                            progress anytime.
-                        </Text>
-
-                        <Hr style={hr} />
-
                         <Text style={paragraph}>
-                            <strong>Login Details:</strong> Your account has been
-                            created. You can log in using your email address.
-                            Your default password is your <strong>email address</strong>.
-                            Please change it after your first login.
+                            <strong>How to track your impact:</strong>
+                            <br />
+                            Your account is ready. You can log in to the dashboard to see all contributions linked to your card.
                         </Text>
 
-                        <Text style={footerText}>
-                            Need to check your dashboard?{" "}
-                            <Link href={loginLink} style={link}>
-                                Log in here
-                            </Link>
+                        <Section style={credentialBox}>
+                            <Text style={credentialText}>
+                                <strong>Platform Login:</strong> {loginLink}
+                                <br />
+                                <strong>Official Identifier:</strong> {email}
+                                <br />
+                                <strong>Temporary Password:</strong> Use your <u>email address</u> to log in for the first time.
+                            </Text>
+                        </Section>
+
+                        <Text style={smallText}>
+                            Once logged in, you can update your profile, track milestones, and change your password for security.
                         </Text>
                     </Section>
 
@@ -173,6 +173,21 @@ const codeValue = {
     fontWeight: "bold" as const,
     color: "#730303",
     letterSpacing: "2px",
+};
+
+const credentialBox = {
+    backgroundColor: "#f0f0f0",
+    border: "1px dashed #730303",
+    borderRadius: "8px",
+    padding: "16px",
+    margin: "20px 0",
+};
+
+const credentialText = {
+    fontSize: "13px",
+    color: "#333",
+    margin: "0",
+    lineHeight: "1.8",
 };
 
 const buttonContainer = {

@@ -14,6 +14,7 @@ import {
 
 interface ContactPersonEmailProps {
     name: string;
+    email: string;
     uniqueCode: string;
     eventTitle: string;
     classYear?: string | null;
@@ -23,6 +24,7 @@ interface ContactPersonEmailProps {
 
 export default function ContactPersonEmail({
     name = "Kofi Mensah",
+    email = "alumni@example.com",
     uniqueCode = "SCH-2026-KOFI",
     eventTitle = "2026 School Project",
     classYear = "Class of 2015",
@@ -71,30 +73,28 @@ export default function ContactPersonEmail({
 
                         <Section style={buttonContainer}>
                             <Link href={profileLink} style={button}>
-                                View Your Profile
+                                View Your Referral Page
                             </Link>
                         </Section>
 
-                        <Text style={smallText}>
-                            Share your profile link or QR code with potential
-                            donors. All donations made through your link will
-                            be tracked under your name.
-                        </Text>
-
-                        <Hr style={hr} />
-
                         <Text style={paragraph}>
-                            <strong>Login Details:</strong> Your account has been
-                            created. You can log in using your email address.
-                            Your default password is your <strong>email address</strong>.
-                            Please change it after your first login.
+                            <strong>Institutional Dashboard:</strong>
+                            <br />
+                            Manage your network, track milestones, and view a detailed breakdown of all contributions credited to you.
                         </Text>
 
-                        <Text style={footerText}>
-                            Access your dashboard:{" "}
-                            <Link href={loginLink} style={link}>
-                                Log in here
-                            </Link>
+                        <Section style={credentialBox}>
+                            <Text style={credentialText}>
+                                <strong>System Login:</strong> {loginLink}
+                                <br />
+                                <strong>Official Identifier:</strong> {email}
+                                <br />
+                                <strong>Temporary Credential:</strong> Use your <u>email address</u> to authenticate for the first time.
+                            </Text>
+                        </Section>
+
+                        <Text style={smallText}>
+                            Your unique code allows the platform to link donations directly to your referral efforts. Share your page link often to maximize your impact!
                         </Text>
                     </Section>
 
@@ -178,6 +178,21 @@ const codeValue = {
     fontWeight: "bold" as const,
     color: "#730303",
     letterSpacing: "2px",
+};
+
+const credentialBox = {
+    backgroundColor: "#f0f0f0",
+    border: "1px dashed #730303",
+    borderRadius: "8px",
+    padding: "16px",
+    margin: "20px 0",
+};
+
+const credentialText = {
+    fontSize: "13px",
+    color: "#333",
+    margin: "0",
+    lineHeight: "1.8",
 };
 
 const buttonContainer = {

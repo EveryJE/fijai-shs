@@ -18,8 +18,8 @@ export async function sendDigitalCardDetails(card: {
     classYear?: string;
     loginLink?: string;
 }) {
-    const cardLink = `${BASE_URL}/card/${card.cardCode}`;
-    const loginLink = card.loginLink || `${BASE_URL}/auth/login`;
+    const cardLink = `${BASE_URL}/donate/${card.cardCode}`;
+    const loginLink = card.loginLink || `${BASE_URL}/auth/welcome?email=${encodeURIComponent(card.email)}`;
 
     const html = await render(
         DigitalCardEmail({
@@ -34,7 +34,7 @@ export async function sendDigitalCardDetails(card: {
 
     await sendMail({
         to: card.email,
-        subject: `Your Digital Card for ${card.eventTitle}`,
+        subject: `Institutional Identity: Your Digital Card for ${card.eventTitle}`,
         //@ts-ignore
         html,
     });
@@ -52,7 +52,7 @@ export async function sendContactPersonDetails(contact: {
     loginLink?: string;
 }) {
     const profileLink = `${BASE_URL}/contact/${contact.uniqueCode}`;
-    const loginLink = contact.loginLink || `${BASE_URL}/auth/login`;
+    const loginLink = contact.loginLink || `${BASE_URL}/auth/welcome?email=${encodeURIComponent(contact.email)}`;
 
     const html = await render(
         ContactPersonEmail({
@@ -67,7 +67,7 @@ export async function sendContactPersonDetails(contact: {
 
     await sendMail({
         to: contact.email,
-        subject: `You're a Contact Person for ${contact.eventTitle}`,
+        subject: `Institutional Role: Contact Person for ${contact.eventTitle}`,
         //@ts-ignore
         html,
     });
