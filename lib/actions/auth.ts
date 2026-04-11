@@ -19,6 +19,12 @@ export async function createUserRecord({
     classYear?: string;
 }) {
     const supabaseAdmin = createAdminClient();
+    
+    // 0. Pre-check: Does this email already have an institutional profile?
+    const existingProfile = await prisma.profile.findUnique({ where: { email } });
+    if (existingProfile) {
+        throw new Error(`An institutional record already exists for ${email}. To avoid duplicate identity records, please use the update feature instead.`);
+    }
 
     // 1. Check if user exists in Supabase Auth
     const { data: userData, error: listError } = await supabaseAdmin.auth.admin.listUsers();

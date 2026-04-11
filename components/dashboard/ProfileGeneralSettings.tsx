@@ -194,7 +194,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                                 </Label>
                                 <Input 
                                     {...register("aliasName")} 
-                                    className="h-12 border-muted-foreground/10"
+                                    className=""
                                     placeholder="School alias" 
                                 />
                             </div>
