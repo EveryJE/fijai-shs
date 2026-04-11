@@ -145,7 +145,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                              Verified
                         </div>
                     </div>
-                    <p className="text-muted-foreground text-sm max-w-xl font-medium leading-relaxed">
+                    <p className="text-sm max-w-xl ">
                         Manage your Fijai SHS alumni identity. Profiles with professional photos receive 4x more engagement within the institutional network.
                     </p>
                 </div>

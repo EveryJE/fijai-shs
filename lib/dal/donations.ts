@@ -23,7 +23,11 @@ export const getDigitalCardByCardCode = cache(async (cardCode: string | undefine
                             },
                         },
                     },
-                    contactPersons: true,
+                    contactPersons: {
+                        include: {
+                            profile: true
+                        }
+                    },
                 },
             },
         },

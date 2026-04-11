@@ -62,13 +62,13 @@ export default async function Home() {
     const rsvps = (event.contactPersons || []).map((cp: any) => ({
         id: cp.id,
         name: cp.name,
-        email: cp.email || undefined,
-        phone: cp.phone || undefined,
-        amount: 0, // Registered RSVPs don't necessarily have an amount here
+        email: cp.email || cp.profile?.email || undefined,
+        phone: cp.phone || cp.profile?.phone || undefined,
+        amount: 0,
         reference: cp.uniqueCode,
         position: (cp.metadata as any)?.position || undefined,
         avatarUrl: cp.profilePictureUrl || cp.profile?.avatarUrl || undefined,
-        classYear: cp.classYear || undefined,
+        classYear: cp.classYear || cp.profile?.classYear || undefined,
     }));
 
     // Fetch total revenue from all donations for this event

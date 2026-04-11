@@ -12,7 +12,9 @@ function WelcomeContent() {
     const email = searchParams.get("email") || ""
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+        <div  style={{
+        backgroundImage: "url('/donate-bg.svg')",
+      }} className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
             <Card className="max-w-md w-full border-none shadow-2xl">
                 <CardHeader className="text-center space-y-4">
                     <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">

@@ -41,11 +41,11 @@ export default async function DonatePage({ params }: DonatePageProps) {
     const rsvps: RSVP[] = (event.contactPersons || []).map((cp: any) => ({
         id: cp.id,
         name: cp.name,
-        email: cp.email || undefined,
-        phone: cp.phone || undefined,
+        email: cp.email || cp.profile?.email || undefined,
+        phone: cp.phone || cp.profile?.phone || undefined,
         position: (cp.metadata as any)?.position || "Project Lead",
-        avatarUrl: cp.profilePictureUrl || null,
-        classYear: cp.classYear || null,
+        avatarUrl: cp.profilePictureUrl || cp.profile?.avatarUrl || null,
+        classYear: cp.classYear || cp.profile?.classYear || null,
     }));
 
     const totalRevenue = donations.reduce((sum, d) => sum + (Number(d.amount) || 0), 0);

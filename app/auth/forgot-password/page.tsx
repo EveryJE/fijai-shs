@@ -103,7 +103,9 @@ function ForgotPasswordContent() {
 
 export default function ForgotPasswordPage() {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+        <div style={{
+            backgroundImage: "url('/donate-bg.svg')",
+        }} className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
             <Suspense fallback={<div>Loading...</div>}>
                 <ForgotPasswordContent />
             </Suspense>

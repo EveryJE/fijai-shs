@@ -44,7 +44,9 @@ export default function ResetPasswordPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+        <div  style={{
+        backgroundImage: "url('/donate-bg.svg')",
+      }} className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
             <Card className="w-full max-w-md">
                 <CardHeader className="text-center">
                     <CardTitle className="text-2xl">
