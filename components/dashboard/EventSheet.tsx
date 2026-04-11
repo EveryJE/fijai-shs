@@ -92,7 +92,7 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={setOpen} modal={false}>
-      <div onClick={() => setOpen(true)} className="cursor-pointer">
+      <div onClick={() => setOpen(true)} className="cursor-pointer hidden">
         {trigger || (
           <Button variant={isEditing ? "outline" : "default"} size={isEditing ? "sm" : "default"}>
             {isEditing ? (

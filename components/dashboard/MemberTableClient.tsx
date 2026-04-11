@@ -41,8 +41,8 @@ export function MemberTableClient({ profiles, events }: MemberTableClientProps) 
 
     return (
         <div className="space-y-4 animate-in fade-in duration-500">
-            <Tabs value={statusTab} onValueChange={setStatusTab} className="w-full">
-                <div className="flex items-center justify-between mb-2">
+            <Tabs value={statusTab} onValueChange={setStatusTab} className="w-full mt-2">
+                <div className="flex items-center justify-between">
                     <TabsList className="bg-muted/50 p-1">
                         <TabsTrigger value="active" className="px-6 font-bold uppercase text-[10px] tracking-widest">
                             Active Members ({activeCount})

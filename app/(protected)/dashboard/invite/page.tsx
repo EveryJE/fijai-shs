@@ -39,7 +39,7 @@ export default async function ParticipantsPage() {
                             </div>
                             <CardDescription className="text-sm font-medium opacity-60">Complete registry of verified alumni participants and administrators.</CardDescription>
                         </div>
-                        <div className="bg-[#730303]/5 px-4 py-2 rounded-full border border-[#730303]/10">
+                        <div className="bg-[#730303]/5 px-4 py-2 rounded border border-[#730303]/10">
                             <span className="text-[10px] font-black uppercase tracking-[2px] text-[#730303]">Total Population: {profiles.length}</span>
                         </div>
                     </div>
