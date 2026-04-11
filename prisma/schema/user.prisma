@@ -12,6 +12,7 @@ model Profile {
     contactPersons ContactPerson[]
     digitalCards   DigitalCard[]
 
+    isActive   Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

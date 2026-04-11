@@ -114,7 +114,53 @@ export async function createUserRecord({
         });
     }
 
-    revalidatePath("/dashboard/participants");
+    revalidatePath("/dashboard/invite");
+    return { success: true };
+}
+
+export async function updateUserRecord({
+    id,
+    fullName,
+    email,
+    classYear,
+}: {
+    id: string;
+    fullName: string;
+    email: string;
+    classYear?: string;
+}) {
+    // Check if email is updated and if it's already taken by another user
+    const existing = await prisma.profile.findFirst({
+        where: {
+            email,
+            id: { not: id }
+        }
+    });
+
+    if (existing) {
+        throw new Error("This email identifier is already associated with another institutional record.");
+    }
+
+    await prisma.profile.update({
+        where: { id },
+        data: {
+            fullName,
+            email,
+            classYear,
+        }
+    });
+
+    revalidatePath("/dashboard/invite");
+    return { success: true };
+}
+
+export async function toggleUserStatus(id: string, isActive: boolean) {
+    await prisma.profile.update({
+        where: { id },
+        data: { isActive }
+    });
+    
+    revalidatePath("/dashboard/invite");
     return { success: true };
 }
 

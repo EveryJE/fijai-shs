@@ -18,10 +18,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Fosa96 Fundraising",
-    description:
-      "Support Fijai Senior High School — donate to fundraising campaigns and help build the future.",
-    images: [{ url: "/logo.png", width: 512, height: 512 }],
+    description: "Support Fijai Senior High School — donate to fundraising campaigns and help build the future.",
+    images: [{ url: "/school-gate.jpg", width: 1200, height: 630, alt: "Fijai SHS Gate" }],
     type: "website",
+    url: "https://fosa96.com",
+    siteName: "Fosa96",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fosa96 Fundraising",
+    description: "Support Fijai Senior High School — donate to fundraising campaigns and help build the future.",
+    images: ["/school-gate.jpg"],
   },
 };
 
