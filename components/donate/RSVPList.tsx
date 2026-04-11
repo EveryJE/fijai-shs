@@ -24,6 +24,7 @@ export const RSVPList: React.FC<RSVPListProps> = ({ rsvps, organizationName, id 
   return (
     <div id={id} className="space-y-6 sticky top-4">
       <GoogleFormCard
+      className='rounded-lg'
         title={"RSVP List"}
         description="Connect with registered alumni and project leads for this campaign."
       >
