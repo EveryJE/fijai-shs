@@ -7,18 +7,31 @@ import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatAmount, cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import {
-    WalletIcon,
-    HandCoinsIcon,
-    PlusIcon,
-    PencilIcon,
-    Trash2Icon,
-    Loader2
+import { 
+    WalletIcon, 
+    HandCoinsIcon, 
+    PlusIcon, 
+    PencilIcon, 
+    Trash2Icon, 
+    Loader2,
+    DownloadCloudIcon,
+    PrinterIcon,
+    EyeIcon,
+    UserCircle2Icon,
+    CameraIcon,
+    MessageSquareQuoteIcon
 } from "lucide-react";
 import { toast } from "sonner";
 import { deleteManualDonation } from "@/lib/actions/donations";
 import { useRouter } from "next/navigation";
 import { ManualDonationSheet } from "./ManualDonationSheet";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog";
 
 interface Donation {
     id: string;
@@ -37,6 +50,7 @@ interface Donation {
     contactPerson?: { name: string } | null;
     digitalCard?: { cardCode: string } | null;
     metadata?: any;
+    momentFileUrl?: string | null;
     momentCaption?: string | null;
 }
 
@@ -49,7 +63,7 @@ interface DonationsClientProps {
 export function DonationsClient({ paystackDonations, manualDonations, events }: DonationsClientProps) {
     const [activeTab, setActiveTab] = useState<"all" | "paystack" | "manual">("all");
     const [sheetOpen, setSheetOpen] = useState(false);
-    const [editingDonation, setEditingDonation] = useState<Donation | null>(null);
+    const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
@@ -64,12 +78,14 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
             ? manualDonations
             : allDonations;
 
-    function handleEdit(donation: Donation) {
-        setEditingDonation(donation);
+    function handleEdit(e: React.MouseEvent, donation: Donation) {
+        e.stopPropagation();
+        setSelectedDonation(donation);
         setSheetOpen(true);
     }
 
-    function handleDelete(id: string) {
+    function handleDelete(e: React.MouseEvent, id: string) {
+        e.stopPropagation();
         if (!confirm("Delete this donation? This cannot be undone.")) return;
         setDeletingId(id);
         startTransition(async () => {
@@ -85,6 +101,37 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
         });
     }
 
+    function exportToCSV() {
+        const headers = ["Reference", "Donor", "Email", "Amount", "Currency", "Event", "Method", "Status", "Date"];
+        const rows = displayed.map(d => [
+            d.reference,
+            d.donorName || "Anonymous",
+            d.donorEmail,
+            d.amount,
+            d.currency,
+            d.event?.title || "General",
+            d.paymentMethod,
+            d.status,
+            new Date(d.createdAt).toLocaleDateString()
+        ]);
+
+        const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `donations_export_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast.success("Excel report exported successfully");
+    }
+
+    function handlePrint() {
+        window.print();
+    }
+
     const tabs = [
         { key: "all" as const, label: "All", count: allDonations.length },
         { key: "paystack" as const, label: "Online", count: paystackDonations.length, icon: WalletIcon },
@@ -93,11 +140,86 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
 
     return (
         <>
-            <Card className=" overflow-hidden">
+            <style dangerouslySetInnerHTML={{ __html: `
+                @media print {
+                    @page { size: auto; margin: 10mm; }
+                    body { background: white !important; margin: 0 !important; padding: 0 !important; }
+
+                    /* Hide Sidebars, Headers, Triggers, and Dialogs */
+                    [data-slot="sidebar"], 
+                    [data-slot="sidebar-trigger"],
+                    header, 
+                    nav, 
+                    footer, 
+                    .no-print, 
+                    [data-slot="dialog"],
+                    button, 
+                    .actions-cell, 
+                    .tab-bar, 
+                    .actions-header { 
+                        display: none !important; 
+                    }
+
+                    /* Reset SidebarInset and Layout Containers */
+                    [data-slot="sidebar-inset"], 
+                    main, 
+                    .SidebarInset {
+                        margin-left: 0 !important;
+                        padding: 0 !important;
+                        position: static !important;
+                        width: 100% !important;
+                        height: auto !important;
+                        overflow: visible !important;
+                    }
+
+                    .overflow-hidden, .overflow-x-auto, .max-h-[600px], .CardContent {
+                        overflow: visible !important;
+                        max-height: none !important;
+                        display: block !important;
+                        border: none !important;
+                    }
+
+                    .Card {
+                        width: 100% !important;
+                        border: none !important;
+                        box-shadow: none !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+
+                    .print-header {
+                        display: block !important;
+                        margin-bottom: 30px;
+                        border-bottom: 2px solid #730303;
+                        padding-bottom: 15px;
+                    }
+
+                    /* Summary Cards Layout */
+                    .grid-cols-1, .grid-cols-3 {
+                        display: flex !important;
+                        flex-direction: row !important;
+                        gap: 20px !important;
+                        margin-bottom: 20px !important;
+                    }
+
+                    table { width: 100% !important; border-collapse: collapse !important; }
+                    th, td { border: 1px solid #ddd !important; padding: 10px 8px !important; text-align: left !important; }
+                    .StatusBadge { background: transparent !important; color: black !important; border: 1px solid #000 !important; }
+                    .font-black, .font-bold { color: #000 !important; }
+                }
+                .print-header { display: none; }
+            `}} />
+
+            <div className="print-header">
+                <h1 style={{ color: '#730303', margin: 0 }}>Fijai SHS Alumni Institutional Fund</h1>
+                <p style={{ fontSize: '12px', margin: '4px 0' }}>Contribution Records — Generated on {new Date().toLocaleDateString()}</p>
+            </div>
+
+            <Card className="overflow-hidden no-print-border">
                 <CardHeader className="pb-0 border-b">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         {/* Tabs */}
-                        <div className="flex gap-1 bg-muted/50 p-1 rounded-lg">
+                        <div className="flex gap-1 bg-muted/50 p-1 rounded-lg tab-bar">
                             {tabs.map((tab) => (
                                 <button
                                     key={tab.key}
@@ -123,15 +245,27 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
                             ))}
                         </div>
 
-                        {/* Add Manual Donation button */}
-                        <Button
-                            size="sm"
-                            onClick={() => { setEditingDonation(null); setSheetOpen(true); }}
-                            className="gap-1.5"
-                        >
-                            <PlusIcon className="h-3.5 w-3.5" />
-                            Add Manual Donation
-                        </Button>
+                        {/* Actions */}
+                        <div className="flex items-center gap-2">
+                             <div className="hidden md:flex items-center gap-1.5 border-r pr-4 mr-2 border-muted">
+                                <Button variant="outline" size="sm" onClick={exportToCSV} className="h-8 text-[11px] font-bold uppercase tracking-wider">
+                                    <DownloadCloudIcon className="h-3.5 w-3.5 mr-1" />
+                                    Export Excel
+                                </Button>
+                                <Button variant="outline" size="sm" onClick={handlePrint} className="h-8 text-[11px] font-bold uppercase tracking-wider">
+                                    <PrinterIcon className="h-3.5 w-3.5 mr-1" />
+                                    Print PDF
+                                </Button>
+                             </div>
+                            <Button
+                                size="sm"
+                                onClick={() => { setSelectedDonation(null); setSheetOpen(true); }}
+                                className="h-8 text-[11px] font-bold uppercase tracking-wider shadow-sm"
+                            >
+                                <PlusIcon className="h-3.5 w-3.5 mr-1" />
+                                Add Manual Donation
+                            </Button>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -156,39 +290,48 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
                                     <TableHead>Status</TableHead>
                                     <TableHead>Date</TableHead>
                                     {(activeTab === "manual" || activeTab === "all") && (
-                                        <TableHead className="text-right w-[100px]">Actions</TableHead>
+                                        <TableHead className="text-right w-[100px] actions-header">Actions</TableHead>
                                     )}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {displayed.map((d) => (
-                                    <TableRow key={d.id} className="hover:bg-muted/20 transition-colors">
+                                    <TableRow 
+                                        key={d.id} 
+                                        className="hover:bg-muted/30 transition-colors cursor-pointer group"
+                                        onClick={() => setSelectedDonation(d)}
+                                    >
                                         <TableCell>
-                                            <div className="flex flex-col">
-                                                <span className="font-medium text-sm">
-                                                    {d.donorName || "Anonymous"}
-                                                </span>
-                                                <span className="text-xs text-muted-foreground">
-                                                    {d.donorEmail}
-                                                </span>
+                                            <div className="flex items-center gap-3">
+                                                 <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center text-primary border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">
+                                                     <UserCircle2Icon className="h-4 w-4" />
+                                                 </div>
+                                                <div className="flex flex-col">
+                                                    <span className="font-semibold text-sm">
+                                                        {d.donorName || "Anonymous"}
+                                                    </span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {d.donorEmail}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            <span className="font-bold text-emerald-600">
+                                            <span className="font-black text-emerald-600">
                                                 {formatAmount(Number(d.amount))}
                                             </span>
                                         </TableCell>
                                         <TableCell>
-                                            <span className="text-xs font-medium truncate max-w-[150px] block">
+                                            <span className="text-xs font-semibold truncate max-w-[150px] block opacity-70">
                                                 {d.event?.title || "—"}
                                             </span>
                                         </TableCell>
                                         <TableCell>
                                             <span className={cn(
-                                                "inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border",
+                                                "inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded border",
                                                 d.paymentMethod === "paystack"
-                                                    ? "bg-blue-50 text-blue-600 border-blue-100"
-                                                    : "bg-amber-50 text-amber-600 border-amber-100"
+                                                    ? "bg-blue-50 text-blue-700 border-blue-100"
+                                                    : "bg-amber-50 text-amber-700 border-amber-100"
                                             )}>
                                                 {d.paymentMethod === "paystack" ? (
                                                     <><WalletIcon className="h-3 w-3" /> Online</>
@@ -201,27 +344,35 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
                                             <StatusBadge variant={d.status} size="sm" />
                                         </TableCell>
                                         <TableCell>
-                                            <span className="text-xs text-muted-foreground">
-                                                {formatDistanceToNow(new Date(d.createdAt), { addSuffix: true })}
-                                            </span>
+                                            <div className="flex flex-col">
+                                                <span className="text-xs font-medium">
+                                                    {formatDistanceToNow(new Date(d.createdAt), { addSuffix: true })}
+                                                </span>
+                                                {d.paidAt && (
+                                                    <span className="text-[10px] text-muted-foreground opacity-60">
+                                                        Settled: {new Date(d.paidAt).toLocaleDateString()}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </TableCell>
                                         {(activeTab === "manual" || activeTab === "all") && (
-                                            <TableCell className="text-right">
+                                            <TableCell className="text-right actions-cell">
                                                 {d.paymentMethod === "manual" ? (
-                                                    <div className="flex justify-end gap-1">
+                                                    <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                         <Button
                                                             variant="ghost"
                                                             size="icon-xs"
-                                                            onClick={() => handleEdit(d)}
+                                                            onClick={(e) => handleEdit(e, d)}
+                                                            className="h-7 w-7"
                                                         >
                                                             <PencilIcon className="h-3 w-3" />
                                                         </Button>
                                                         <Button
                                                             variant="ghost"
                                                             size="icon-xs"
-                                                            onClick={() => handleDelete(d.id)}
+                                                            onClick={(e) => handleDelete(e, d.id)}
                                                             disabled={deletingId === d.id}
-                                                            className="text-destructive hover:text-destructive"
+                                                            className="text-destructive hover:text-destructive h-7 w-7"
                                                         >
                                                             {deletingId === d.id ? (
                                                                 <Loader2 className="h-3 w-3 animate-spin" />
@@ -231,7 +382,11 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
                                                         </Button>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-[10px] text-muted-foreground/40">—</span>
+                                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end">
+                                                        <Button variant="ghost" size="icon-xs" className="h-7 w-7 text-muted-foreground">
+                                                            <EyeIcon className="h-3.5 w-3.5" />
+                                                        </Button>
+                                                    </div>
                                                 )}
                                             </TableCell>
                                         )}
@@ -246,9 +401,96 @@ export function DonationsClient({ paystackDonations, manualDonations, events }: 
             <ManualDonationSheet
                 open={sheetOpen}
                 onOpenChange={setSheetOpen}
-                donation={editingDonation}
+                donation={selectedDonation}
                 events={events}
             />
+
+            {/* Donation Detail / Memory Dialog */}
+            <Dialog open={!!selectedDonation && !sheetOpen} onOpenChange={(open) => !open && setSelectedDonation(null)}>
+                <DialogContent className="max-w-2xl p-0 overflow-hidden border-none shadow-2xl">
+                    <div className="bg-primary p-6 text-primary-foreground relative">
+                         <div className="flex items-center gap-2 opacity-60 text-[10px] font-black uppercase tracking-[3px] mb-2">
+                             Institutional Record
+                         </div>
+                         <div className="flex justify-between items-end">
+                             <div className="space-y-1">
+                                <DialogTitle className="text-3xl font-black">{formatAmount(selectedDonation?.amount || 0)}</DialogTitle>
+                                <DialogDescription className="text-primary-foreground/70 font-medium">
+                                    Contribution by {selectedDonation?.donorName || "Anonymous Alumni"}
+                                </DialogDescription>
+                             </div>
+                             <div className="text-right">
+                                 <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Reference</p>
+                                 <p className="font-mono text-sm leading-none mt-1">{selectedDonation?.reference}</p>
+                             </div>
+                         </div>
+                    </div>
+
+                    <div className="p-8 space-y-8">
+                        <div className="grid grid-cols-2 gap-8">
+                             <div className="space-y-1">
+                                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                                     <UserCircle2Icon className="h-3 w-3" />
+                                     Donor Contact
+                                 </p>
+                                 <p className="text-sm font-semibold">{selectedDonation?.donorEmail}</p>
+                                 {selectedDonation?.phone && <p className="text-xs text-muted-foreground">{selectedDonation.phone}</p>}
+                             </div>
+                             <div className="space-y-1">
+                                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                                     <WalletIcon className="h-3 w-3" />
+                                     Allocation
+                                 </p>
+                                 <p className="text-sm font-semibold truncate">{selectedDonation?.event?.title || "General Fund"}</p>
+                                 <p className="text-[10px] text-muted-foreground uppercase font-bold">{selectedDonation?.paymentMethod} Payment</p>
+                             </div>
+                        </div>
+
+                        {/* Shared Memory / Moment */}
+                        {(selectedDonation?.momentFileUrl || selectedDonation?.momentCaption) ? (
+                            <div className="space-y-4 pt-4 border-t">
+                                <div className="flex items-center gap-2">
+                                     <CameraIcon className="h-4 w-4 text-primary" />
+                                     <h4 className="text-sm font-black uppercase tracking-widest text-[#730303]">Shared Alumni Moment</h4>
+                                </div>
+                                
+                                <div className="bg-muted/30 rounded-2xl overflow-hidden border p-2">
+                                    {selectedDonation?.momentFileUrl && (
+                                        <div className="aspect-video w-full relative rounded-xl overflow-hidden mb-3">
+                                            <img 
+                                                src={selectedDonation.momentFileUrl} 
+                                                alt="Donation Moment" 
+                                                className="object-cover w-full h-full"
+                                            />
+                                        </div>
+                                    )}
+                                    {selectedDonation?.momentCaption && (
+                                        <div className="p-4 flex gap-3 italic">
+                                            <MessageSquareQuoteIcon className="h-5 w-5 text-primary/30 shrink-0" />
+                                            <p className="text-sm text-muted-foreground leading-relaxed">
+                                                "{selectedDonation.momentCaption}"
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="pt-8 text-center opacity-30">
+                                <p className="text-[10px] font-bold uppercase tracking-[4px]">No visual memory attached</p>
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="p-4 bg-muted/20 border-t flex justify-between items-center">
+                         <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                             Recorded {selectedDonation ? new Date(selectedDonation.createdAt).toLocaleString() : ""}
+                         </span>
+                         <Button variant="outline" size="sm" className="h-8 text-[11px] font-bold" onClick={() => setSelectedDonation(null)}>
+                             Close Record
+                         </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

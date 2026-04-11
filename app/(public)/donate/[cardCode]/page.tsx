@@ -50,6 +50,16 @@ export default async function DonatePage({ params }: DonatePageProps) {
 
     const totalRevenue = donations.reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
 
+    const mappedDonations = donations.map(d => ({
+        id: d.id,
+        donorName: d.donorName,
+        amount: Number(d.amount),
+        currency: d.currency,
+        createdAt: d.createdAt,
+        momentFileUrl: d.momentFileUrl,
+        momentCaption: d.momentCaption,
+    }));
+
     return (
       <DonateFormClient
         digitalCard={digitalCard}
@@ -57,6 +67,7 @@ export default async function DonatePage({ params }: DonatePageProps) {
         categories={categories}
         rsvps={rsvps}
         totalRevenue={totalRevenue}
+        recentDonations={mappedDonations}
       />
     );
 }
