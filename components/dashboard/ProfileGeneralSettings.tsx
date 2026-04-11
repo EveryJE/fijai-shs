@@ -177,7 +177,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black   text-muted-foreground flex items-center gap-1.5">
+                                <Label className="">
                                     <GraduationCapIcon className="h-3.5 w-3.5 text-primary" />
                                     Class Year
                                 </Label>
@@ -188,7 +188,7 @@ export function ProfileGeneralSettings({ profile, isAdmin }: ProfileGeneralSetti
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black   text-muted-foreground flex items-center gap-1.5">
+                                <Label className="">
                                     <SparklesIcon className="h-3.5 w-3.5 text-primary" />
                                     Nickname
                                 </Label>
