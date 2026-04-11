@@ -38,15 +38,17 @@ export default async function DonatePage({ params }: DonatePageProps) {
 
     const donations = await getDonationsByDigitalCard(digitalCard.id);
     
-    const rsvps: RSVP[] = (event.contactPersons || []).map((cp: any) => ({
-        id: cp.id,
-        name: cp.name,
-        email: cp.email || cp.profile?.email || undefined,
-        phone: cp.phone || cp.profile?.phone || undefined,
-        position: (cp.metadata as any)?.position || "Project Lead",
-        avatarUrl: cp.profilePictureUrl || cp.profile?.avatarUrl || null,
-        classYear: cp.classYear || cp.profile?.classYear || null,
-    }));
+    const rsvps: RSVP[] = (event.contactPersons || [])
+        .filter((cp: any) => cp.profile?.isActive !== false)
+        .map((cp: any) => ({
+            id: cp.id,
+            name: cp.name,
+            email: cp.email || cp.profile?.email || undefined,
+            phone: cp.phone || cp.profile?.phone || undefined,
+            position: (cp.metadata as any)?.position || "Project Lead",
+            avatarUrl: cp.profilePictureUrl || cp.profile?.avatarUrl || null,
+            classYear: cp.classYear || cp.profile?.classYear || null,
+        }));
 
     const totalRevenue = donations.reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
 

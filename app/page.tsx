@@ -58,8 +58,10 @@ export default async function Home() {
       })),
     }));
 
-    // Use registered contact persons as RSVPs
-    const rsvps = (event.contactPersons || []).map((cp: any) => ({
+    // Use registered contact persons as RSVPs - only show active ones
+    const rsvps = (event.contactPersons || [])
+      .filter((cp: any) => cp.profile?.isActive !== false) // Default to true if profile is missing for some reason, but usually it should be there
+      .map((cp: any) => ({
         id: cp.id,
         name: cp.name,
         email: cp.email || cp.profile?.email || undefined,
