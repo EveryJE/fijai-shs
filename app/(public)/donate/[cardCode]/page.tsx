@@ -56,7 +56,7 @@ export default async function DonatePage({ params }: DonatePageProps) {
             name: cp.name,
             email: cp.email || cp.profile?.email || undefined,
             phone: cp.phone || cp.profile?.phone || undefined,
-            position: (cp.metadata as any)?.position || "Project Lead",
+            position: (cp.metadata as any)?.position,
             avatarUrl: cp.profilePictureUrl || cp.profile?.avatarUrl || null,
             classYear: cp.classYear || cp.profile?.classYear || null,
         }));

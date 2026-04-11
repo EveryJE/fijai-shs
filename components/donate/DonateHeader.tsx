@@ -34,6 +34,10 @@ export function DonateHeader({ eventTitle, eventDescription, eventImage, digital
                             </div>
                             <span className="text-xl text-primary font-bold">{eventTitle}</span>
                         </div>
+                        {
+                            digitalCodeUserName && <div className="italic">Refered By: {digitalCodeUserName}</div>
+                        }
+                        
 
                         <div className="space-y-2">
                           
