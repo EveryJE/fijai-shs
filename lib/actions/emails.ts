@@ -4,8 +4,8 @@ import { render } from "@react-email/render";
 import { sendMail } from "@/lib/mail";
 import DigitalCardEmail from "@/emails/digital-card";
 import ContactPersonEmail from "@/emails/contact-person";
+import { getBaseUrl } from "../server-utils";
 
-const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN_URL || "http://localhost:3000";
 
 /**
  * Send a digital card holder their card details + login link.
@@ -18,8 +18,10 @@ export async function sendDigitalCardDetails(card: {
     classYear?: string;
     loginLink?: string;
 }) {
-    const cardLink = `${BASE_URL}/donate/${card.cardCode}`;
-    const loginLink = card.loginLink || `${BASE_URL}/auth/welcome?email=${encodeURIComponent(card.email)}`;
+    const baseUrl = await getBaseUrl();
+    const cardLink = `${baseUrl}/donate/${card.cardCode}`;
+    const loginLink = card.loginLink || `${baseUrl}/auth/welcome?email=${encodeURIComponent(card.email)}`;
+
 
     const html = await render(
         DigitalCardEmail({
@@ -52,8 +54,10 @@ export async function sendContactPersonDetails(contact: {
     classYear?: string;
     loginLink?: string;
 }) {
-    const profileLink = `${BASE_URL}/donate/${contact.uniqueCode}`;
-    const loginLink = contact.loginLink || `${BASE_URL}/auth/welcome?email=${encodeURIComponent(contact.email)}`;
+    const baseUrl = await getBaseUrl();
+    const profileLink = `${baseUrl}/donate/${contact.uniqueCode}`;
+    const loginLink = contact.loginLink || `${baseUrl}/auth/welcome?email=${encodeURIComponent(contact.email)}`;
+
 
     const html = await render(
         ContactPersonEmail({

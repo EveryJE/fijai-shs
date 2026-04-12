@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { sendContactPersonDetails, sendDigitalCardDetails } from "./emails";
+import { getBaseUrl } from "../server-utils";
+
 
 export async function createUserRecord({
     email,
@@ -63,7 +65,9 @@ export async function createUserRecord({
     const event = await prisma.event.findUnique({ where: { id: eventId } });
     if (!event) throw new Error("Reference event not found");
 
-    const loginLink = `${process.env.NEXT_PUBLIC_DOMAIN_URL}/auth/welcome?email=${encodeURIComponent(email)}`;
+    const domain = await getBaseUrl();
+    const loginLink = `${domain}/auth/welcome?email=${encodeURIComponent(email)}`;
+
 
     // 3. Create RSVP or DigitalCard based on roles
     // We allow multiple roles, so we check each one
