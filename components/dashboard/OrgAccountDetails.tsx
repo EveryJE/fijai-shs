@@ -226,10 +226,10 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                         )}
                     </div>
                 </CardHeader>
-                <CardContent className="p-8">
+                <CardContent className="p-4 sm:p-6">
                     {payoutAccountNumber && payoutAccountName && payoutBankCode ? (
-                        <div className="flex flex-col items-center justify-center p-6 bg-muted/20 rounded-2xl border-2 border-dashed border-muted-foreground/10 space-y-4">
-                            <p className="text-[10px]   tracking-[3px] text-muted-foreground/60 mb-2">Current Active Account</p>
+                        <div className="flex flex-col items-center justify-center p- bg-muted/20 rounded-2xl sm:border-2 border-dashed border-muted-foreground/10 space-y-4">
+                            <p className="text-[10px] text-muted-foreground/60 mb-2">Current Active Account</p>
                             <PayoutAccountCard
                                 paystackBankCode={payoutBankCode}
                                 paystackAccountNumber={payoutAccountNumber}

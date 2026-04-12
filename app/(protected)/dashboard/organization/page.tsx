@@ -28,11 +28,11 @@ export default async function OrgSettingsPage() {
 
             <Tabs defaultValue="general" className="space-y-8">
                 <TabsList variant="institutional" className="p-1">
-                    <TabsTrigger value="general" className="px-10 py-2.5 font-black uppercase tracking-[2px] text-[10px]">
+                    <TabsTrigger value="general" className="px-10 py-2.5">
                         <Building2Icon className="mr-2 h-4 w-4" />
                         Branding
                     </TabsTrigger>
-                    <TabsTrigger value="payouts" className="px-10 py-2.5 font-black uppercase tracking-[2px] text-[10px]">
+                    <TabsTrigger value="payouts" className="px-10 py-2.5">
                         <LandmarkIcon className="mr-2 h-4 w-4" />
                         Payout Details
                     </TabsTrigger>
