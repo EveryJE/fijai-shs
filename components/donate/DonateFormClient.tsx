@@ -138,7 +138,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
         backgroundImage: "url('/donate-bg.svg')",
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-start justify-center gap-8 pt-4">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col lg:flex-row items-start justify-center gap-8 pt-4">
         
         {/* Main Form Container - Preserving original max-w-3xl look */}
         <div className="max-w-3xl w-full bg-white/50 backdrop-blur-sm overflow-hidden shrink-0">

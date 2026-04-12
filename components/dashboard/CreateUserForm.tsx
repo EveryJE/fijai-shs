@@ -53,19 +53,22 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
 
     setLoading(true);
     try {
-      if (isEdit) {
-          await updateUserRecord({ id: profile.id, email, fullName, classYear: classYear || undefined });
-          toast.success("Identity record updated successfully");
+      const allRoles = [...roles];
+      if (isAdmin) allRoles.push("admin");
+
+      const result = isEdit 
+        ? await updateUserRecord({ id: profile.id, email, fullName, classYear: classYear || undefined })
+        : await createUserRecord({ email, fullName, roles: allRoles, eventId, classYear: classYear || undefined });
+
+      if (result.success) {
+          toast.success(isEdit ? "Identity record updated successfully" : "Participant record created successfully");
+          if (!isEdit) resetForm();
+          setOpen(false);
       } else {
-          const allRoles = [...roles];
-          if (isAdmin) allRoles.push("admin");
-          await createUserRecord({ email, fullName, roles: allRoles, eventId, classYear: classYear || undefined });
-          toast.success("Participant record created successfully");
-          resetForm();
+          toast.error(result.error || "Failed to process record");
       }
-      setOpen(false);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to process record");
+      toast.error("A connection error occurred. Please try again.");
     } finally {
       setLoading(false);
     }

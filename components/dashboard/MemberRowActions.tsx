@@ -25,10 +25,14 @@ export function MemberRowActions({ profile, events }: MemberRowActionsProps) {
     const handleToggleStatus = async () => {
         setLoading(true);
         try {
-            await toggleUserStatus(profile.id, !profile.isActive);
-            toast.success(profile.isActive ? "Member deactivated successfully" : "Member reactivated successfully");
+            const result = await toggleUserStatus(profile.id, !profile.isActive);
+            if (result.success) {
+                toast.success(profile.isActive ? "Member deactivated successfully" : "Member reactivated successfully");
+            } else {
+                toast.error(result.error || "Failed to update member status");
+            }
         } catch (err) {
-            toast.error("Failed to update member status");
+            toast.error("A connection error occurred. Please try again.");
         } finally {
             setLoading(false);
         }

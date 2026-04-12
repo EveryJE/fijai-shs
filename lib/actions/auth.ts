@@ -20,106 +20,114 @@ export async function createUserRecord({
     eventId: string;
     classYear?: string;
 }) {
-    const supabaseAdmin = createAdminClient();
-    
-    // 0. Pre-check: Does this email already have an institutional profile?
-    const existingProfile = await prisma.profile.findUnique({ where: { email } });
-    if (existingProfile) {
-        throw new Error(`An institutional record already exists for ${email}. To avoid duplicate identity records, please use the update feature instead.`);
-    }
+    try {
+        const supabaseAdmin = createAdminClient();
+        
+        // 0. Pre-check: Does this email already have an institutional profile?
+        const existingProfile = await prisma.profile.findUnique({ where: { email } });
+        if (existingProfile) {
+            return { 
+                success: false, 
+                error: `An institutional record already exists for ${email}. To avoid duplicate identity records, please use the update feature instead.` 
+            };
+        }
 
-    // 1. Check if user exists in Supabase Auth
-    const { data: userData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
-    if (listError) throw new Error(listError.message);
-    
-    let existingAuthUser = userData?.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
+        // 1. Check if user exists in Supabase Auth
+        const { data: userData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+        if (listError) return { success: false, error: listError.message };
+        
+        let existingAuthUser = userData?.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
 
-    if (!existingAuthUser) {
-        // Create user with scaffolded password (email)
-        const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
-            email,
-            password: email,
-            email_confirm: true,
-            user_metadata: { full_name: fullName },
+        if (!existingAuthUser) {
+            // Create user with scaffolded password (email)
+            const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
+                email,
+                password: email,
+                email_confirm: true,
+                user_metadata: { full_name: fullName },
+            });
+
+            if (createError) return { success: false, error: createError.message };
+            existingAuthUser = newUser.user;
+        }
+
+        // 2. Create or Update Profile in Prisma
+        const profile = await prisma.profile.upsert({
+            where: { email },
+            update: {
+                fullName,
+                roles: { set: roles },
+            },
+            create: {
+                id: existingAuthUser.id, // Match Supabase ID
+                email,
+                fullName,
+                roles,
+            },
         });
 
-        if (createError) throw new Error(createError.message);
-        existingAuthUser = newUser.user;
-    }
+        const event = await prisma.event.findUnique({ where: { id: eventId } });
+        if (!event) return { success: false, error: "Reference event not found" };
 
-    // 2. Create or Update Profile in Prisma
-    const profile = await prisma.profile.upsert({
-        where: { email },
-        update: {
-            fullName,
-            roles: { set: roles },
-        },
-        create: {
-            id: existingAuthUser.id, // Match Supabase ID
-            email,
-            fullName,
-            roles,
-        },
-    });
+        const domain = await getBaseUrl();
+        const loginLink = `${domain}/auth/welcome?email=${encodeURIComponent(email)}`;
 
-    const event = await prisma.event.findUnique({ where: { id: eventId } });
-    if (!event) throw new Error("Reference event not found");
+        // 3. Create RSVP or DigitalCard based on roles
+        if (roles.includes("rsvp")) {
+            const uniqueCode = `RSVP-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+            const contactPerson = await prisma.contactPerson.create({
+                data: {
+                    eventId,
+                    profileId: profile.id,
+                    name: fullName,
+                    email,
+                    classYear,
+                    uniqueCode,
+                },
+            });
 
-    const domain = await getBaseUrl();
-    const loginLink = `${domain}/auth/welcome?email=${encodeURIComponent(email)}`;
-
-
-    // 3. Create RSVP or DigitalCard based on roles
-    // We allow multiple roles, so we check each one
-    
-    if (roles.includes("rsvp")) {
-        const uniqueCode = `RSVP-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-        const contactPerson = await prisma.contactPerson.create({
-            data: {
-                eventId,
-                profileId: profile.id,
+            await sendContactPersonDetails({
+                email,
                 name: fullName,
-                email,
+                uniqueCode: contactPerson.uniqueCode,
+                eventTitle: event.title,
                 classYear,
-                uniqueCode,
-            },
-        });
+                loginLink,
+            });
+        }
 
-        await sendContactPersonDetails({
-            email,
-            name: fullName,
-            uniqueCode: contactPerson.uniqueCode,
-            eventTitle: event.title,
-            classYear,
-            loginLink,
-        });
-    }
+        if (roles.includes("cardholder")) {
+            const cardCode = `FJS-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+            const digitalCard = await prisma.digitalCard.create({
+                data: {
+                    eventId,
+                    profileId: profile.id,
+                    holderName: fullName,
+                    email,
+                    classYear,
+                    cardCode,
+                },
+            });
 
-    if (roles.includes("cardholder")) {
-        const cardCode = `FJS-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-        const digitalCard = await prisma.digitalCard.create({
-            data: {
-                eventId,
-                profileId: profile.id,
-                holderName: fullName,
+            await sendDigitalCardDetails({
                 email,
+                name: fullName,
+                cardCode: digitalCard.cardCode,
+                eventTitle: event.title,
                 classYear,
-                cardCode,
-            },
-        });
+                loginLink,
+            });
+        }
 
-        await sendDigitalCardDetails({
-            email,
-            name: fullName,
-            cardCode: digitalCard.cardCode,
-            eventTitle: event.title,
-            classYear,
-            loginLink,
-        });
+        revalidatePath("/dashboard/invite");
+        return { success: true };
+    } catch (error) {
+        console.error("Error in createUserRecord:", error);
+        return { 
+            success: false, 
+            error: error instanceof Error ? error.message : "An unexpected error occurred while establishing the member record." 
+        };
     }
-
-    revalidatePath("/dashboard/invite");
-    return { success: true };
 }
 
 export async function updateUserRecord({
@@ -133,39 +141,58 @@ export async function updateUserRecord({
     email: string;
     classYear?: string;
 }) {
-    // Check if email is updated and if it's already taken by another user
-    const existing = await prisma.profile.findFirst({
-        where: {
-            email,
-            id: { not: id }
-        }
-    });
+    try {
+        // Check if email is updated and if it's already taken by another user
+        const existing = await prisma.profile.findFirst({
+            where: {
+                email,
+                id: { not: id }
+            }
+        });
 
-    if (existing) {
-        throw new Error("This email identifier is already associated with another institutional record.");
+        if (existing) {
+            return { 
+                success: false, 
+                error: "This email identifier is already associated with another institutional record." 
+            };
+        }
+
+        await prisma.profile.update({
+            where: { id },
+            data: {
+                fullName,
+                email,
+                classYear,
+            }
+        });
+
+        revalidatePath("/dashboard/invite");
+        return { success: true };
+    } catch (error) {
+        console.error("Error in updateUserRecord:", error);
+        return { 
+            success: false, 
+            error: error instanceof Error ? error.message : "An unexpected error occurred while refining the identity record." 
+        };
     }
-
-    await prisma.profile.update({
-        where: { id },
-        data: {
-            fullName,
-            email,
-            classYear,
-        }
-    });
-
-    revalidatePath("/dashboard/invite");
-    return { success: true };
 }
 
 export async function toggleUserStatus(id: string, isActive: boolean) {
-    await prisma.profile.update({
-        where: { id },
-        data: { isActive }
-    });
-    
-    revalidatePath("/dashboard/invite");
-    return { success: true };
+    try {
+        await prisma.profile.update({
+            where: { id },
+            data: { isActive }
+        });
+        
+        revalidatePath("/dashboard/invite");
+        return { success: true };
+    } catch (error) {
+        console.error("Error in toggleUserStatus:", error);
+        return { 
+            success: false, 
+            error: error instanceof Error ? error.message : "An unexpected error occurred while toggling the member status." 
+        };
+    }
 }
 
 // Keep inviteUser as alias for compatibility if needed, but we'll switch to createUserRecord
