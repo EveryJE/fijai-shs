@@ -90,20 +90,27 @@ GoogleFormSelect.displayName = "GoogleFormSelect";
 /**
  * Container Card for Form Sections
  */
-export const GoogleFormCard = ({ children, className, title, description, required }: { 
+export const GoogleFormCard = ({ children, className, title, description, required, accentColor }: { 
     children: React.ReactNode; 
     className?: string;
     title?: string;
     description?: string;
     required?: boolean;
+    accentColor?: string;
 }) => {
   return (
     <div className={cn(
-        "border border-[#dadce0]  bg-white/85 hover:border-primary-100 p-4 md:p-4 transition-all ",
+        "border border-[#dadce0] bg-white/85 p-4 md:p-4 transition-all relative",
         className
     )}>
+        {accentColor && (
+            <div 
+                className="absolute top-0 left-0 right-0 h-2 bg-primary" 
+                style={{ backgroundColor: accentColor }}
+            />
+        )}
         {(title || description) && (
-            <div className="mb-2">
+            <div className={cn("mb-2", accentColor && "mt-4")}>
                 {title && (
                     <h3 className="font-medium">
                         {title}

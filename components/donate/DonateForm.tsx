@@ -100,7 +100,12 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
     <form onSubmit={handleSubmit} className="space-y-6 pb-5">
       
       {/* 1. Category Selection */}
-      <GoogleFormCard title="Project Category" description="Please select a category to select from ot" required>
+      <GoogleFormCard 
+        title="Project Category" 
+        description="Please select a category to support." 
+        required 
+        accentColor={selectedCategory?.color}
+      >
         <Combobox
             options={categories.map(cat => ({ value: cat.id, label: cat.name }))}
             value={category}
@@ -114,38 +119,64 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
         title="Contribution Registry" 
         description="Select specific project item or fund within this category."
         required={!!category}
+        accentColor={selectedCategory?.color}
       >
-        <Combobox 
-            options={selectedCategory?.items.map(it => ({ 
-                value: it.id, 
-                label: `${it.icon ? it.icon + ' ' : ''}${it.name}${it.targetAmount ? ` (${it.currency || 'GHS'} ${Number(it.targetAmount).toFixed(2)})` : ''}` 
-            })) || []}
-            value={item}
-            onChange={setItem}
-            placeholder={category ? "Select project item" : "Select a focus area first"}
-            disabled={!category}
-        />
+        <div className="flex items-center gap-3">
+            <div className="flex-1">
+                <Combobox 
+                    options={selectedCategory?.items.map(it => ({ 
+                        value: it.id, 
+                        label: `${it.icon ? it.icon + ' ' : ''}${it.name}${it.targetAmount ? ` (${it.currency || 'GHS'} ${Number(it.targetAmount).toFixed(2)})` : ''}` 
+                    })) || []}
+                    value={item}
+                    onChange={setItem}
+                    placeholder={category ? "Select project item" : "Select a focus area first"}
+                    disabled={!category}
+                />
+            </div>
+            {selectedItem && (
+                <div 
+                   className="h-10 w-10 shrink-0 rounded-full flex items-center justify-center border-2 transition-all duration-500"
+                   style={{ 
+                       borderColor: selectedItem.color || 'transparent',
+                       backgroundColor: selectedItem.color ? `${selectedItem.color}15` : 'transparent',
+                       color: selectedItem.color || 'inherit'
+                   }}
+                >
+                    <SparklesIcon className="h-5 w-5" />
+                </div>
+            )}
+        </div>
         
         {/* If selected item has no target amount, show custom amount input */}
         {item && selectedItem && !selectedItem.targetAmount && (
             <div className="mt-6 animate-in fade-in slide-in-from-top-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-[#730303] mb-2 font-black">
+                <p 
+                    className="text-[10px] font-black uppercase tracking-widest mb-2 font-black"
+                    style={{ color: selectedItem.color || selectedCategory?.color || "#730303" }}
+                >
                     Designated Amount ({selectedItem.currency || 'GHS'})
                 </p>
-                <GoogleFormInput 
-                    name="customAmount" 
-                    type="number" 
-                    value={customAmount} 
-                    onChange={handleChange} 
-                    placeholder="0.00" 
-                    required 
-                />
+                <div className="flex items-center gap-3">
+                   <GoogleFormInput 
+                        name="customAmount" 
+                        type="number" 
+                        value={customAmount} 
+                        onChange={handleChange} 
+                        placeholder="0.00" 
+                        required 
+                    />
+                </div>
             </div>
         )}
       </GoogleFormCard>
 
       {/* 3. Donor Identity */}
-      <GoogleFormCard title="Donor Credentials" description="Tell us who is making this impact. Your name will be recorded in the institutional registry.">
+      <GoogleFormCard 
+        title="Donor Credentials" 
+        description="Tell us who is making this impact. Your name will be recorded in the institutional registry."
+        accentColor={selectedCategory?.color}
+      >
         <div className="space-y-6">
             <div>
                 <p className="text-sm">Full Legal Name</p>
@@ -186,6 +217,7 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
       <GoogleFormCard 
         title="Share a Moment" 
         description="Optional: Attach a photo and a brief memory or message of your time at Fijai SHS."
+        accentColor={selectedCategory?.color}
       >
         <div className="space-y-6">
             <GoogleFormFileUpload 
