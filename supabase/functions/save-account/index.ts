@@ -71,6 +71,7 @@ serve(async (req) => {
                         settlement_bank: bankCode,
                         account_number: accountNumber,
                         business_name: accountName,
+                        percentage_charge: 0,
                     }),
                 }
             );

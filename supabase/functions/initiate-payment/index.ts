@@ -99,12 +99,15 @@ Deno.serve(async (req) => {
         // Fetch organization payout details
         const { data: org, error: orgError } = await supabase
             .from("organizations")
-            .select("subaccountCode")
-            .limit(1)
+            .select("subaccountCode, name")
             .maybeSingle();
 
-        if (orgError) console.error("Organization lookup error:", orgError);
+        if (orgError) {
+            console.error("Organization lookup error:", orgError);
+        }
+        
         const subaccountCode = org?.subaccountCode;
+        console.log(`Resolved subaccount code: ${subaccountCode || "NONE"} for organization: ${org?.name || "UNKNOWN"}`);
 
         // Build metadata to pass to Paystack (and back to our webhook)
         const paystackMetadata = {
