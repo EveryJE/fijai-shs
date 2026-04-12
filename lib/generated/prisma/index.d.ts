@@ -3053,10 +3053,14 @@ export namespace Prisma {
 
   export type DonationAvgAggregateOutputType = {
     amount: Decimal | null
+    fees: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type DonationSumAggregateOutputType = {
     amount: Decimal | null
+    fees: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type DonationMinAggregateOutputType = {
@@ -3070,6 +3074,8 @@ export namespace Prisma {
     donorEmail: string | null
     phone: string | null
     amount: Decimal | null
+    fees: Decimal | null
+    netAmount: Decimal | null
     currency: string | null
     status: string | null
     paymentMethod: string | null
@@ -3095,6 +3101,8 @@ export namespace Prisma {
     donorEmail: string | null
     phone: string | null
     amount: Decimal | null
+    fees: Decimal | null
+    netAmount: Decimal | null
     currency: string | null
     status: string | null
     paymentMethod: string | null
@@ -3120,6 +3128,8 @@ export namespace Prisma {
     donorEmail: number
     phone: number
     amount: number
+    fees: number
+    netAmount: number
     currency: number
     status: number
     paymentMethod: number
@@ -3140,10 +3150,14 @@ export namespace Prisma {
 
   export type DonationAvgAggregateInputType = {
     amount?: true
+    fees?: true
+    netAmount?: true
   }
 
   export type DonationSumAggregateInputType = {
     amount?: true
+    fees?: true
+    netAmount?: true
   }
 
   export type DonationMinAggregateInputType = {
@@ -3157,6 +3171,8 @@ export namespace Prisma {
     donorEmail?: true
     phone?: true
     amount?: true
+    fees?: true
+    netAmount?: true
     currency?: true
     status?: true
     paymentMethod?: true
@@ -3182,6 +3198,8 @@ export namespace Prisma {
     donorEmail?: true
     phone?: true
     amount?: true
+    fees?: true
+    netAmount?: true
     currency?: true
     status?: true
     paymentMethod?: true
@@ -3207,6 +3225,8 @@ export namespace Prisma {
     donorEmail?: true
     phone?: true
     amount?: true
+    fees?: true
+    netAmount?: true
     currency?: true
     status?: true
     paymentMethod?: true
@@ -3321,6 +3341,8 @@ export namespace Prisma {
     donorEmail: string
     phone: string | null
     amount: Decimal
+    fees: Decimal
+    netAmount: Decimal
     currency: string
     status: string
     paymentMethod: string
@@ -3367,6 +3389,8 @@ export namespace Prisma {
     donorEmail?: boolean
     phone?: boolean
     amount?: boolean
+    fees?: boolean
+    netAmount?: boolean
     currency?: boolean
     status?: boolean
     paymentMethod?: boolean
@@ -3398,6 +3422,8 @@ export namespace Prisma {
     donorEmail?: boolean
     phone?: boolean
     amount?: boolean
+    fees?: boolean
+    netAmount?: boolean
     currency?: boolean
     status?: boolean
     paymentMethod?: boolean
@@ -3429,6 +3455,8 @@ export namespace Prisma {
     donorEmail?: boolean
     phone?: boolean
     amount?: boolean
+    fees?: boolean
+    netAmount?: boolean
     currency?: boolean
     status?: boolean
     paymentMethod?: boolean
@@ -3460,6 +3488,8 @@ export namespace Prisma {
     donorEmail?: boolean
     phone?: boolean
     amount?: boolean
+    fees?: boolean
+    netAmount?: boolean
     currency?: boolean
     status?: boolean
     paymentMethod?: boolean
@@ -3476,7 +3506,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type DonationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reference" | "eventId" | "contactPersonId" | "digitalCardId" | "donationItemId" | "donorName" | "donorEmail" | "phone" | "amount" | "currency" | "status" | "paymentMethod" | "userId" | "providerReference" | "providerResponse" | "metadata" | "momentFileUrl" | "momentCaption" | "verifiedAt" | "paidAt" | "donatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["donation"]>
+  export type DonationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reference" | "eventId" | "contactPersonId" | "digitalCardId" | "donationItemId" | "donorName" | "donorEmail" | "phone" | "amount" | "fees" | "netAmount" | "currency" | "status" | "paymentMethod" | "userId" | "providerReference" | "providerResponse" | "metadata" | "momentFileUrl" | "momentCaption" | "verifiedAt" | "paidAt" | "donatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["donation"]>
   export type DonationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
     contactPerson?: boolean | Donation$contactPersonArgs<ExtArgs>
@@ -3515,6 +3545,8 @@ export namespace Prisma {
       donorEmail: string
       phone: string | null
       amount: Prisma.Decimal
+      fees: Prisma.Decimal
+      netAmount: Prisma.Decimal
       currency: string
       status: string
       paymentMethod: string
@@ -3966,6 +3998,8 @@ export namespace Prisma {
     readonly donorEmail: FieldRef<"Donation", 'String'>
     readonly phone: FieldRef<"Donation", 'String'>
     readonly amount: FieldRef<"Donation", 'Decimal'>
+    readonly fees: FieldRef<"Donation", 'Decimal'>
+    readonly netAmount: FieldRef<"Donation", 'Decimal'>
     readonly currency: FieldRef<"Donation", 'String'>
     readonly status: FieldRef<"Donation", 'String'>
     readonly paymentMethod: FieldRef<"Donation", 'String'>
@@ -12673,6 +12707,8 @@ export namespace Prisma {
     donorEmail: 'donorEmail',
     phone: 'phone',
     amount: 'amount',
+    fees: 'fees',
+    netAmount: 'netAmount',
     currency: 'currency',
     status: 'status',
     paymentMethod: 'paymentMethod',
@@ -13063,6 +13099,8 @@ export namespace Prisma {
     donorEmail?: StringFilter<"Donation"> | string
     phone?: StringNullableFilter<"Donation"> | string | null
     amount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Donation"> | string
     status?: StringFilter<"Donation"> | string
     paymentMethod?: StringFilter<"Donation"> | string
@@ -13094,6 +13132,8 @@ export namespace Prisma {
     donorEmail?: SortOrder
     phone?: SortOrderInput | SortOrder
     amount?: SortOrder
+    fees?: SortOrder
+    netAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -13128,6 +13168,8 @@ export namespace Prisma {
     donorEmail?: StringFilter<"Donation"> | string
     phone?: StringNullableFilter<"Donation"> | string | null
     amount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Donation"> | string
     status?: StringFilter<"Donation"> | string
     paymentMethod?: StringFilter<"Donation"> | string
@@ -13159,6 +13201,8 @@ export namespace Prisma {
     donorEmail?: SortOrder
     phone?: SortOrderInput | SortOrder
     amount?: SortOrder
+    fees?: SortOrder
+    netAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -13194,6 +13238,8 @@ export namespace Prisma {
     donorEmail?: StringWithAggregatesFilter<"Donation"> | string
     phone?: StringNullableWithAggregatesFilter<"Donation"> | string | null
     amount?: DecimalWithAggregatesFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    fees?: DecimalWithAggregatesFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalWithAggregatesFilter<"Donation"> | Decimal | DecimalJsLike | number | string
     currency?: StringWithAggregatesFilter<"Donation"> | string
     status?: StringWithAggregatesFilter<"Donation"> | string
     paymentMethod?: StringWithAggregatesFilter<"Donation"> | string
@@ -13935,6 +13981,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -13966,6 +14014,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -13989,6 +14039,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -14020,6 +14072,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -14047,6 +14101,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -14070,6 +14126,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -14097,6 +14155,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -15058,6 +15118,8 @@ export namespace Prisma {
     donorEmail?: SortOrder
     phone?: SortOrder
     amount?: SortOrder
+    fees?: SortOrder
+    netAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -15076,6 +15138,8 @@ export namespace Prisma {
 
   export type DonationAvgOrderByAggregateInput = {
     amount?: SortOrder
+    fees?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type DonationMaxOrderByAggregateInput = {
@@ -15089,6 +15153,8 @@ export namespace Prisma {
     donorEmail?: SortOrder
     phone?: SortOrder
     amount?: SortOrder
+    fees?: SortOrder
+    netAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -15114,6 +15180,8 @@ export namespace Prisma {
     donorEmail?: SortOrder
     phone?: SortOrder
     amount?: SortOrder
+    fees?: SortOrder
+    netAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -15130,6 +15198,8 @@ export namespace Prisma {
 
   export type DonationSumOrderByAggregateInput = {
     amount?: SortOrder
+    fees?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -16553,6 +16623,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -16582,6 +16654,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -16720,6 +16794,8 @@ export namespace Prisma {
     donorEmail?: StringFilter<"Donation"> | string
     phone?: StringNullableFilter<"Donation"> | string | null
     amount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Donation"> | string
     status?: StringFilter<"Donation"> | string
     paymentMethod?: StringFilter<"Donation"> | string
@@ -17157,6 +17233,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -17186,6 +17264,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -17499,6 +17579,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -17528,6 +17610,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -17678,6 +17762,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -17707,6 +17793,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -17957,6 +18045,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -17980,6 +18070,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18009,6 +18101,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18035,6 +18129,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18100,6 +18196,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -18246,6 +18344,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18275,6 +18375,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18301,6 +18403,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18377,6 +18481,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -18400,6 +18506,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18429,6 +18537,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18455,6 +18565,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18481,6 +18593,8 @@ export namespace Prisma {
     donorEmail: string
     phone?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    fees?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     currency?: string
     status?: string
     paymentMethod?: string
@@ -18504,6 +18618,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18533,6 +18649,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -18559,6 +18677,8 @@ export namespace Prisma {
     donorEmail?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fees?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string

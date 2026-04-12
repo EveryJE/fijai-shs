@@ -38,6 +38,8 @@ export async function createManualDonation(formData: FormData) {
             donorEmail,
             donorName,
             amount,
+            fees: 0,
+            netAmount: amount,
             currency,
             status: "paid",
             paymentMethod: "manual",
@@ -89,6 +91,8 @@ export async function updateManualDonation(id: string, data: {
         data: {
             ...data,
             amount: data.amount !== undefined ? data.amount : undefined,
+            fees: 0,
+            netAmount: data.amount !== undefined ? data.amount : undefined,
         },
     });
 

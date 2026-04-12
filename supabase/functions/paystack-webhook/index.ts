@@ -98,13 +98,16 @@ Deno.serve(async (req) => {
             return new Response("OK", { status: 200 });
         }
 
+        const fees = Number(data.fees ?? 0) / 100;
+        const netAmount = Number(paidAmount) - fees;
+
         const finalMetadata = {
             ...paystackMetadata,
             raw_gateway_id: data.id,
             gateway_channel: data.channel,
             card_last4: data.authorization?.last4,
             card_brand: data.authorization?.brand,
-            fees: (data.fees || 0) / 100,
+            fees: fees,
         };
 
         if (!existingDonation) {
@@ -124,6 +127,8 @@ Deno.serve(async (req) => {
                 donorName: paystackMetadata.donor_name || data.authorization?.account_name || "Alumni Donor",
                 phone: paystackMetadata.donor_phone || data.customer?.phone || null,
                 amount: paidAmount,
+                fees: fees,
+                netAmount: netAmount,
                 currency: paystackMetadata.currency || data.currency || "GHS",
                 status: "paid",
                 paymentMethod: "paystack",
@@ -155,6 +160,8 @@ Deno.serve(async (req) => {
                 .from("donations")
                 .update({
                     status: "paid",
+                    fees: fees,
+                    netAmount: netAmount,
                     metadata: finalMetadata,
                     providerReference: String(data.id || ""),
                     verifiedAt: now,

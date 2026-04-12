@@ -121,13 +121,13 @@ export const getDonationStats = cache(async () => {
         prisma.donation.count({ where: { status: "paid" } }),
         prisma.donation.aggregate({
             where: { status: "paid" },
-            _sum: { amount: true },
+            _sum: { netAmount: true },
         }),
     ]);
 
     return {
         total,
         paid,
-        totalAmount: totalAmount._sum.amount ?? 0,
+        totalAmount: totalAmount._sum.netAmount ?? 0,
     };
 });

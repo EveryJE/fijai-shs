@@ -73,6 +73,7 @@ interface Event {
     createdAt: Date;
     updatedAt: Date;
     categories: Category[];
+    donations: { netAmount: number | any }[];
 }
 
 const COLORS = [
@@ -331,7 +332,11 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 <DollarSign className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">0</div>
+                                <div className="text-2xl font-bold">
+                                    {new Intl.NumberFormat('en-GH', { style: 'currency', currency: 'GHS' }).format(
+                                        event.donations.reduce((sum, d) => sum + Number(d.netAmount), 0)
+                                    )}
+                                </div>
                             </CardContent>
                         </Card>
                         <Card className="border-none ">
@@ -340,7 +345,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 <Users className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">0</div>
+                                <div className="text-2xl font-bold">{event.donations.length}</div>
                             </CardContent>
                         </Card>
                     </div>

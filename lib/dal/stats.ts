@@ -12,7 +12,7 @@ export const getOrgStats = cache(async () => {
         }),
         prisma.donation.aggregate({
             _sum: {
-                amount: true
+                netAmount: true
             },
             where: {
                 status: "paid"
@@ -24,7 +24,7 @@ export const getOrgStats = cache(async () => {
         totalUsers,
         rsvpUsers,
         cardholders,
-        totalDonated: Number(totalDonations?._sum?.amount || 0),
+        totalDonated: Number(totalDonations?._sum?.netAmount || 0),
     };
 });
 
@@ -35,11 +35,11 @@ export const getOrganization = cache(async () => {
 export const getDonationBreakdown = cache(async () => {
     const [paystackAgg, manualAgg, paystackCount, manualCount] = await Promise.all([
         prisma.donation.aggregate({
-            _sum: { amount: true },
+            _sum: { netAmount: true },
             where: { status: "paid", paymentMethod: "paystack" },
         }),
         prisma.donation.aggregate({
-            _sum: { amount: true },
+            _sum: { netAmount: true },
             where: { status: "paid", paymentMethod: "manual" },
         }),
         prisma.donation.count({ where: { status: "paid", paymentMethod: "paystack" } }),
@@ -47,8 +47,8 @@ export const getDonationBreakdown = cache(async () => {
     ]);
 
     return {
-        paystackTotal: Number(paystackAgg._sum?.amount || 0),
-        manualTotal: Number(manualAgg._sum?.amount || 0),
+        paystackTotal: Number(paystackAgg._sum?.netAmount || 0),
+        manualTotal: Number(manualAgg._sum?.netAmount || 0),
         paystackCount,
         manualCount,
     };
@@ -69,6 +69,8 @@ export const getRecentTransactions = cache(async (limit = 10) => {
     return transactions.map(tx => ({
         ...tx,
         amount: Number(tx.amount),
+        netAmount: Number(tx.netAmount || 0),
+        fees: Number(tx.fees || 0),
         donationItem: tx.donationItem ? {
             ...tx.donationItem,
             targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
@@ -92,6 +94,8 @@ export const getDonationsByMethod = cache(async (method: "paystack" | "manual", 
     return donations.map(tx => ({
         ...tx,
         amount: Number(tx.amount),
+        netAmount: Number(tx.netAmount || 0),
+        fees: Number(tx.fees || 0),
         donationItem: tx.donationItem ? {
             ...tx.donationItem,
             targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
@@ -111,7 +115,7 @@ export const getMostImpactUser = cache(async () => {
     const topDonor = await prisma.donation.groupBy({
         by: ['userId'],
         _sum: {
-            amount: true
+            netAmount: true
         },
         where: {
             status: "paid",
@@ -119,7 +123,7 @@ export const getMostImpactUser = cache(async () => {
         },
         orderBy: {
             _sum: {
-                amount: "desc"
+                netAmount: "desc"
             }
         },
         take: 1
@@ -142,7 +146,7 @@ export const getMonthlyRevenue = cache(async () => {
         const nextD = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
         
         const sum = await prisma.donation.aggregate({
-            _sum: { amount: true },
+            _sum: { netAmount: true },
             where: {
                 status: "paid",
                 createdAt: {
@@ -154,7 +158,7 @@ export const getMonthlyRevenue = cache(async () => {
 
         last6Months.push({
             month: months[d.getMonth()],
-            revenue: Number(sum._sum?.amount || 0)
+            revenue: Number(sum._sum?.netAmount || 0)
         });
     }
 
@@ -172,7 +176,7 @@ export const getDigitalCardImpact = cache(async (limit = 5) => {
     const impact = await prisma.donation.groupBy({
         by: ['digitalCardId'],
         _sum: {
-            amount: true
+            netAmount: true
         },
         where: {
             status: "paid",
@@ -180,7 +184,7 @@ export const getDigitalCardImpact = cache(async (limit = 5) => {
         },
         orderBy: {
             _sum: {
-                amount: "desc"
+                netAmount: "desc"
             }
         },
         take: limit
@@ -199,7 +203,7 @@ export const getDigitalCardImpact = cache(async (limit = 5) => {
         const card = cards.find(c => c.id === i.digitalCardId);
         return {
             name: card?.profile?.fullName || card?.cardCode || "Unknown",
-            amount: Number(i._sum?.amount || 0)
+            amount: Number(i._sum?.netAmount || 0)
         };
     });
 });
@@ -220,7 +224,7 @@ export const getDonationByItemCategory = cache(async () => {
 
     return categories.map(cat => {
         const total = cat.donationItems.reduce((sum, item) => {
-            return sum + item.donations.reduce((s, d) => s + Number(d.amount), 0);
+            return sum + item.donations.reduce((s, d) => s + Number(d.netAmount), 0);
         }, 0);
 
         return {

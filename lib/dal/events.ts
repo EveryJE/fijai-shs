@@ -24,6 +24,10 @@ export const getEventWithCategories = cache(async (eventId: string) => {
     return prisma.event.findUnique({
         where: { id: eventId },
         include: {
+            donations: {
+                where: { status: "paid" },
+                select: { netAmount: true }
+            },
             categories: {
                 orderBy: { displayOrder: "asc" },
                 include: {

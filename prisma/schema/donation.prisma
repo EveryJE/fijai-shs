@@ -11,8 +11,10 @@ model Donation {
     donorEmail String
     phone      String?
 
-    amount   Decimal @db.Decimal(12, 2)
-    currency String  @default("GHS")
+    amount    Decimal @db.Decimal(12, 2)
+    fees      Decimal @default(0) @db.Decimal(12, 2)
+    netAmount Decimal @default(0) @db.Decimal(12, 2)
+    currency  String  @default("GHS")
 
     status        String @default("pending") // pending | paid | failed
     paymentMethod String @default("paystack") // paystack | manual
