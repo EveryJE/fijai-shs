@@ -155,12 +155,11 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                        <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="currency">Currency *</Label>
                                 <Select
                                     value={formData.currency}
-                                    onValueChange={(value) => setFormData({ ...formData, currency: value })}
+                                    onValueChange={(value) => setFormData({ ...formData, currency: value || "GHS" })}
                                 >
                                     <SelectTrigger id="currency">
                                         <SelectValue placeholder="GHS" />
@@ -203,7 +202,6 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                                     </SelectContent>
                                 </Select>
                             </div>
-                        </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="notes">Notes</Label>

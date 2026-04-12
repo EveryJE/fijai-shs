@@ -562,7 +562,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 <Label htmlFor="itemCurrency">Currency</Label>
                                 <Select
                                     value={itemForm.currency}
-                                    onValueChange={(value) => setItemForm({ ...itemForm, currency: value })}
+                                    onValueChange={(value) => setItemForm({ ...itemForm, currency: value || "GHS" })}
                                 >
                                     <SelectTrigger id="itemCurrency">
                                         <SelectValue placeholder="Select currency" />
