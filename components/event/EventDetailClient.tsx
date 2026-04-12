@@ -76,15 +76,17 @@ interface Event {
 }
 
 const COLORS = [
-    "#730303", // Maroon
-    "#DAA520", // Gold
-    "#1B3A5C", // Dark Blue
-    "#10B981", // Green
-    "#8B5CF6", // Purple
-    "#F97316", // Orange
-    "#EC4899", // Pink
+    "#730303", // Primary Maroon
+    "#DAA520", // Institutional Gold
+    "#1B3A5C", // Deep Blue
+    "#CD7F32", // Bronze
+    "#B87333", // Copper
+    "#FFD700", // Bright Gold
+    "#C0C0C0", // Silver
+    "#E5E4E2", // Platinum
+    "#10B981", // Emerald Green
+    "#8B5CF6", // Royal Purple
     "#06B6D4", // Cyan
-    "#CD7F32"//bronze
 ];
 
 export function EventDetailClient({ event }: { readonly event: Event }) {
