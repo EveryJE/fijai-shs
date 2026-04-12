@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/dashboard/AppSidebar";
-import { getProfileByEmail } from "@/lib/dal";
+import { getProfileByEmail, getOrganization } from "@/lib/dal";
 import { Separator } from "@/components/ui/separator";
 import { RouteGuard } from "@/components/RouteGuard";
 import { Breadcrumbs } from "@/components/dashboard/Breadcrumbs";
@@ -21,8 +21,9 @@ export default async function ProtectedLayout(props: {
     if (!user) redirect("/auth/login");
 
 
-    // Fetch profile first
+    // Fetch profile and organization
     const profile = await getProfileByEmail(user.email!);
+    const organization = await getOrganization();
 
     // Grant super admin if email matches a hardcoded value or env variable (for dev/admin override)
     const isSuperAdmin = [
@@ -50,7 +51,7 @@ export default async function ProtectedLayout(props: {
 
     return (
         <SidebarProvider>
-            <AppSidebar user={sidebarUser} />
+            <AppSidebar user={sidebarUser} organization={organization} />
             <SidebarInset className="bg-background/95">
                 <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 backdrop-blur-sm sticky top-0 z-30 transition-[width,height] ease-linear bg-background/50">
                     <SidebarTrigger className="-ml-1" />

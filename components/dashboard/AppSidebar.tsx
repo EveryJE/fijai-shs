@@ -19,6 +19,7 @@ import Image from "next/image"
 
 export function AppSidebar({
   user,
+  organization,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   user: {
@@ -28,11 +29,19 @@ export function AppSidebar({
     avatar?: string | null
     roles: string[]
   }
+  organization: {
+    id: string
+    name: string
+    logoUrl?: string | null
+    primaryColor?: string | null
+  }
 }) {
   const filteredNavMain = navMain.filter((item) => {
     if (!item.roles) return true
     return item.roles.some((role) => user.roles.includes(role))
   })
+
+  const logoColor = organization.primaryColor || "#730303";
 
   return (
     <Sidebar
@@ -44,18 +53,18 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" className="hover:bg-transparent">
-              <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-[#730303] text-sidebar-primary-foreground shadow-lg overflow-hidden shrink-0">
+              <div className="flex aspect-square size-10 items-center justify-center rounded-lg shadow-lg overflow-hidden shrink-0" style={{ backgroundColor: logoColor }}>
                 <Image
-                  src="/logo.png"
-                  alt="Fijai SHS"
+                  src={organization.logoUrl || "/logo.png"}
+                  alt={organization.name}
                   width={40}
                   height={40}
-                  className="p-1.5"
+                  className="p-1.5 object-contain"
                 />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight ml-2">
-                <span className="truncate font-bold text-base  text-[#730303]">Fosa 96</span>
-                <span className="truncate text-[10px] uppercase font-semibold text-muted-foreground/60 ">Alumni Fundraising</span>
+                <span className="truncate font-bold text-base" style={{ color: logoColor }}>{organization.name}</span>
+                <span className="truncate text-[10px] uppercase font-semibold text-muted-foreground/60 ">Institutional Dashboard</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
