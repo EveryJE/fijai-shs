@@ -36,6 +36,7 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
         phone: "",
         amount: "",
         eventId: "",
+        currency: "GHS",
         momentCaption: "",
     });
 
@@ -47,6 +48,7 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                 phone: donation.phone || "",
                 amount: String(donation.amount || ""),
                 eventId: donation.event?.id || "",
+                currency: donation.currency || "GHS",
                 momentCaption: donation.momentCaption || "",
             });
         } else {
@@ -56,6 +58,7 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                 phone: "",
                 amount: "",
                 eventId: events[0]?.id || "",
+                currency: "GHS",
                 momentCaption: "",
             });
         }
@@ -77,6 +80,7 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                         donorEmail: formData.donorEmail,
                         phone: formData.phone || undefined,
                         amount: Number(formData.amount),
+                        currency: formData.currency,
                         momentCaption: formData.momentCaption || null,
                     });
                     toast.success("Donation updated");
@@ -86,6 +90,7 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                     fd.set("donorEmail", formData.donorEmail);
                     fd.set("amount", formData.amount);
                     fd.set("eventId", formData.eventId);
+                    fd.set("currency", formData.currency);
                     if (formData.phone) fd.set("phone", formData.phone);
                     if (formData.momentCaption) fd.set("notes", formData.momentCaption);
                     
@@ -150,8 +155,24 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="amount">Amount (GHS) *</Label>
+                                <Label htmlFor="currency">Currency *</Label>
+                                <Select
+                                    value={formData.currency}
+                                    onValueChange={(value) => setFormData({ ...formData, currency: value })}
+                                >
+                                    <SelectTrigger id="currency">
+                                        <SelectValue placeholder="GHS" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="GHS">GHS</SelectItem>
+                                        <SelectItem value="USD">USD</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="amount">Amount *</Label>
                                 <Input
                                     id="amount"
                                     type="number"
@@ -163,6 +184,7 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                                     required
                                 />
                             </div>
+                        </div>
                             <div className="space-y-2">
                                 <Label htmlFor="eventId">Event *</Label>
                                 <Select

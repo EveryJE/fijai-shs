@@ -203,7 +203,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
             setIsItemSheetOpen(false);
             setEditingItem(null);
             setSelectedCategoryId(null);
-            setItemForm({ name: "", icon: "", color: "#730303", targetAmount: "" });
+            setItemForm({ name: "", icon: "", color: "#730303", targetAmount: "", currency: "GHS" });
             router.refresh();
         } catch (error) {
             toast.error("Failed to save item");
@@ -329,7 +329,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 <DollarSign className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">GHS 0</div>
+                                <div className="text-2xl font-bold">0</div>
                             </CardContent>
                         </Card>
                         <Card className="border-none ">

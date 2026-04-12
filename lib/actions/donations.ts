@@ -68,6 +68,7 @@ export async function updateManualDonation(id: string, data: {
     donorEmail?: string;
     phone?: string;
     amount?: number;
+    currency?: string;
     donationItemId?: string | null;
     contactPersonId?: string | null;
     momentCaption?: string | null;
