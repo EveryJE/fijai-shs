@@ -35,12 +35,12 @@ export default async function ParticipantsPage() {
                         <div className="space-y-1">
                             <div className="flex items-center gap-2">
                                 <UsersIcon className="h-5 w-5 text-[#DAA520]" />
-                                <CardTitle className="text-xl font-bold tracking-tight text-[#730303]">Active Member Roster</CardTitle>
+                                <CardTitle className="text-xl font-bold text-[#730303]">Active Member Roster</CardTitle>
                             </div>
-                            <CardDescription className="text-sm font-medium opacity-60">Complete registry of verified alumni participants and administrators.</CardDescription>
+                            <CardDescription className="text-sm opacity-60">Complete registry of verified alumni participants and administrators.</CardDescription>
                         </div>
                         <div className="bg-[#730303]/5 px-4 py-2 rounded border border-[#730303]/10">
-                            <span className="text-[10px] font-black uppercase tracking-[2px] text-[#730303]">Total Population: {profiles.length}</span>
+                            <span className="text-[10px] font-medium uppercase  text-[#730303]">Total Population: {profiles.length}</span>
                         </div>
                     </div>
                 </CardHeader>

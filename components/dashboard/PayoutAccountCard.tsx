@@ -52,11 +52,10 @@ export function PayoutAccountCard({
         >
             {/* Background Gradient */}
             <div
-                className={`absolute inset-0 ${
-                    isMomo
+                className={`absolute inset-0 ${isMomo
                         ? "bg-gradient-to-br from-[#1a1a1a] via-[#3d2a00] to-[#1a1a1a]"
                         : "bg-gradient-to-br from-[#006400] via-[#1a1a1a] to-[#730303]"
-                }`}
+                    }`}
             />
 
             {/* Decorative Glow Circles */}
@@ -84,7 +83,7 @@ export function PayoutAccountCard({
                     <div className="flex items-center gap-1.5 bg-black/30 px-2 py-0.5 rounded-full border border-white/10">
                         <div className="w-2 h-2 rounded-full bg-[#DAA520] animate-pulse" />
                         <span className="text-[10px] text-white font-mono tracking-[1px] uppercase">
-                           Momo
+                            Momo
                         </span>
                     </div>
                 ) : (
@@ -120,7 +119,7 @@ export function PayoutAccountCard({
                     <p className="text-[8px] text-white/40 tracking-[2px] uppercase mb-0.5 font-bold">
                         {isMomo ? "NETWORK" : "BANK"}
                     </p>
-                    <p className="text-[11px] text-[#DAA520] font-black tracking-wider truncate uppercase">
+                    <p className="text-[11px] text-[#DAA520] font-black  truncate uppercase">
                         {bankName}
                     </p>
                 </div>

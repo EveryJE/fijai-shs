@@ -90,16 +90,16 @@ export function RecentTransactionsTable({ transactions }: RecentTransactionsTabl
                             const cardHolderName = tx.metadata?.card_account_name || tx.metadata?.card_name || null;
 
                             return (
-                                <TableRow 
-                                    key={tx.id} 
+                                <TableRow
+                                    key={tx.id}
                                     className="group hover:bg-muted/30 transition-colors cursor-pointer"
                                     onClick={() => setSelectedTx(tx)}
                                 >
                                     <TableCell>
                                         <div className="flex items-center gap-3">
-                                             <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center text-primary border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">
-                                                 <UserCircle2Icon className="h-4 w-4" />
-                                             </div>
+                                            <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center text-primary border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">
+                                                <UserCircle2Icon className="h-4 w-4" />
+                                            </div>
                                             <div className="flex flex-col">
                                                 <span className="font-semibold text-sm">
                                                     {tx.donorName || "Anonymous Alumnus"}
@@ -190,55 +190,55 @@ export function RecentTransactionsTable({ transactions }: RecentTransactionsTabl
             <Dialog open={!!selectedTx} onOpenChange={(open) => !open && setSelectedTx(null)}>
                 <DialogContent className="max-w-2xl p-0 overflow-hidden border-none shadow-2xl">
                     <div className="bg-primary p-6 text-primary-foreground relative">
-                         <div className="flex items-center gap-2 opacity-60 text-[10px] font-black uppercase tracking-[3px] mb-2">
-                             Transaction Insight
-                         </div>
-                         <div className="flex justify-between items-end">
-                             <div className="space-y-1">
+                        <div className="flex items-center gap-2 opacity-60 text-[10px] font-black uppercase tracking-[3px] mb-2">
+                            Transaction Insight
+                        </div>
+                        <div className="flex justify-between items-end">
+                            <div className="space-y-1">
                                 <DialogTitle className="text-3xl font-black">{formatAmount(Number(selectedTx?.amount || 0))}</DialogTitle>
                                 <DialogDescription className="text-primary-foreground/70 font-medium">
                                     Contribution by {selectedTx?.donorName || "Anonymous Alumni"}
                                 </DialogDescription>
-                             </div>
-                             <div className="text-right">
-                                 <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Reference</p>
-                                 <p className="font-mono text-sm leading-none mt-1">{selectedTx?.reference}</p>
-                             </div>
-                         </div>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Reference</p>
+                                <p className="font-mono text-sm leading-none mt-1">{selectedTx?.reference}</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="p-8 space-y-8">
                         <div className="grid grid-cols-2 gap-8">
-                             <div className="space-y-1">
-                                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                                     <UserCircle2Icon className="h-3 w-3" />
-                                     Donor Contact
-                                 </p>
-                                 <p className="text-sm font-semibold">{selectedTx?.donorEmail}</p>
-                             </div>
-                             <div className="space-y-1">
-                                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                                     <WalletIcon className="h-3 w-3" />
-                                     Allocation
-                                 </p>
-                                 <p className="text-sm font-semibold truncate">{selectedTx?.event?.title || "General Fund"}</p>
-                             </div>
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase  flex items-center gap-1.5">
+                                    <UserCircle2Icon className="h-3 w-3" />
+                                    Donor Contact
+                                </p>
+                                <p className="text-sm font-semibold">{selectedTx?.donorEmail}</p>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase  flex items-center gap-1.5">
+                                    <WalletIcon className="h-3 w-3" />
+                                    Allocation
+                                </p>
+                                <p className="text-sm font-semibold truncate">{selectedTx?.event?.title || "General Fund"}</p>
+                            </div>
                         </div>
 
                         {/* Shared Memory / Moment */}
                         {(selectedTx?.momentFileUrl || selectedTx?.momentCaption) ? (
                             <div className="space-y-4 pt-4 border-t">
                                 <div className="flex items-center gap-2">
-                                     <CameraIcon className="h-4 w-4 text-primary" />
-                                     <h4 className="text-sm font-black uppercase tracking-widest text-[#730303]">Shared Alumni Moment</h4>
+                                    <CameraIcon className="h-4 w-4 text-primary" />
+                                    <h4 className="text-sm font-black uppercase tracking-widest text-[#730303]">Shared Alumni Moment</h4>
                                 </div>
-                                
+
                                 <div className="bg-muted/30 rounded-2xl overflow-hidden border p-2">
                                     {selectedTx?.momentFileUrl && (
                                         <div className="aspect-video w-full relative rounded-xl overflow-hidden mb-3">
-                                            <img 
-                                                src={selectedTx.momentFileUrl} 
-                                                alt="Donation Moment" 
+                                            <img
+                                                src={selectedTx.momentFileUrl}
+                                                alt="Donation Moment"
                                                 className="object-cover w-full h-full"
                                             />
                                         </div>

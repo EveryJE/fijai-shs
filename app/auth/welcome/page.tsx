@@ -12,15 +12,15 @@ function WelcomeContent() {
     const email = searchParams.get("email") || ""
 
     return (
-        <div  style={{
-        backgroundImage: "url('/donate-bg.svg')",
-      }} className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+        <div style={{
+            backgroundImage: "url('/donate-bg.svg')",
+        }} className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
             <Card className="max-w-md w-full border-none shadow-none">
                 <CardHeader className="text-center space-y-4">
                     <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-                        <img 
-                            src="/logo.png" 
-                            alt="Fijai SHS Logo" 
+                        <img
+                            src="/logo.png"
+                            alt="Fijai SHS Logo"
                             className="w-16 h-16 object-contain"
                         />
                     </div>
@@ -43,7 +43,7 @@ function WelcomeContent() {
                     </div>
 
                     <div className="space-y-3">
-                        <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground">How to Log In</h3>
+                        <h3 className="font-bold text-sm uppercase  text-muted-foreground">How to Log In</h3>
                         <div className="flex items-center gap-3 text-sm">
                             <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center font-bold text-secondary-foreground">1</div>
                             <div className="flex-1 flex items-center gap-2">
@@ -61,10 +61,10 @@ function WelcomeContent() {
                     </div>
 
                     <div className="p-3 bg-amber-50 rounded-md border border-amber-100 flex gap-3">
-                         <div className="h-2 w-2 rounded-full bg-amber-400 mt-1.5" />
-                         <p className="text-xs text-amber-800 leading-normal">
+                        <div className="h-2 w-2 rounded-full bg-amber-400 mt-1.5" />
+                        <p className="text-xs text-amber-800 leading-normal">
                             For security purposes, you will be required to change your password immediately after logging in.
-                         </p>
+                        </p>
                     </div>
                 </CardContent>
                 <CardFooter>

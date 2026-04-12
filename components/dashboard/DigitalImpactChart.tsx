@@ -42,7 +42,7 @@ export function DigitalImpactChart({ data }: DigitalImpactChartProps) {
                             <CreditCardIcon className="h-4 w-4 text-[#DAA520]" />
                             <CardTitle className="text-sm font-bold">Digital Card Impact</CardTitle>
                         </div>
-                        <CardDescription className="text-[10px] uppercase tracking-wider">
+                        <CardDescription className="text-[10px] uppercase ">
                             Donation Ranking by Cardholder
                         </CardDescription>
                     </div>

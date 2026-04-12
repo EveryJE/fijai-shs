@@ -18,12 +18,12 @@ interface GoogleFormFileUploadProps {
  * Reusable File Upload for Google-Style Forms
  * Integrated with the Fijai optimization hook (WebP conversion).
  */
-export function GoogleFormFileUpload({ 
-    value, 
-    onChange, 
-    label = "Share a Moment", 
-    bucket = "events", 
-    folder = "moments" 
+export function GoogleFormFileUpload({
+    value,
+    onChange,
+    label = "Share a Moment",
+    bucket = "events",
+    folder = "moments"
 }: GoogleFormFileUploadProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { isUploading, upload } = useImageUpload({
@@ -32,8 +32,8 @@ export function GoogleFormFileUpload({
         convertOptions: { quality: 0.8, maxWidth: 1000, maxHeight: 1000, maxSizeMB: 1 }
     });
 
-    const displayUrl = value?.startsWith("http") 
-        ? value 
+    const displayUrl = value?.startsWith("http")
+        ? value
         : (getPublicUrlSync(bucket as any, value) || null);
 
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -44,13 +44,13 @@ export function GoogleFormFileUpload({
         if (path) {
             onChange(path);
         }
-        
+
         if (fileInputRef.current) fileInputRef.current.value = "";
     }
 
     return (
         <div className="space-y-4">
-            <div 
+            <div
                 onClick={() => !isUploading && fileInputRef.current?.click()}
                 className={cn(
                     "relative border-2 border-dashed border-muted-foreground/20 rounded-xl p-8 transition-all flex flex-col items-center justify-center cursor-pointer hover:bg-muted/5",
@@ -61,7 +61,7 @@ export function GoogleFormFileUpload({
                 {displayUrl ? (
                     <div className="relative w-full aspect-video rounded-lg overflow-hidden border shadow-sm">
                         <img src={displayUrl} alt="Uploaded moment" className="w-full h-full object-cover" />
-                        <button 
+                        <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onChange("");
@@ -81,13 +81,13 @@ export function GoogleFormFileUpload({
                         <p className="text-sm">
                             {isUploading ? "Optimizing..." : label}
                         </p>
-                        <p className="text-[10px] text-muted-foreground/40 mt-1 uppercase tracking-tight">
+                        <p className="text-[10px] text-muted-foreground/40 mt-1 uppercase ">
                             JPEG, PNG or WebP (Max 5MB)
                         </p>
                     </div>
                 )}
-                
-                <input 
+
+                <input
                     ref={fileInputRef}
                     type="file"
                     accept="image/*"

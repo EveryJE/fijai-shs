@@ -25,13 +25,13 @@ export function MostImpactUserCard({ user }: MostImpactUserCardProps) {
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
                 <TrophyIcon className="w-32 h-32" />
             </div>
-            
+
             <CardHeader className="relative pb-0 pt-6">
                 <div className="flex items-center gap-3">
-                     <div className="bg-white/10 p-2 rounded-lg border border-white/10">
+                    <div className="bg-white/10 p-2 rounded-lg border border-white/10">
                         <StarIcon className="h-4 w-4 text-emerald-400 fill-emerald-400" />
-                     </div>
-                     <CardTitle className="text-sm font-semibold uppercase tracking-wider">Top Contributor</CardTitle>
+                    </div>
+                    <CardTitle className="text-sm font-semibold uppercase ">Top Contributor</CardTitle>
                 </div>
             </CardHeader>
             <CardContent className="relative pt-6 pb-8 space-y-6">
@@ -48,25 +48,25 @@ export function MostImpactUserCard({ user }: MostImpactUserCardProps) {
                         </div>
                     </div>
                     <div>
-                         <p className="text-xl font-bold leading-none">{user.fullName || "Alumni Member"}</p>
-                         <p className="text-xs text-primary-foreground/60 mt-1 uppercase font-medium tracking-wide">Verified Supporter</p>
+                        <p className="text-xl font-bold leading-none">{user.fullName || "Alumni Member"}</p>
+                        <p className="text-xs text-primary-foreground/60 mt-1 uppercase font-medium tracking-wide">Verified Supporter</p>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                     <div className="bg-white/5 p-3 rounded-lg border border-white/10">
-                         <p className="text-[10px] uppercase font-semibold opacity-60 mb-1">Impact Level</p>
-                         <p className="text-sm font-bold text-emerald-400">Elite Tier</p>
-                     </div>
-                     <div className="bg-white/5 p-3 rounded-lg border border-white/10">
-                         <p className="text-[10px] uppercase font-semibold opacity-60 mb-1">Alumni Code</p>
-                         <p className="text-sm font-bold uppercase">{user.uniqueCode || "N/A"}</p>
-                     </div>
+                    <div className="bg-white/5 p-3 rounded-lg border border-white/10">
+                        <p className="text-[10px] uppercase font-semibold opacity-60 mb-1">Impact Level</p>
+                        <p className="text-sm font-bold text-emerald-400">Elite Tier</p>
+                    </div>
+                    <div className="bg-white/5 p-3 rounded-lg border border-white/10">
+                        <p className="text-[10px] uppercase font-semibold opacity-60 mb-1">Alumni Code</p>
+                        <p className="text-sm font-bold uppercase">{user.uniqueCode || "N/A"}</p>
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-2 pt-2 text-[10px] font-medium uppercase tracking-wider opacity-60">
-                     <HeartHandshakeIcon className="h-3 w-3" />
-                     Institutionally Recognized Milestone
+                <div className="flex items-center gap-2 pt-2 text-[10px] font-medium uppercase  opacity-60">
+                    <HeartHandshakeIcon className="h-3 w-3" />
+                    Institutionally Recognized Milestone
                 </div>
             </CardContent>
         </Card>

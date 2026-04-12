@@ -57,7 +57,7 @@ export default async function DashboardPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 pb-2">
                 <div>
-                    <h1 className="text-3xl font-black tracking-tight">
+                    <h1 className="text-3xl font-black ">
                         Dashboard
                     </h1>
                 </div>
@@ -97,7 +97,7 @@ export default async function DashboardPage() {
                                                 {event.title}
                                             </h3>
                                         </div>
-                                      
+
                                     </CardContent>
                                 </Card>
                             </Link>
@@ -169,7 +169,7 @@ function StatCard({ title, value, icon: Icon, accent }: {
             <CardContent className="p-4 flex items-start justify-between gap-3">
                 <div className="space-y-1 min-w-0">
                     <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide truncate">{title}</p>
-                    <p className="text-xl font-black tracking-tight truncate">{value}</p>
+                    <p className="text-xl font-black  truncate">{value}</p>
                 </div>
                 <div className={cn("p-2 rounded-lg shrink-0", a.bg, a.border, "border")}>
                     <Icon className={cn("h-4 w-4", a.text)} />

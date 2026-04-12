@@ -312,7 +312,7 @@ export function StatusBadge({
     return (
         <span
             className={cn(
-                "inline-flex w-fit gap-1.5 items-center rounded border font-medium transition-colors tracking-tight",
+                "inline-flex w-fit gap-1.5 items-center rounded border font-medium transition-colors ",
                 config.textColor,
                 config.borderColor,
                 config.bgColor,

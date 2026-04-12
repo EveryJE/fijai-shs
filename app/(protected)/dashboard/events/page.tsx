@@ -15,7 +15,7 @@ export default async function EventsPage() {
         <div className="max-w-7xl p-6 lg:p-10">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Events Management</h1>
+                    <h1 className="text-3xl font-bold ">Events Management</h1>
                     <p className="text-muted-foreground mt-1">
                         Create and manage your school events, RSVPs, and Digital Cards.
                     </p>
@@ -27,8 +27,8 @@ export default async function EventsPage() {
                 <Card className="overflow-hidden pt-0">
                     <CardHeader className="bg-primary/10 rounded-none pt-3 pb-4">
                         <div className="flex items-center gap-2">
-                             <CalendarDaysIcon className="h-5 w-5 text-primary" />
-                             <CardTitle className="text-xl">All Events</CardTitle>
+                            <CalendarDaysIcon className="h-5 w-5 text-primary" />
+                            <CardTitle className="text-xl">All Events</CardTitle>
                         </div>
                         <CardDescription>A list of all organized events and their current status.</CardDescription>
                     </CardHeader>
@@ -62,13 +62,13 @@ export default async function EventsPage() {
                                                 <StatusBadge variant={event.status} size="sm" />
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {event.startDate 
-                                                    ? format(new Date(event.startDate), "MMM d, yyyy HH:mm") 
+                                                {event.startDate
+                                                    ? format(new Date(event.startDate), "MMM d, yyyy HH:mm")
                                                     : "Not set"}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {event.endDate 
-                                                    ? format(new Date(event.endDate), "MMM d, yyyy HH:mm") 
+                                                {event.endDate
+                                                    ? format(new Date(event.endDate), "MMM d, yyyy HH:mm")
                                                     : "Not set"}
                                             </TableCell>
                                             <TableCell className="text-right">

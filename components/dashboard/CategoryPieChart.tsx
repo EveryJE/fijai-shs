@@ -39,7 +39,7 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
                     <PieChartIcon className="h-4 w-4 text-amber-600" />
                     <CardTitle className="text-sm font-bold">Category Distribution</CardTitle>
                 </div>
-                <CardDescription className="text-[10px] uppercase tracking-wider">
+                <CardDescription className="text-[10px] uppercase ">
                     Donations by Category
                 </CardDescription>
             </CardHeader>
@@ -81,7 +81,7 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
                                                         className="w-2 h-2 rounded-full"
                                                         style={{ backgroundColor: entry.color }}
                                                     />
-                                                    <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                                                    <span className="text-[10px] font-medium text-muted-foreground uppercase ">
                                                         {entry.value}
                                                     </span>
                                                 </div>

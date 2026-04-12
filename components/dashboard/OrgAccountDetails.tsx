@@ -15,7 +15,7 @@ import { createClient } from "@/utils/supabase/client";
 import { savePayoutAccount } from "@/lib/actions/org";
 import { PayoutAccountCard } from "@/components/dashboard/PayoutAccountCard";
 import { cn } from "@/lib/utils";
-import { Select, SelectContent, SelectItem,  SelectTrigger, SelectValue } from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface OrgAccountDetailsProps {
     readonly organization: any;
@@ -27,7 +27,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
     const [isPending, startTransition] = useTransition();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const isAdmin = userRoles.includes("admin");
-    
+
     // Determine initial bank type based on existing account
     const getInitialBankType = () => {
         if (organization?.bankCode) {
@@ -36,7 +36,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
         }
         return "momo";
     };
-    
+
     const [bankType, setBankType] = useState<"momo" | "bank">(getInitialBankType());
     const [country, setCountry] = useState("GH");
 
@@ -68,24 +68,24 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
     useEffect(() => {
         async function loadNetworks() {
             setIsLoadingNetworks(true);
-            
+
             const currency = getCurrencyByCountryCode(country) || "GHS";
             try {
                 const { banks: fetchedBanks, momo: fetchedMomo } = await fetchPaystackBanks(currency);
                 setBanks(fetchedBanks);
                 setMomoNetworks(fetchedMomo);
-                
+
                 // Pre-fill if org has existing data
                 if (payoutBankCode || payoutAccountNumber) {
                     const allNetworks = [...fetchedBanks, ...fetchedMomo];
-                    
+
                     if (payoutBankCode) {
                         const matched = allNetworks.find(n => n.code === payoutBankCode);
                         if (matched) {
                             setBankCode(payoutBankCode);
                         }
                     }
-                    
+
                     if (payoutAccountNumber) {
                         setAccountNumber(payoutAccountNumber);
                     }
@@ -123,7 +123,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
 
         try {
             console.log("Verifying account:", { accountNumber, bankCode });
-            
+
             const { data, error } = await supabase.functions.invoke("verify-account", {
                 body: JSON.stringify({ accountNumber, bankCode }),
             });
@@ -183,13 +183,13 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                 setPayoutBankCode(bankCode);
                 setPayoutAccountNumber(accountNumber);
                 setPayoutAccountName(verifiedName);
-                
+
                 setBankCode("");
                 setAccountNumber("");
                 setVerifiedName(null);
 
                 toast.success("Payout account saved successfully!");
-                
+
                 // Close modal and refresh server data
                 setIsModalOpen(false);
                 router.refresh();
@@ -209,11 +209,11 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                 <Banknote className="h-6 w-6 text-primary" />
                             </div>
                             <div>
-                                <CardTitle className="text-xl font-semibold tracking-tight">Financial Payout Setup</CardTitle>
+                                <CardTitle className="text-xl font-semibold ">Financial Payout Setup</CardTitle>
                                 <CardDescription className="text-sm font-medium">Link a verified account to receive institutional funding.</CardDescription>
                             </div>
                         </div>
-                        {( isAdmin && payoutAccountNumber && payoutAccountName && payoutBankCode) && (
+                        {(isAdmin && payoutAccountNumber && payoutAccountName && payoutBankCode) && (
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -261,7 +261,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                             {payoutAccountNumber ? "Update Payout Account" : "Add Payout Account"}
                         </SheetTitle>
                     </SheetHeader>
-                    
+
                     <div className="space-y-6">
                         <div className="space-y-4">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b">
@@ -287,20 +287,20 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
 
                                 <div className="space-y-1 min-w-[200px]">
                                     <Label className="   text-[#730303]">Payout Country</Label>
-                                   <Select
-                                   value={country}
-                                   onValueChange={(value) => setCountry(value || "GH")}
-                                   disabled={isLoadingNetworks}
-                                   >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select Country" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {countryOptions.map((opt) => (
-                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                   </Select>
+                                    <Select
+                                        value={country}
+                                        onValueChange={(value) => setCountry(value || "GH")}
+                                        disabled={isLoadingNetworks}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select Country" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {countryOptions.map((opt) => (
+                                                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
 
@@ -310,9 +310,9 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                         {bankType === "momo" ? "Network Provider" : "Financial Institution"}
                                     </Label>
                                     <Select
-                                    value={bankCode}
-                                    onValueChange={(value) => setBankCode(value || "")}
-                                    disabled={isLoadingNetworks}
+                                        value={bankCode}
+                                        onValueChange={(value) => setBankCode(value || "")}
+                                        disabled={isLoadingNetworks}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select Network Provider" />
@@ -341,7 +341,7 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                     {verifiedName && (
                                         <div className="flex items-center gap-2 mt-3 px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100 animate-in zoom-in-95 fill-mode-both">
                                             <Check className="h-4 w-4 shrink-0" />
-                                            <span className="text-[11px]   tracking-wider">Verified: {verifiedName}</span>
+                                            <span className="text-[11px]   ">Verified: {verifiedName}</span>
                                         </div>
                                     )}
                                 </div>

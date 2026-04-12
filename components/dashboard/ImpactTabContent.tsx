@@ -20,13 +20,13 @@ interface ImpactTabContentProps {
 export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: ImpactTabContentProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  
+
   const totalAmount = donations.reduce((sum, d) => sum + Number(d.amount), 0);
-  const shareLink = digitalCard 
+  const shareLink = digitalCard
     ? `${window.location.origin}/donate/${digitalCard.cardCode}`
-    : rsvp 
-    ? `${window.location.origin}/donate/${rsvp.uniqueCode}`
-    : "";
+    : rsvp
+      ? `${window.location.origin}/donate/${rsvp.uniqueCode}`
+      : "";
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareLink);
@@ -49,66 +49,66 @@ export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: Impa
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="bg-primary text-primary-foreground overflow-hidden relative group border-none ">
           <div className="absolute top-0 right-0 p-6 opacity-10 rotate-12 group-hover:scale-110 transition-transform duration-500">
-             <HeartHandshakeIcon className="w-32 h-32" />
+            <HeartHandshakeIcon className="w-32 h-32" />
           </div>
           <CardHeader className="pb-2 relative">
             <CardTitle className="text-sm font-medium opacity-80">Total Impact Generated</CardTitle>
           </CardHeader>
           <CardContent className="relative pt-4 pb-8">
-            <div className="text-4xl font-bold tracking-tight">{formatAmount(totalAmount)}</div>
+            <div className="text-4xl font-bold ">{formatAmount(totalAmount)}</div>
             <div className="flex items-center gap-2 mt-4">
-                <div className="bg-white/10 px-3 py-1 rounded-md border border-white/5 flex items-center gap-1.5">
-                    <SparklesIcon className="h-3.5 w-3.5 text-secondary" />
-                    <p className="text-xs font-semibold">{donations.length} Contributions</p>
-                </div>
+              <div className="bg-white/10 px-3 py-1 rounded-md border border-white/5 flex items-center gap-1.5">
+                <SparklesIcon className="h-3.5 w-3.5 text-secondary" />
+                <p className="text-xs font-semibold">{donations.length} Contributions</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {shareLink && (
-           <Card className="lg:col-span-2 border-none  bg-card">
-              <CardHeader className="pb-4 border-b">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <CardTitle className="text-lg font-semibold text-primary">Your Influence Link</CardTitle>
-                        <CardDescription>Share this link to track your fundraising impact</CardDescription>
-                    </div>
+          <Card className="lg:col-span-2 border-none  bg-card">
+            <CardHeader className="pb-4 border-b">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg font-semibold text-primary">Your Influence Link</CardTitle>
+                  <CardDescription>Share this link to track your fundraising impact</CardDescription>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-6 pt-6">
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="flex-1 bg-muted border p-3 py-2 rounded-md text-sm flex items-center font-mono text-muted-foreground select-all">
-                        {shareLink}
-                    </div>
-                    <Button className="font-semibold " onClick={copyToClipboard}>
-                        Copy link
-                    </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 bg-muted border p-3 py-2 rounded-md text-sm flex items-center font-mono text-muted-foreground select-all">
+                  {shareLink}
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a href={shareLink} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 bg-muted hover:bg-muted/80 transition-all rounded-md border flex items-center justify-center text-sm font-medium text-foreground">
-                    Open Page →
-                  </a>
-                  <a href={`https://wa.me/?text=${encodeURIComponent('Support the Fijai SHS Fundraiser! Donate through my link here: ' + shareLink)}`} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 bg-emerald-600 hover:bg-emerald-700  transition-all rounded-md flex items-center justify-center text-sm font-semibold text-white">
-                    Share on WhatsApp
-                  </a>
-                </div>
-              </CardContent>
-           </Card>
+                <Button className="font-semibold " onClick={copyToClipboard}>
+                  Copy link
+                </Button>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a href={shareLink} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 bg-muted hover:bg-muted/80 transition-all rounded-md border flex items-center justify-center text-sm font-medium text-foreground">
+                  Open Page →
+                </a>
+                <a href={`https://wa.me/?text=${encodeURIComponent('Support the Fijai SHS Fundraiser! Donate through my link here: ' + shareLink)}`} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 bg-emerald-600 hover:bg-emerald-700  transition-all rounded-md flex items-center justify-center text-sm font-semibold text-white">
+                  Share on WhatsApp
+                </a>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
 
       <Card className="border-none  gap-y-0 overflow-hidden pt-0 bg-card">
         <CardHeader className="pb-6 border-b rounded-t-none border-t-0 ">
-             <div className="flex items-center gap-3">
-                 <div className="bg-primary/5 p-2 rounded-md">
-                    <SparklesIcon className="h-5 w-5 text-primary" />
-                 </div>
-                 <div>
-                    <CardTitle className="text-xl font-bold">Your Network Impact</CardTitle>
-                    <CardDescription>Verified transactions credited to your referral efforts.</CardDescription>
-                 </div>
-             </div>
-        </CardHeader> 
+          <div className="flex items-center gap-3">
+            <div className="bg-primary/5 p-2 rounded-md">
+              <SparklesIcon className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-xl font-bold">Your Network Impact</CardTitle>
+              <CardDescription>Verified transactions credited to your referral efforts.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
         <CardContent className="p-0 ">
           <Table >
             <TableHeader className="bg-accent-50/50 uppercase">
@@ -122,36 +122,36 @@ export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: Impa
             </TableHeader>
             <TableBody>
               {donations.length === 0 ? (
-                  <TableRow>
-                     <TableCell colSpan={5} className="py-20 text-center text-muted-foreground">
-                        <div className="flex flex-col items-center gap-2 opacity-50">
-                            <HeartHandshakeIcon className="h-10 w-10 mb-2" />
-                            <p className="text-sm font-medium">No impact captured yet</p>
-                        </div>
-                     </TableCell>
-                  </TableRow>
+                <TableRow>
+                  <TableCell colSpan={5} className="py-20 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2 opacity-50">
+                      <HeartHandshakeIcon className="h-10 w-10 mb-2" />
+                      <p className="text-sm font-medium">No impact captured yet</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
               ) : (
                 paginatedDonations.map((d: any) => (
                   <TableRow key={d.id} className="hover:bg-muted/50 transition-colors">
                     <TableCell className="font-semibold text-foreground">
-                       <div className="flex flex-col">
-                          <span>{d.donorName || (d.userId === profile?.id ? profile?.fullName : "Anonymous Donor")}</span>
-                          <span className="text-xs font-normal text-muted-foreground">{d.donorEmail}</span>
-                       </div>
+                      <div className="flex flex-col">
+                        <span>{d.donorName || (d.userId === profile?.id ? profile?.fullName : "Anonymous Donor")}</span>
+                        <span className="text-xs font-normal text-muted-foreground">{d.donorEmail}</span>
+                      </div>
                     </TableCell>
                     <TableCell>
-                        <span className="text-sm font-medium text-emerald-600">
-                            {formatAmount(d.amount)}
-                        </span>
+                      <span className="text-sm font-medium text-emerald-600">
+                        {formatAmount(d.amount)}
+                      </span>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                        {d.event?.title || "Fijai Fundraiser"}
+                      {d.event?.title || "Fijai Fundraiser"}
                     </TableCell>
                     <TableCell className="text-xs text-muted-foreground">
-                        {format(new Date(d.createdAt), "MMM dd, yyyy")}
+                      {format(new Date(d.createdAt), "MMM dd, yyyy")}
                     </TableCell>
                     <TableCell className="text-right">
-                        <StatusBadge variant={d.status} />
+                      <StatusBadge variant={d.status} />
                     </TableCell>
                   </TableRow>
                 ))

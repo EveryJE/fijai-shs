@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatAmount, cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { 
-    WalletIcon, 
-    HandCoinsIcon, 
-    PlusIcon, 
-    PencilIcon, 
-    Trash2Icon, 
+import {
+    WalletIcon,
+    HandCoinsIcon,
+    PlusIcon,
+    PencilIcon,
+    Trash2Icon,
     Loader2,
     DownloadCloudIcon,
     PrinterIcon,
@@ -142,7 +142,8 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
 
     return (
         <>
-            <style dangerouslySetInnerHTML={{ __html: `
+            <style dangerouslySetInnerHTML={{
+                __html: `
                 @media print {
                     @page { size: auto; margin: 10mm; }
                     body { background: white !important; margin: 0 !important; padding: 0 !important; }
@@ -249,20 +250,20 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
 
                         {/* Actions */}
                         <div className="flex items-center gap-2">
-                             <div className="hidden md:flex items-center gap-1.5 border-r pr-4 mr-2 border-muted">
-                                <Button variant="outline" size="sm" onClick={exportToCSV} className="h-8 text-[11px] font-bold uppercase tracking-wider">
+                            <div className="hidden md:flex items-center gap-1.5 border-r pr-4 mr-2 border-muted">
+                                <Button variant="outline" size="sm" onClick={exportToCSV} className="h-8 text-[11px] font-bold uppercase ">
                                     <DownloadCloudIcon className="h-3.5 w-3.5 mr-1" />
                                     Export Excel
                                 </Button>
-                                <Button variant="outline" size="sm" onClick={handlePrint} className="h-8 text-[11px] font-bold uppercase tracking-wider">
+                                <Button variant="outline" size="sm" onClick={handlePrint} className="h-8 text-[11px] font-bold uppercase ">
                                     <PrinterIcon className="h-3.5 w-3.5 mr-1" />
                                     Print PDF
                                 </Button>
-                             </div>
+                            </div>
                             <Button
                                 size="sm"
                                 onClick={() => { setSelectedDonation(null); setSheetOpen(true); }}
-                                className="h-8 text-[11px] font-bold uppercase tracking-wider shadow-sm"
+                                className="h-8 text-[11px] font-bold uppercase  shadow-sm"
                             >
                                 <PlusIcon className="h-3.5 w-3.5 mr-1" />
                                 Add Manual Donation
@@ -298,16 +299,16 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                             </TableHeader>
                             <TableBody>
                                 {displayed.map((d) => (
-                                    <TableRow 
-                                        key={d.id} 
+                                    <TableRow
+                                        key={d.id}
                                         className="hover:bg-muted/30 transition-colors cursor-pointer group"
                                         onClick={() => setSelectedDonation(d)}
                                     >
                                         <TableCell>
                                             <div className="flex items-center gap-3">
-                                                 <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center text-primary border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">
-                                                     <UserCircle2Icon className="h-4 w-4" />
-                                                 </div>
+                                                <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center text-primary border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">
+                                                    <UserCircle2Icon className="h-4 w-4" />
+                                                </div>
                                                 <div className="flex flex-col">
                                                     <span className="font-semibold text-sm">
                                                         {d.donorName || "Anonymous"}
@@ -420,57 +421,57 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
             <Dialog open={!!selectedDonation && !sheetOpen} onOpenChange={(open) => !open && setSelectedDonation(null)}>
                 <DialogContent className="max-w-2xl p-0 overflow-hidden border-none shadow-2xl">
                     <div className="bg-primary p-6 text-primary-foreground relative">
-                         <div className="flex items-center gap-2 opacity-60 text-[10px] font-black uppercase tracking-[3px] mb-2">
-                             Institutional Record
-                         </div>
-                         <div className="flex justify-between items-end">
-                             <div className="space-y-1">
+                        <div className="flex items-center gap-2 opacity-60 text-[10px] font-black uppercase tracking-[3px] mb-2">
+                            Institutional Record
+                        </div>
+                        <div className="flex justify-between items-end">
+                            <div className="space-y-1">
                                 <DialogTitle className="text-3xl font-black">{formatAmount(selectedDonation?.amount || 0)}</DialogTitle>
                                 <DialogDescription className="text-primary-foreground/70 font-medium">
                                     Contribution by {selectedDonation?.donorName || "Anonymous Alumni"}
                                 </DialogDescription>
-                             </div>
-                             <div className="text-right">
-                                 <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Reference</p>
-                                 <p className="font-mono text-sm leading-none mt-1">{selectedDonation?.reference}</p>
-                             </div>
-                         </div>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Reference</p>
+                                <p className="font-mono text-sm leading-none mt-1">{selectedDonation?.reference}</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="p-8 space-y-8">
                         <div className="grid grid-cols-2 gap-8">
-                             <div className="space-y-1">
-                                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                                     <UserCircle2Icon className="h-3 w-3" />
-                                     Donor Contact
-                                 </p>
-                                 <p className="text-sm font-semibold">{selectedDonation?.donorEmail}</p>
-                                 {selectedDonation?.phone && <p className="text-xs text-muted-foreground">{selectedDonation.phone}</p>}
-                             </div>
-                             <div className="space-y-1">
-                                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                                     <WalletIcon className="h-3 w-3" />
-                                     Allocation
-                                 </p>
-                                 <p className="text-sm font-semibold truncate">{selectedDonation?.event?.title || "General Fund"}</p>
-                                 <p className="text-[10px] text-muted-foreground uppercase font-bold">{selectedDonation?.paymentMethod} Payment</p>
-                             </div>
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase  flex items-center gap-1.5">
+                                    <UserCircle2Icon className="h-3 w-3" />
+                                    Donor Contact
+                                </p>
+                                <p className="text-sm font-semibold">{selectedDonation?.donorEmail}</p>
+                                {selectedDonation?.phone && <p className="text-xs text-muted-foreground">{selectedDonation.phone}</p>}
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase  flex items-center gap-1.5">
+                                    <WalletIcon className="h-3 w-3" />
+                                    Allocation
+                                </p>
+                                <p className="text-sm font-semibold truncate">{selectedDonation?.event?.title || "General Fund"}</p>
+                                <p className="text-[10px] text-muted-foreground uppercase font-bold">{selectedDonation?.paymentMethod} Payment</p>
+                            </div>
                         </div>
 
                         {/* Shared Memory / Moment */}
                         {(selectedDonation?.momentFileUrl || selectedDonation?.momentCaption) ? (
                             <div className="space-y-4 pt-4 border-t">
                                 <div className="flex items-center gap-2">
-                                     <CameraIcon className="h-4 w-4 text-primary" />
-                                     <h4 className="text-sm font-black uppercase tracking-widest text-[#730303]">Shared Alumni Moment</h4>
+                                    <CameraIcon className="h-4 w-4 text-primary" />
+                                    <h4 className="text-sm font-black uppercase tracking-widest text-[#730303]">Shared Alumni Moment</h4>
                                 </div>
-                                
+
                                 <div className="bg-muted/30 rounded-2xl overflow-hidden border p-2">
                                     {selectedDonation?.momentFileUrl && (
                                         <div className="aspect-video w-full relative rounded-xl overflow-hidden mb-3">
-                                            <img 
-                                                src={selectedDonation.momentFileUrl} 
-                                                alt="Donation Moment" 
+                                            <img
+                                                src={selectedDonation.momentFileUrl}
+                                                alt="Donation Moment"
                                                 className="object-cover w-full h-full"
                                             />
                                         </div>
@@ -491,14 +492,14 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                             </div>
                         )}
                     </div>
-                    
+
                     <div className="p-4 bg-muted/20 border-t flex justify-between items-center">
-                         <span className="text-[10px] font-bold text-muted-foreground uppercase">
-                             Recorded {selectedDonation ? new Date(selectedDonation.createdAt).toLocaleString() : ""}
-                         </span>
-                         <Button variant="outline" size="sm" className="h-8 text-[11px] font-bold" onClick={() => setSelectedDonation(null)}>
-                             Close Record
-                         </Button>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                            Recorded {selectedDonation ? new Date(selectedDonation.createdAt).toLocaleString() : ""}
+                        </span>
+                        <Button variant="outline" size="sm" className="h-8 text-[11px] font-bold" onClick={() => setSelectedDonation(null)}>
+                            Close Record
+                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>

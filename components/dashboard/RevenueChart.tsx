@@ -40,13 +40,13 @@ export function RevenueChart({ data }: RevenueChartProps) {
                             <TrendingUpIcon className="h-4 w-4 text-emerald-600" />
                             <CardTitle className="text-sm font-bold">Revenue Trend</CardTitle>
                         </div>
-                        <CardDescription className="text-[10px] uppercase tracking-wider">
+                        <CardDescription className="text-[10px] uppercase ">
                             Last 6 Months
                         </CardDescription>
                     </div>
                     <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-100">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">Live</span>
+                        <span className="text-[10px] font-bold uppercase ">Live</span>
                     </div>
                 </div>
             </CardHeader>

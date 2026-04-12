@@ -20,16 +20,16 @@ import {
 } from "@/components/ui/dialog";
 import { updateEvent, createCategory, updateCategory, deleteCategory, createDonationItem, updateDonationItem, deleteDonationItem } from "@/lib/actions/events";
 import { format } from "date-fns";
-import { 
-    CalendarDays, 
-    Clock, 
-    Plus, 
-    Pencil, 
-    Trash2, 
-    Package, 
-    LayoutGrid, 
-    DollarSign, 
-    TrendingUp, 
+import {
+    CalendarDays,
+    Clock,
+    Plus,
+    Pencil,
+    Trash2,
+    Package,
+    LayoutGrid,
+    DollarSign,
+    TrendingUp,
     Users,
     Loader2,
     Save,
@@ -85,17 +85,17 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
     const [activeTab, setActiveTab] = useState("overview");
     const [isSaving, setIsSaving] = useState(false);
     const saveInProgress = useRef(false);
-    
+
     // Category/Item editing
     const [isCategorySheetOpen, setIsCategorySheetOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
     const [categoryForm, setCategoryForm] = useState({ name: "", color: "#730303" });
-    
+
     const [isItemSheetOpen, setIsItemSheetOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<DonationItem | null>(null);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
     const [itemForm, setItemForm] = useState({ name: "", icon: "", color: "#730303", targetAmount: "" });
-    
+
     // Delete confirmation
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteTarget, setDeleteTarget] = useState<{ type: "category" | "item"; id: string; name: string } | null>(null);
@@ -119,11 +119,11 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
             toast.error("Category name is required");
             return;
         }
-        
+
         if (saveInProgress.current || isSaving) return;
         saveInProgress.current = true;
         setIsSaving(true);
-        
+
         try {
             if (editingCategory) {
                 await updateCategory(editingCategory.id, {
@@ -152,7 +152,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
 
     const handleDeleteCategory = async () => {
         if (!deleteTarget || deleteTarget.type !== "category") return;
-        
+
         startTransition(async () => {
             try {
                 await deleteCategory(deleteTarget.id);
@@ -171,11 +171,11 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
             toast.error("Item name and category are required");
             return;
         }
-        
+
         if (saveInProgress.current || isSaving) return;
         saveInProgress.current = true;
         setIsSaving(true);
-        
+
         try {
             const itemData = {
                 name: itemForm.name,
@@ -183,7 +183,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                 color: itemForm.color,
                 targetAmount: itemForm.targetAmount ? parseFloat(itemForm.targetAmount) : null,
             };
-            
+
             if (editingItem) {
                 await updateDonationItem(editingItem.id, itemData);
                 toast.success("Item updated");
@@ -206,7 +206,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
 
     const handleDeleteItem = async () => {
         if (!deleteTarget || deleteTarget.type !== "item") return;
-        
+
         startTransition(async () => {
             try {
                 await deleteDonationItem(deleteTarget.id);
@@ -274,9 +274,9 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                         </span>
                     )}
                 </div>
-                <h1 className="text-3xl font-bold tracking-tight">{event.title}</h1>
+                <h1 className="text-3xl font-bold ">{event.title}</h1>
                 {event.description && (
-                    <div 
+                    <div
                         className="text-muted-foreground mt-2 prose prose-sm max-w-none"
                         dangerouslySetInnerHTML={{ __html: event.description }}
                     />
@@ -366,38 +366,38 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 <div className="space-y-8">
                                     {event.categories.map((category) => (
                                         <div key={category.id} className="border rounded-lg overflow-hidden">
-                                            <div 
+                                            <div
                                                 className="flex items-center justify-between p-4 border-b"
                                                 style={{ backgroundColor: `${category.color}10` }}
                                             >
                                                 <div className="flex items-center gap-3">
-                                                    <div 
+                                                    <div
                                                         className="w-4 h-4 rounded-full"
                                                         style={{ backgroundColor: category.color }}
                                                     />
                                                     <span className="font-semibold">{category.name}</span>
-                                                    <Badge variant="outline" className="ml-2" style={{ backgroundColor: `${category.color}10`,borderColor:`${category.color}` }}>
+                                                    <Badge variant="outline" className="ml-2" style={{ backgroundColor: `${category.color}10`, borderColor: `${category.color}` }}>
                                                         {category.donationItems.length} items
                                                     </Badge>
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    <Button 
-                                                        variant="ghost" 
+                                                    <Button
+                                                        variant="ghost"
                                                         size="sm"
                                                         onClick={() => openItemSheet(category.id)}
                                                     >
                                                         <Plus className="h-4 w-4 mr-1" />
                                                         Add Item
                                                     </Button>
-                                                    <Button 
-                                                        variant="ghost" 
+                                                    <Button
+                                                        variant="ghost"
                                                         size="sm"
                                                         onClick={() => openCategorySheet(category)}
                                                     >
                                                         <Pencil className="h-4 w-4" />
                                                     </Button>
-                                                    <Button 
-                                                        variant="ghost" 
+                                                    <Button
+                                                        variant="ghost"
                                                         size="sm"
                                                         onClick={() => openDeleteDialog("category", category.id, category.name)}
                                                     >
@@ -413,7 +413,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                                 ) : (
                                                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                                                         {category.donationItems.map((item) => (
-                                                            <div 
+                                                            <div
                                                                 key={item.id}
                                                                 className="flex items-center justify-between p-3 rounded-lg border bg-background"
                                                             >
@@ -431,15 +431,15 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex items-center gap-1">
-                                                                    <Button 
-                                                                        variant="ghost" 
+                                                                    <Button
+                                                                        variant="ghost"
                                                                         size="icon-sm"
                                                                         onClick={() => openItemSheet(category.id, item)}
                                                                     >
                                                                         <Pencil className="h-3 w-3" />
                                                                     </Button>
-                                                                    <Button 
-                                                                        variant="ghost" 
+                                                                    <Button
+                                                                        variant="ghost"
                                                                         size="icon-sm"
                                                                         onClick={() => openDeleteDialog("item", item.id, item.name)}
                                                                     >
@@ -583,7 +583,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                     <DialogHeader>
                         <DialogTitle>Confirm Delete</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete "{deleteTarget?.name}"? 
+                            Are you sure you want to delete "{deleteTarget?.name}"?
                             {deleteTarget?.type === "category" && " This will also delete all items in this category."}
                             This action cannot be undone.
                         </DialogDescription>
@@ -592,8 +592,8 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                         <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
                             Cancel
                         </Button>
-                        <Button 
-                            variant="destructive" 
+                        <Button
+                            variant="destructive"
                             onClick={deleteTarget?.type === "category" ? handleDeleteCategory : handleDeleteItem}
                             disabled={isSaving}
                         >

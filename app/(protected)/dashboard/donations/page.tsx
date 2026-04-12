@@ -22,7 +22,7 @@ export default async function DonationsPage() {
         <div className="max-w-7xl p-6 lg:p-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-black tracking-tight">Donations</h1>
+                <h1 className="text-3xl font-black ">Donations</h1>
                 <p className="text-sm text-muted-foreground mt-1">Manage all contributions — both online payments and cash donations.</p>
             </div>
 
@@ -35,7 +35,7 @@ export default async function DonationsPage() {
                         </div>
                         <div>
                             <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">Total Raised</p>
-                            <p className="text-lg font-black tracking-tight">{formatAmount(breakdown.paystackTotal + breakdown.manualTotal)}</p>
+                            <p className="text-lg font-black ">{formatAmount(breakdown.paystackTotal + breakdown.manualTotal)}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -46,7 +46,7 @@ export default async function DonationsPage() {
                         </div>
                         <div>
                             <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">Online ({breakdown.paystackCount})</p>
-                            <p className="text-lg font-black tracking-tight">{formatAmount(breakdown.paystackTotal)}</p>
+                            <p className="text-lg font-black ">{formatAmount(breakdown.paystackTotal)}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -57,7 +57,7 @@ export default async function DonationsPage() {
                         </div>
                         <div>
                             <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">Manual ({breakdown.manualCount})</p>
-                            <p className="text-lg font-black tracking-tight">{formatAmount(breakdown.manualTotal)}</p>
+                            <p className="text-lg font-black ">{formatAmount(breakdown.manualTotal)}</p>
                         </div>
                     </CardContent>
                 </Card>

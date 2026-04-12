@@ -90,7 +90,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold px-2">Navigation</SidebarGroupLabel>
+      <SidebarGroupLabel className="text-[10px] uppercase  text-muted-foreground/60 font-semibold px-2">Navigation</SidebarGroupLabel>
       <SidebarMenu className="gap-1 mt-1">
         {items.map((item, index) => {
           const isActive = isUrlActive(item.url) || hasActiveSubItem(item.items)
@@ -130,33 +130,33 @@ export function NavMain({
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger
-                    render={
-                        <SidebarMenuButton
-                            tooltip={item.title}
-                            isActive={isActive}
-                            className={cn(
-                                "rounded-md text-sm transition-all duration-200  data-[active=true]:font-semibold data-[state=open]:hover:text-foreground",
-                                color.hover,
-                                color.active,
-                                color.open,
-                                "text-muted-foreground/80 hover:text-foreground data-[active=true]:text-foreground"
-                            )}
-                        >
-                            {item.icon && <item.icon className="h-4 w-4" />}
-                            <span className="flex-1 text-left">{item.title}</span>
-                            <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                        </SidebarMenuButton>
-                    }
+                  render={
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      isActive={isActive}
+                      className={cn(
+                        "rounded-md text-sm transition-all duration-200  data-[active=true]:font-semibold data-[state=open]:hover:text-foreground",
+                        color.hover,
+                        color.active,
+                        color.open,
+                        "text-muted-foreground/80 hover:text-foreground data-[active=true]:text-foreground"
+                      )}
+                    >
+                      {item.icon && <item.icon className="h-4 w-4" />}
+                      <span className="flex-1 text-left">{item.title}</span>
+                      <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  }
                 />
                 <CollapsibleContent>
                   <div className="relative border-l ml-3.5 pl-2 mt-1 py-1 flex flex-col gap-1 border-muted/50">
                     <div
                       className="absolute left-[-1px] z-10 w-0.5 rounded-full transition-all duration-300 ease-in-out"
                       style={{
-                          height: "16px",
-                          top: `${activeSubIndex * 36 + 10}px`,
-                          opacity: hasActiveSub ? 1 : 0,
-                          backgroundColor: color.bar,
+                        height: "16px",
+                        top: `${activeSubIndex * 36 + 10}px`,
+                        opacity: hasActiveSub ? 1 : 0,
+                        backgroundColor: color.bar,
                       }}
                     />
                     <SidebarMenuSub className="mt-1 border-l-black/10">
@@ -171,9 +171,9 @@ export function NavMain({
                               isUrlActive(subItem.url) ? "text-foreground" : "text-muted-foreground/70 hover:text-foreground"
                             )}
                             render={
-                                <Link href={subItem.url}>
-                                    <span>{subItem.title}</span>
-                                </Link>
+                              <Link href={subItem.url}>
+                                <span>{subItem.title}</span>
+                              </Link>
                             }
                           />
                         </SidebarMenuSubItem>
