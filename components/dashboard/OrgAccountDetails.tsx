@@ -65,6 +65,9 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
     const countryOptions = supportedCountries.map((c) => ({ value: c.code, label: c.name }));
     const networkOptions = networks.map((n) => ({ value: n.code, label: n.name }));
 
+    const selectedBankName = networks.find(n => n.code === bankCode)?.name;
+    const selectedCountryName = supportedCountries.find(c => c.code === country)?.name;
+
     useEffect(() => {
         async function loadNetworks() {
             setIsLoadingNetworks(true);
@@ -293,7 +296,9 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                         disabled={isLoadingNetworks}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select Country" />
+                                            <SelectValue placeholder="Select Country">
+                                                {selectedCountryName}
+                                            </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {countryOptions.map((opt) => (
@@ -315,7 +320,9 @@ export function OrgAccountDetails({ organization, userRoles = [] }: OrgAccountDe
                                         disabled={isLoadingNetworks}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select Network Provider" />
+                                            <SelectValue placeholder="Select Network Provider">
+                                                {selectedBankName}
+                                            </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {networkOptions.map((opt) => (

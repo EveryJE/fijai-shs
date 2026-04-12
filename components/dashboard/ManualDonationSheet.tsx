@@ -191,7 +191,9 @@ export function ManualDonationSheet({ open, onOpenChange, donation, events }: Ma
                                     onValueChange={(value) => { if (value) setFormData({ ...formData, eventId: value }); }}
                                 >
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select event" />
+                                        <SelectValue placeholder="Select event">
+                                            {events.find(e => e.id === formData.eventId)?.title}
+                                        </SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>
                                         {events.map((ev) => (
