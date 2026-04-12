@@ -16,6 +16,7 @@ interface DonateItem {
   icon?: string;
   color?: string;
   targetAmount?: string;
+  currency?: string;
   displayOrder?: number;
 }
 
@@ -73,7 +74,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
   totalRevenue = 0,
   organizationName,
 }) => {
-  const [successData, setSuccessData] = useState<{ reference: string; amount: number; donorName: string } | null>(null);
+  const [successData, setSuccessData] = useState<{ reference: string; amount: number; currency: string; donorName: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { initiateDonation, loading } = usePaystack();
@@ -97,12 +98,15 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
         return;
       }
 
+      const selectedItem = categories.flatMap(c => c.items).find(i => i.id === data.item);
+
       await initiateDonation(
         {
           email: data.email,
           amount: data.amount,
           donorName: data.name,
           phone: data.phone,
+          currency: selectedItem?.currency || "GHS",
           digitalCardId: digitalCard?.id,
           contactPersonId: contactPerson?.id,
           donationItemId: data.item,
@@ -113,9 +117,11 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
         },
         {
           onSuccess: (tx) => {
+            const selectedItem = categories.flatMap(c => c.items).find(i => i.id === data.item);
             setSuccessData({
               reference: tx.reference,
               amount: data.amount!,
+              currency: selectedItem?.currency || "GHS",
               donorName: data.name
             });
             setSubmitting(false);
@@ -180,6 +186,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
           onClose={() => setSuccessData(null)}
           reference={successData?.reference || ""}
           amount={successData?.amount || 0}
+          currency={successData?.currency}
           donorName={successData?.donorName}
           eventTitle={event.title}
           eventDescription={event.description || undefined}

@@ -11,6 +11,7 @@ interface DonationSuccessDialogProps {
   onClose: () => void;
   reference: string;
   amount: number;
+  currency?: string;
   donorName?: string;
   eventTitle?: string;
   eventDescription?: string;
@@ -25,6 +26,7 @@ export function DonationSuccessDialog({
   onClose,
   reference,
   amount,
+  currency = "GHS",
   donorName,
   eventTitle,
   eventDescription
@@ -96,7 +98,7 @@ export function DonationSuccessDialog({
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Amount Established</span>
-                    <span className="text-sm text-[#730303]">GHS {amount.toFixed(2)}</span>
+                    <span className="text-sm text-[#730303]">{currency} {amount.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Donor Designation</span>

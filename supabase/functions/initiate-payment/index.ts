@@ -44,10 +44,10 @@ Deno.serve(async (req) => {
         const body = await req.json();
         const {
             email,
-            amount,
+            amount: rawAmount,
             donorName,
             phone,
-            currency = "GHS",
+            currency: rawCurrency = "GHS",
             eventId,
             contactPersonId,
             digitalCardId,
@@ -57,14 +57,41 @@ Deno.serve(async (req) => {
             metadata = {},
         } = body;
 
-        console.log(`Donation request for ${email} - Amount: ${amount} ${currency}`);
+        console.log(`Donation request for ${email} - Amount: ${rawAmount} ${rawCurrency}`);
 
-        if (!email || !amount || !eventId) {
+        if (!email || !rawAmount || !eventId) {
             return new Response(
                 JSON.stringify({ error: "email, amount, and eventId are required" }),
                 { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
         }
+
+        // 1. Handle Currency Conversion & Fees
+        let finalAmountGHS = Number(rawAmount);
+        let exchangeRate = 1;
+
+        if (rawCurrency !== "GHS") {
+            try {
+                const rateRes = await fetch(`https://open.er-api.com/v6/latest/${rawCurrency}`);
+                const rateData = await rateRes.json();
+                if (rateData.result === "success" && rateData.rates?.GHS) {
+                    exchangeRate = rateData.rates.GHS;
+                    finalAmountGHS = Number(rawAmount) * exchangeRate;
+                    console.log(`Converted ${rawAmount} ${rawCurrency} to ${finalAmountGHS} GHS (Rate: ${exchangeRate})`);
+                } else {
+                    console.error("Exchange rate lookup failed, falling back to 1:1 or throwing error");
+                }
+            } catch (e) {
+                console.error("Error fetching exchange rate:", e);
+            }
+        }
+
+        // 2. Apply Paystack Fee (1.95% local fee)
+        // To ensure the recipient gets X, we charge X / (1 - 0.0195)
+        const PAYSTACK_FEE_PERCENT = 0.0195;
+        const totalAmountToChargeGHS = finalAmountGHS / (1 - PAYSTACK_FEE_PERCENT);
+        
+        console.log(`Original: ${finalAmountGHS} GHS, Total after fees (1.95%): ${totalAmountToChargeGHS.toFixed(2)} GHS`);
 
         const donationId = crypto.randomUUID();
         const reference = `DON-${crypto.randomUUID().substring(0, 12).toUpperCase()}`;
@@ -86,8 +113,10 @@ Deno.serve(async (req) => {
             donor_email: email,
             donor_name: donorName,
             donor_phone: phone,
-            amount: amount,
-            currency: currency,
+            amount: rawAmount, // Keep original intended amount
+            currency: rawCurrency, // Keep original currency
+            exchange_rate: exchangeRate,
+            total_charged_ghs: totalAmountToChargeGHS,
             event_id: eventId,
             contact_person_id: contactPersonId,
             digital_card_id: digitalCardId,
@@ -100,8 +129,8 @@ Deno.serve(async (req) => {
 
         const paystackBody: Record<string, unknown> = {
             email,
-            amount: toPesewas(Number(amount)),
-            currency,
+            amount: toPesewas(totalAmountToChargeGHS),
+            currency: "GHS", // We always initiate in GHS for local accounts
             reference,
             metadata: paystackMetadata,
             callback_url: `${req.headers.get("origin") || ""}/dashboard/donations`,

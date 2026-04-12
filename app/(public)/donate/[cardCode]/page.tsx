@@ -40,6 +40,7 @@ export default async function DonatePage({ params }: DonatePageProps) {
         icon: item.icon,
         color: item.color,
         targetAmount: item.targetAmount ? item.targetAmount.toString() : undefined,
+        currency: item.currency || "GHS",
         displayOrder: item.displayOrder,
       })),
     }));

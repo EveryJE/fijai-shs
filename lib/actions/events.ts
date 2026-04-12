@@ -146,6 +146,7 @@ export async function createDonationItem(categoryId: string, data: {
   icon?: string | null;
   color?: string;
   targetAmount?: number | null;
+  currency?: string;
 }) {
   try {
     const maxOrder = await prisma.donationItem.aggregate({
@@ -160,6 +161,7 @@ export async function createDonationItem(categoryId: string, data: {
         icon: data.icon,
         color: data.color,
         targetAmount: data.targetAmount,
+        currency: data.currency || "GHS",
         displayOrder: (maxOrder._max.displayOrder || 0) + 1,
       },
     });
@@ -184,6 +186,7 @@ export async function updateDonationItem(id: string, data: {
   icon?: string | null;
   color?: string;
   targetAmount?: number | null;
+  currency?: string;
 }) {
   try {
     const item = await prisma.donationItem.update({

@@ -17,6 +17,7 @@ interface CategoryItem {
   icon?: string;
   color?: string;
   targetAmount?: string;
+  currency?: string;
   displayOrder?: number;
 }
 interface Category {
@@ -115,7 +116,10 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
         required={!!category}
       >
         <Combobox 
-            options={selectedCategory?.items.map(it => ({ value: it.id, label: `${it.icon ? it.icon + ' ' : ''}${it.name}${it.targetAmount ? ` (GHS ${Number(it.targetAmount).toFixed(2)})` : ''}` })) || []}
+            options={selectedCategory?.items.map(it => ({ 
+                value: it.id, 
+                label: `${it.icon ? it.icon + ' ' : ''}${it.name}${it.targetAmount ? ` (${it.currency || 'GHS'} ${Number(it.targetAmount).toFixed(2)})` : ''}` 
+            })) || []}
             value={item}
             onChange={setItem}
             placeholder={category ? "Select project item" : "Select a focus area first"}
@@ -125,7 +129,9 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
         {/* If selected item has no target amount, show custom amount input */}
         {item && selectedItem && !selectedItem.targetAmount && (
             <div className="mt-6 animate-in fade-in slide-in-from-top-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-[#730303] mb-2 font-black">Designated Amount (GHS)</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-[#730303] mb-2 font-black">
+                    Designated Amount ({selectedItem.currency || 'GHS'})
+                </p>
                 <GoogleFormInput 
                     name="customAmount" 
                     type="number" 

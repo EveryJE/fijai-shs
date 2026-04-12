@@ -18,6 +18,13 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { updateEvent, createCategory, updateCategory, deleteCategory, createDonationItem, updateDonationItem, deleteDonationItem } from "@/lib/actions/events";
 import { format } from "date-fns";
 import {
@@ -52,6 +59,7 @@ interface DonationItem {
     icon: string | null;
     color: string | null;
     targetAmount: number | null;
+    currency: string;
     displayOrder: number;
 }
 
@@ -94,7 +102,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
     const [isItemSheetOpen, setIsItemSheetOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<DonationItem | null>(null);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-    const [itemForm, setItemForm] = useState({ name: "", icon: "", color: "#730303", targetAmount: "" });
+    const [itemForm, setItemForm] = useState({ name: "", icon: "", color: "#730303", targetAmount: "", currency: "GHS" });
 
     // Delete confirmation
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -182,6 +190,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                 icon: itemForm.icon || null,
                 color: itemForm.color,
                 targetAmount: itemForm.targetAmount ? parseFloat(itemForm.targetAmount) : null,
+                currency: itemForm.currency,
             };
 
             if (editingItem) {
@@ -240,10 +249,11 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                 icon: item.icon || "",
                 color: item.color || "#730303",
                 targetAmount: item.targetAmount?.toString() || "",
+                currency: item.currency || "GHS",
             });
         } else {
             setEditingItem(null);
-            setItemForm({ name: "", icon: "", color: "#730303", targetAmount: "" });
+            setItemForm({ name: "", icon: "", color: "#730303", targetAmount: "", currency: "GHS" });
         }
         setIsItemSheetOpen(true);
     };
@@ -425,7 +435,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                                                         <p className="font-medium text-sm">{item.name}</p>
                                                                         {item.targetAmount && (
                                                                             <p className="text-xs text-muted-foreground">
-                                                                                Target: GHS {item.targetAmount.toLocaleString()}
+                                                                                Target: {item.currency} {item.targetAmount.toLocaleString()}
                                                                             </p>
                                                                         )}
                                                                     </div>
@@ -510,7 +520,7 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
             </Sheet>
 
             {/* Item Sheet */}
-            <Sheet open={isItemSheetOpen} onOpenChange={setIsItemSheetOpen}>
+            <Sheet open={isItemSheetOpen} onOpenChange={setIsItemSheetOpen} modal={false}>
                 <SheetContent side="right" className="w-full sm:max-w-lg">
                     <SheetHeader>
                         <SheetTitle>{editingItem ? "Edit Item" : "Add Item"}</SheetTitle>
@@ -537,15 +547,32 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 placeholder="e.g. 🎓, 🏫, 📚"
                             />
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="itemTarget">Target Amount (GHS)</Label>
-                            <Input
-                                id="itemTarget"
-                                type="number"
-                                value={itemForm.targetAmount}
-                                onChange={(e) => setItemForm({ ...itemForm, targetAmount: e.target.value })}
-                                placeholder="Optional target"
-                            />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="itemTarget">Target Amount</Label>
+                                <Input
+                                    id="itemTarget"
+                                    type="number"
+                                    value={itemForm.targetAmount}
+                                    onChange={(e) => setItemForm({ ...itemForm, targetAmount: e.target.value })}
+                                    placeholder="Optional target"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="itemCurrency">Currency</Label>
+                                <Select
+                                    value={itemForm.currency}
+                                    onValueChange={(value) => setItemForm({ ...itemForm, currency: value })}
+                                >
+                                    <SelectTrigger id="itemCurrency">
+                                        <SelectValue placeholder="Select currency" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="GHS">GHS</SelectItem>
+                                        <SelectItem value="USD">USD</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                         <div className="space-y-2">
                             <Label>Color</Label>

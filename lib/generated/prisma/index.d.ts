@@ -7966,6 +7966,7 @@ export namespace Prisma {
     icon: string | null
     color: string | null
     targetAmount: Decimal | null
+    currency: string | null
     displayOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7978,6 +7979,7 @@ export namespace Prisma {
     icon: string | null
     color: string | null
     targetAmount: Decimal | null
+    currency: string | null
     displayOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7990,6 +7992,7 @@ export namespace Prisma {
     icon: number
     color: number
     targetAmount: number
+    currency: number
     displayOrder: number
     createdAt: number
     updatedAt: number
@@ -8014,6 +8017,7 @@ export namespace Prisma {
     icon?: true
     color?: true
     targetAmount?: true
+    currency?: true
     displayOrder?: true
     createdAt?: true
     updatedAt?: true
@@ -8026,6 +8030,7 @@ export namespace Prisma {
     icon?: true
     color?: true
     targetAmount?: true
+    currency?: true
     displayOrder?: true
     createdAt?: true
     updatedAt?: true
@@ -8038,6 +8043,7 @@ export namespace Prisma {
     icon?: true
     color?: true
     targetAmount?: true
+    currency?: true
     displayOrder?: true
     createdAt?: true
     updatedAt?: true
@@ -8137,6 +8143,7 @@ export namespace Prisma {
     icon: string | null
     color: string | null
     targetAmount: Decimal | null
+    currency: string
     displayOrder: number
     createdAt: Date
     updatedAt: Date
@@ -8168,6 +8175,7 @@ export namespace Prisma {
     icon?: boolean
     color?: boolean
     targetAmount?: boolean
+    currency?: boolean
     displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8183,6 +8191,7 @@ export namespace Prisma {
     icon?: boolean
     color?: boolean
     targetAmount?: boolean
+    currency?: boolean
     displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8196,6 +8205,7 @@ export namespace Prisma {
     icon?: boolean
     color?: boolean
     targetAmount?: boolean
+    currency?: boolean
     displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8209,12 +8219,13 @@ export namespace Prisma {
     icon?: boolean
     color?: boolean
     targetAmount?: boolean
+    currency?: boolean
     displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DonationItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "categoryId" | "name" | "icon" | "color" | "targetAmount" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["donationItem"]>
+  export type DonationItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "categoryId" | "name" | "icon" | "color" | "targetAmount" | "currency" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["donationItem"]>
   export type DonationItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     donations?: boolean | DonationItem$donationsArgs<ExtArgs>
@@ -8240,6 +8251,7 @@ export namespace Prisma {
       icon: string | null
       color: string | null
       targetAmount: Prisma.Decimal | null
+      currency: string
       displayOrder: number
       createdAt: Date
       updatedAt: Date
@@ -8674,6 +8686,7 @@ export namespace Prisma {
     readonly icon: FieldRef<"DonationItem", 'String'>
     readonly color: FieldRef<"DonationItem", 'String'>
     readonly targetAmount: FieldRef<"DonationItem", 'Decimal'>
+    readonly currency: FieldRef<"DonationItem", 'String'>
     readonly displayOrder: FieldRef<"DonationItem", 'Int'>
     readonly createdAt: FieldRef<"DonationItem", 'DateTime'>
     readonly updatedAt: FieldRef<"DonationItem", 'DateTime'>
@@ -12734,6 +12747,7 @@ export namespace Prisma {
     icon: 'icon',
     color: 'color',
     targetAmount: 'targetAmount',
+    currency: 'currency',
     displayOrder: 'displayOrder',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -13457,6 +13471,7 @@ export namespace Prisma {
     icon?: StringNullableFilter<"DonationItem"> | string | null
     color?: StringNullableFilter<"DonationItem"> | string | null
     targetAmount?: DecimalNullableFilter<"DonationItem"> | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFilter<"DonationItem"> | string
     displayOrder?: IntFilter<"DonationItem"> | number
     createdAt?: DateTimeFilter<"DonationItem"> | Date | string
     updatedAt?: DateTimeFilter<"DonationItem"> | Date | string
@@ -13471,6 +13486,7 @@ export namespace Prisma {
     icon?: SortOrderInput | SortOrder
     color?: SortOrderInput | SortOrder
     targetAmount?: SortOrderInput | SortOrder
+    currency?: SortOrder
     displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13488,6 +13504,7 @@ export namespace Prisma {
     icon?: StringNullableFilter<"DonationItem"> | string | null
     color?: StringNullableFilter<"DonationItem"> | string | null
     targetAmount?: DecimalNullableFilter<"DonationItem"> | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFilter<"DonationItem"> | string
     displayOrder?: IntFilter<"DonationItem"> | number
     createdAt?: DateTimeFilter<"DonationItem"> | Date | string
     updatedAt?: DateTimeFilter<"DonationItem"> | Date | string
@@ -13502,6 +13519,7 @@ export namespace Prisma {
     icon?: SortOrderInput | SortOrder
     color?: SortOrderInput | SortOrder
     targetAmount?: SortOrderInput | SortOrder
+    currency?: SortOrder
     displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13522,6 +13540,7 @@ export namespace Prisma {
     icon?: StringNullableWithAggregatesFilter<"DonationItem"> | string | null
     color?: StringNullableWithAggregatesFilter<"DonationItem"> | string | null
     targetAmount?: DecimalNullableWithAggregatesFilter<"DonationItem"> | Decimal | DecimalJsLike | number | string | null
+    currency?: StringWithAggregatesFilter<"DonationItem"> | string
     displayOrder?: IntWithAggregatesFilter<"DonationItem"> | number
     createdAt?: DateTimeWithAggregatesFilter<"DonationItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"DonationItem"> | Date | string
@@ -14392,6 +14411,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     targetAmount?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14406,6 +14426,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     targetAmount?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14418,6 +14439,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14432,6 +14454,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14445,6 +14468,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     targetAmount?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14456,6 +14480,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14468,6 +14493,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15377,6 +15403,7 @@ export namespace Prisma {
     icon?: SortOrder
     color?: SortOrder
     targetAmount?: SortOrder
+    currency?: SortOrder
     displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15394,6 +15421,7 @@ export namespace Prisma {
     icon?: SortOrder
     color?: SortOrder
     targetAmount?: SortOrder
+    currency?: SortOrder
     displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15406,6 +15434,7 @@ export namespace Prisma {
     icon?: SortOrder
     color?: SortOrder
     targetAmount?: SortOrder
+    currency?: SortOrder
     displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16820,6 +16849,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     targetAmount?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16833,6 +16863,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     targetAmount?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16985,6 +17016,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16998,6 +17030,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17333,6 +17366,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     targetAmount?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17345,6 +17379,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     targetAmount?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17426,6 +17461,7 @@ export namespace Prisma {
     icon?: StringNullableFilter<"DonationItem"> | string | null
     color?: StringNullableFilter<"DonationItem"> | string | null
     targetAmount?: DecimalNullableFilter<"DonationItem"> | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFilter<"DonationItem"> | string
     displayOrder?: IntFilter<"DonationItem"> | number
     createdAt?: DateTimeFilter<"DonationItem"> | Date | string
     updatedAt?: DateTimeFilter<"DonationItem"> | Date | string
@@ -18287,6 +18323,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     targetAmount?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18298,6 +18335,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18310,6 +18348,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18322,6 +18361,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

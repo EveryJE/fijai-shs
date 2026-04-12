@@ -154,6 +154,7 @@ model DonationItem {
   icon         String? // emoji / SVG code / icon-name
   color        String? // hex — dynamic per item
   targetAmount Decimal? @db.Decimal(12, 2)
+  currency     String   @default("GHS")
   displayOrder Int      @default(0)
 
   category  Category   @relation(fields: [categoryId], references: [id])
