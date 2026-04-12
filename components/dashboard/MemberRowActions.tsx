@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2Icon, RotateCcwIcon, Loader2 } from "lucide-react";
-import { toggleUserStatus } from "@/lib/actions/auth";
+import { Trash2Icon, RotateCcwIcon, Loader2, MailIcon } from "lucide-react";
+import { toggleUserStatus, resendInvitationEmail } from "@/lib/actions/auth";
+
 import { toast } from "sonner";
 import { CreateUserForm } from "@/components/dashboard/CreateUserForm";
 
@@ -21,6 +22,8 @@ interface MemberRowActionsProps {
 
 export function MemberRowActions({ profile, events }: MemberRowActionsProps) {
     const [loading, setLoading] = useState(false);
+    const [resending, setResending] = useState(false);
+
 
     const handleToggleStatus = async () => {
         setLoading(true);
@@ -38,9 +41,41 @@ export function MemberRowActions({ profile, events }: MemberRowActionsProps) {
         }
     };
 
+    const handleResendEmail = async () => {
+        setResending(true);
+        try {
+            const result = await resendInvitationEmail(profile.id);
+            if (result.success) {
+                toast.success(`Invitation email resent to ${profile.email}`);
+            } else {
+                toast.error(result.error || "Failed to resend invitation email");
+            }
+        } catch (err) {
+            toast.error("A connection error occurred. Please try again.");
+        } finally {
+            setResending(false);
+        }
+    };
+
+
     return (
         <div className="flex items-center gap-2">
+            <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors"
+                onClick={handleResendEmail}
+                disabled={resending || !profile.isActive}
+                title="Resend Invitation Email"
+            >
+                {resending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                    <MailIcon className="h-4 w-4" />
+                )}
+            </Button>
             <CreateUserForm events={events} profile={profile} />
+
             <Button 
                 variant="ghost" 
                 size="icon" 

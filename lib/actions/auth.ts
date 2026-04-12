@@ -195,5 +195,72 @@ export async function toggleUserStatus(id: string, isActive: boolean) {
     }
 }
 
+export async function resendInvitationEmail(profileId: string) {
+    try {
+        const profile = await prisma.profile.findUnique({
+            where: { id: profileId },
+            include: {
+                contactPersons: {
+                    include: { event: true },
+                    take: 1,
+                    orderBy: { createdAt: "desc" }
+                },
+                digitalCards: {
+                    include: { event: true },
+                    take: 1,
+                    orderBy: { createdAt: "desc" }
+                }
+            }
+        });
+
+        if (!profile) return { success: false, error: "Member profile not found." };
+        if (!profile.email) return { success: false, error: "Member does not have an associated email address." };
+
+        const domain = await getBaseUrl();
+        const loginLink = `${domain}/auth/welcome?email=${encodeURIComponent(profile.email)}`;
+        let emailsSent = 0;
+
+        // Resend RSVP/Contact Person details if applicable
+        if (profile.roles.includes("rsvp") && profile.contactPersons.length > 0) {
+            const contact = profile.contactPersons[0];
+            await sendContactPersonDetails({
+                email: profile.email,
+                name: profile.fullName || "Member",
+                uniqueCode: contact.uniqueCode,
+                eventTitle: contact.event.title,
+                classYear: contact.classYear || undefined,
+                loginLink,
+            });
+            emailsSent++;
+        }
+
+        // Resend Digital Card details if applicable
+        if (profile.roles.includes("cardholder") && profile.digitalCards.length > 0) {
+            const card = profile.digitalCards[0];
+            await sendDigitalCardDetails({
+                email: profile.email,
+                name: profile.fullName || "Member",
+                cardCode: card.cardCode,
+                eventTitle: card.event.title,
+                classYear: card.classYear || undefined,
+                loginLink,
+            });
+            emailsSent++;
+        }
+
+        if (emailsSent === 0) {
+            return { success: false, error: "No active RSVP or Digital Card records found to resend." };
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error in resendInvitationEmail:", error);
+        return { 
+            success: false, 
+            error: error instanceof Error ? error.message : "An unexpected error occurred while resending the invitation." 
+        };
+    }
+}
+
 // Keep inviteUser as alias for compatibility if needed, but we'll switch to createUserRecord
 export const inviteUser = createUserRecord;
