@@ -1,8 +1,7 @@
 "use client";
 
-import { TableRow, TableCell } from "@/components/ui/table";
+import { TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 
 interface EventRowProps {
     event: any;
@@ -12,10 +11,22 @@ interface EventRowProps {
 export function EventRow({ event, children }: EventRowProps) {
     const router = useRouter();
 
+    const handleRowClick = () => {
+        router.push(`/dashboard/events/${event.id}`);
+    };
+
     return (
         <TableRow
             className="hover:bg-muted/50 transition-colors cursor-pointer group"
-            onClick={() => router.push(`/dashboard/events/${event.id}`)}
+            onClick={handleRowClick}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    handleRowClick();
+                }
+            }}
+            tabIndex={0}
+            role="link"
+            aria-label={`View details for ${event.title}`}
         >
             {children}
         </TableRow>

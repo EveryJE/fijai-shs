@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { EventSheet } from "@/components/dashboard/EventSheet";
 import { EventRow } from "@/components/dashboard/EventRow";
 import { EventActions } from "@/components/dashboard/EventActions";
 import { CalendarDaysIcon } from "lucide-react";

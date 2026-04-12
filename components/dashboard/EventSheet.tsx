@@ -7,6 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,10 +32,17 @@ interface Event {
 interface EventSheetProps {
   event?: Event;
   trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function EventSheet({ event, trigger }: EventSheetProps) {
-  const [open, setOpen] = useState(false);
+export function EventSheet({ event, trigger, open: controlledOpen, onOpenChange: setControlledOpen }: EventSheetProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  
+  // Use controlled state if provided, otherwise internal
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = setControlledOpen !== undefined ? setControlledOpen : setInternalOpen;
+
   const [isPending, startTransition] = useTransition();
   const isEditing = !!event;
 
@@ -92,17 +100,19 @@ export function EventSheet({ event, trigger }: EventSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={setOpen} modal={false}>
-      <div onClick={() => setOpen(true)} className="cursor-pointer hidden">
-        {trigger || (
-          <Button variant={isEditing ? "outline" : "default"} size={isEditing ? "sm" : "default"}>
-            {isEditing ? (
-              <><PencilIcon className="mr-2 h-4 w-4" /> Edit</>
-            ) : (
-              <><PlusIcon className="mr-2 h-4 w-4" /> Create Event</>
-            )}
-          </Button>
-        )}
-      </div>
+      {!controlledOpen && (
+        <SheetTrigger asChild>
+          {trigger || (
+            <Button variant={isEditing ? "outline" : "default"} size={isEditing ? "sm" : "default"}>
+              {isEditing ? (
+                <><PencilIcon className="mr-2 h-4 w-4" /> Edit</>
+              ) : (
+                <><PlusIcon className="mr-2 h-4 w-4" /> Create Event</>
+              )}
+            </Button>
+          )}
+        </SheetTrigger>
+      )}
       <SheetContent side="right" className="w-full sm:max-w-xl p-0 flex flex-col h-full">
         <SheetHeader className="flex-shrink-0 p-6 border-b bg-background z-10">
           <SheetTitle>{isEditing ? "Edit Event" : "Create New Event"}</SheetTitle>

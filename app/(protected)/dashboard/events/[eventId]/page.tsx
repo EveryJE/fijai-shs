@@ -22,7 +22,13 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                 ...item,
                 targetAmount: item.targetAmount ? Number(item.targetAmount) : null
             }))
-        }))
+        })),
+        donations: (event as any).donations?.map((d: any) => ({
+            ...d,
+            amount: Number(d.amount),
+            netAmount: Number(d.netAmount || 0),
+            fees: Number(d.fees || 0)
+        })) || []
     } as any;
 
     return <EventDetailClient event={typedEvent} />;
