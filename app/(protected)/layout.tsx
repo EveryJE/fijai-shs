@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/dashboard/AppSidebar";
 import { getProfileByEmail } from "@/lib/dal";
 import { Separator } from "@/components/ui/separator";
 import { RouteGuard } from "@/components/RouteGuard";
+import { Breadcrumbs } from "@/components/dashboard/Breadcrumbs";
 
 export default async function ProtectedLayout(props: {
     children: React.ReactNode;
@@ -54,8 +55,8 @@ export default async function ProtectedLayout(props: {
                 <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 backdrop-blur-sm sticky top-0 z-30 transition-[width,height] ease-linear bg-background/50">
                     <SidebarTrigger className="-ml-1" />
                     <Separator orientation="vertical" className="mr-2 h-4" />
-                    <div className="flex-1">
-                        <span className="text-sm font-medium hidden sm:inline-block text-muted-foreground/80">Dashboard</span>
+                    <div className="flex-1 px-2">
+                        <Breadcrumbs />
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col p-0 ">

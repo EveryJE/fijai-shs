@@ -215,7 +215,7 @@ export const getDonationByItemCategory = cache(async () => {
                 include: {
                     donations: {
                         where: { status: "paid" },
-                        select: { amount: true }
+                        select: { netAmount: true }
                     }
                 }
             }

@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { EventSheet } from "@/components/dashboard/EventSheet";
-import { CalendarDaysIcon, MoreHorizontalIcon, EyeIcon } from "lucide-react";
+import { EventRow } from "@/components/dashboard/EventRow";
+import { EventActions } from "@/components/dashboard/EventActions";
+import { CalendarDaysIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -52,34 +53,30 @@ export default async function EventsPage() {
                                     </TableRow>
                                 ) : (
                                     events.map((event: any) => (
-                                        <TableRow key={event.id} className="hover:bg-muted/50 transition-colors">
+                                        <EventRow key={event.id} event={event}>
                                             <TableCell className="font-semibold text-foreground">
-                                                <Link href={`/dashboard/events/${event.id}`} className="hover:underline">
-                                                    {event.title}
-                                                </Link>
+                                                <div className="flex flex-col">
+                                                    <span className="group-hover:text-primary transition-colors text-sm">{event.title}</span>
+                                                    <span className="text-[10px] text-muted-foreground font-mono opacity-0 group-hover:opacity-60 transition-opacity">ID: {event.id.slice(0, 8)}...</span>
+                                                </div>
                                             </TableCell>
                                             <TableCell>
                                                 <StatusBadge variant={event.status} size="sm" />
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="text-muted-foreground text-xs">
                                                 {event.startDate
                                                     ? format(new Date(event.startDate), "MMM d, yyyy HH:mm")
                                                     : "Not set"}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="text-muted-foreground text-xs">
                                                 {event.endDate
                                                     ? format(new Date(event.endDate), "MMM d, yyyy HH:mm")
                                                     : "Not set"}
                                             </TableCell>
                                             <TableCell className="text-right">
-                                                <div className="flex justify-end gap-2">
-                                                    <EventSheet event={event} />
-                                                    <Button variant="ghost" size="icon-sm">
-                                                        <MoreHorizontalIcon className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
+                                                <EventActions event={event} />
                                             </TableCell>
-                                        </TableRow>
+                                        </EventRow>
                                     ))
                                 )}
                             </TableBody>

@@ -24,6 +24,8 @@ interface Transaction {
     donorName: string | null;
     donorEmail: string;
     amount: number | any;
+    netAmount: number | any;
+    fees: number | any;
     currency: string;
     status: string;
     paymentMethod: string;
@@ -121,8 +123,8 @@ export function RecentTransactionsTable({ transactions }: RecentTransactionsTabl
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        <span className="font-black text-emerald-600">
-                                            {formatAmount(Number(tx.amount))}
+                                      <span className="font-black text-emerald-600">
+                                            {formatAmount(Number(tx.netAmount || tx.amount))}
                                         </span>
                                     </TableCell>
                                     <TableCell>
@@ -195,7 +197,7 @@ export function RecentTransactionsTable({ transactions }: RecentTransactionsTabl
                         </div>
                         <div className="flex justify-between items-end">
                             <div className="space-y-1">
-                                <DialogTitle className="text-3xl font-black">{formatAmount(Number(selectedTx?.amount || 0))}</DialogTitle>
+                                <DialogTitle className="text-3xl font-black">{formatAmount(Number(selectedTx?.netAmount || selectedTx?.amount || 0))}</DialogTitle>
                                 <DialogDescription className="text-primary-foreground/70 font-medium">
                                     Contribution by {selectedTx?.donorName || "Anonymous Alumni"}
                                 </DialogDescription>
@@ -207,7 +209,7 @@ export function RecentTransactionsTable({ transactions }: RecentTransactionsTabl
                         </div>
                     </div>
 
-                    <div className="p-8 space-y-8">
+                    <div className="p-8 space-y-8 pt-0">
                         <div className="grid grid-cols-2 gap-8">
                             <div className="space-y-1">
                                 <p className="text-[10px] font-black text-muted-foreground uppercase  flex items-center gap-1.5">

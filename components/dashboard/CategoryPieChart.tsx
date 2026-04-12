@@ -36,7 +36,7 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
         <Card className=" overflow-hidden flex flex-col">
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                    <PieChartIcon className="h-4 w-4 text-amber-600" />
+                    <PieChartIcon className="h-4 w-4 text-[#730303]" />
                     <CardTitle className="text-sm font-bold">Category Distribution</CardTitle>
                 </div>
                 <CardDescription className="text-[10px] uppercase ">

@@ -40,6 +40,8 @@ interface Donation {
     donorEmail: string;
     phone: string | null;
     amount: number;
+    netAmount: number;
+    fees: number;
     currency: string;
     status: string;
     paymentMethod: string;
@@ -109,7 +111,7 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
             d.reference,
             d.donorName || "Anonymous",
             d.donorEmail,
-            d.amount,
+            d.netAmount || d.amount,
             d.currency,
             d.event?.title || "General",
             d.paymentMethod,
@@ -321,7 +323,7 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                                         </TableCell>
                                         <TableCell>
                                             <span className="font-black text-emerald-600">
-                                                {formatAmount(Number(d.amount))}
+                                                {formatAmount(Number(d.netAmount || d.amount))}
                                             </span>
                                         </TableCell>
                                         <TableCell>
@@ -426,9 +428,9 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                         </div>
                         <div className="flex justify-between items-end">
                             <div className="space-y-1">
-                                <DialogTitle className="text-3xl font-black">{formatAmount(selectedDonation?.amount || 0)}</DialogTitle>
+                                <DialogTitle className="text-3xl font-black">{formatAmount(selectedDonation?.netAmount || selectedDonation?.amount || 0)}</DialogTitle>
                                 <DialogDescription className="text-primary-foreground/70 font-medium">
-                                    Contribution by {selectedDonation?.donorName || "Anonymous Alumni"}
+                                    Final payout from {selectedDonation?.donorName || "Anonymous Alumni"}
                                 </DialogDescription>
                             </div>
                             <div className="text-right">
@@ -438,7 +440,7 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                         </div>
                     </div>
 
-                    <div className="p-8 space-y-8">
+                    <div className="p-8 space-y-8 pt-0">
                         <div className="grid grid-cols-2 gap-8">
                             <div className="space-y-1">
                                 <p className="text-[10px] font-black text-muted-foreground uppercase  flex items-center gap-1.5">

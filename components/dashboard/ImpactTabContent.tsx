@@ -21,7 +21,7 @@ export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: Impa
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const totalAmount = donations.reduce((sum, d) => sum + Number(d.amount), 0);
+  const totalAmount = donations.reduce((sum, d) => sum + Number(d.netAmount || d.amount), 0);
   const shareLink = digitalCard
     ? `${window.location.origin}/donate/${digitalCard.cardCode}`
     : rsvp
@@ -141,7 +141,7 @@ export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: Impa
                     </TableCell>
                     <TableCell>
                       <span className="text-sm font-medium text-emerald-600">
-                        {formatAmount(d.amount)}
+                        {formatAmount(d.netAmount || d.amount)}
                       </span>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
