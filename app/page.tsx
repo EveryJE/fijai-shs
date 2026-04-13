@@ -18,43 +18,19 @@ export default async function Home() {
         );
     }
     
-    // Fetch full event with categories and registered ContactPersons (RSVPs)
-    const event = await prisma.event.findUnique({
-        where: { id: activeEventSummary.id },
-        include: {
-            categories: {
-                orderBy: { displayOrder: "asc" },
-                include: {
-                    donationItems: {
-                        orderBy: { displayOrder: "asc" },
-                    },
-                },
-            },
-            contactPersons: {
-                orderBy: { createdAt: "asc" },
-                include: {
-                    profile: true
-                }
-            }
-        },
-    });
+    // Reuse the exact same DAL function for consistency
+    const event = await getEventWithCategories(activeEventSummary.id);
 
     if (!event) {
         notFound();
     }
     
     const categories = (event.categories || []).map((cat: any) => ({
-      id: cat.id,
-      name: cat.name,
-      color: cat.color,
-      displayOrder: cat.displayOrder,
+      ...cat,
       items: (cat.donationItems || []).map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        icon: item.icon,
-        color: item.color,
+        ...item,
         targetAmount: item.targetAmount ? item.targetAmount.toString() : undefined,
-        displayOrder: item.displayOrder,
+        currency: item.currency || "GHS",
       })),
     }));
 
