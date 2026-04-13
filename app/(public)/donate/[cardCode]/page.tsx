@@ -6,6 +6,9 @@ import { type RSVP } from "@/components/donate/RSVPList";
 import { prisma } from "@/lib/prisma";
 
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface DonatePageProps {
   readonly params: Promise<{ readonly cardCode: string }>;
 }
