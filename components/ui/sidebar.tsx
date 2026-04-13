@@ -167,6 +167,7 @@ function Sidebar({
   if (collapsible === "none") {
     return (
       <div
+        aria-modal={false}  
         data-slot="sidebar"
         className={cn(
           "flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground",
@@ -181,7 +182,7 @@ function Sidebar({
 
   if (isMobile) {
     return (
-      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+      <Sheet open={openMobile} onOpenChange={setOpenMobile} modal={false} {...props}>
         <SheetContent
           dir={dir}
           data-sidebar="sidebar"

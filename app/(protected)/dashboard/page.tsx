@@ -166,14 +166,17 @@ function StatCard({ title, value, icon: Icon, accent }: {
 
     return (
         <Card className=" hover:shadow-md transition-shadow duration-200">
-            <CardContent className="p-4 flex items-start justify-between gap-3">
-                <div className="space-y-1 min-w-0">
+            <CardContent className="p-4 flex flex-col items-start justify-between gap-3">
+                <div className="space-y-1  flex items-center justify-between w-full min-w-0">
                     <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide truncate">{title}</p>
-                    <p className="text-xl font-black  truncate">{value}</p>
+                    <div className={cn("p-2 rounded-lg shrink-0", a.bg, a.border, "border")}>
+                        <Icon className={cn("h-4 w-4", a.text)} />
+                    </div>
                 </div>
-                <div className={cn("p-2 rounded-lg shrink-0", a.bg, a.border, "border")}>
-                    <Icon className={cn("h-4 w-4", a.text)} />
-                </div>
+
+
+                <p className="text-xl font-black  truncate">{value}</p>
+
             </CardContent>
         </Card>
     );
