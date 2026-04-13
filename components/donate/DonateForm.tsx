@@ -109,7 +109,11 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
         <Combobox
             options={categories.map(cat => ({ value: cat.id, label: cat.name }))}
             value={category}
-            onChange={(val) => { setCategory(val); setItem(''); }}
+            onChange={(val) => { 
+                setCategory(val); 
+                setItem(''); 
+                setCustomAmount('');
+            }}
             placeholder="Select established category"
         />
       </GoogleFormCard>
@@ -124,6 +128,7 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
         <div className="flex items-center gap-3">
             <div className="flex-1">
                 <Combobox 
+                    key={`item-combobox-${category}`}
                     options={selectedCategory?.items.map(it => ({ 
                         value: it.id, 
                         label: `${it.icon ? it.icon + ' ' : ''}${it.name}${it.targetAmount ? ` (${it.currency || 'GHS'} ${Number(it.targetAmount).toFixed(2)})` : ''}` 
