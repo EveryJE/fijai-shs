@@ -74,7 +74,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
   totalRevenue = 0,
   organizationName,
 }) => {
-  const [successData, setSuccessData] = useState<{ reference: string; amount: number; currency: string; donorName: string } | null>(null);
+  const [successData, setSuccessData] = useState<{ reference: string; amount: number; currency: string | undefined; donorName: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { initiateDonation, loading } = usePaystack();
@@ -106,7 +106,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
           amount: data.amount,
           donorName: data.name,
           phone: data.phone,
-          currency: selectedItem?.currency || "GHS",
+          currency: selectedItem?.currency,
           digitalCardId: digitalCard?.id,
           contactPersonId: contactPerson?.id,
           donationItemId: data.item,
@@ -121,7 +121,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
             setSuccessData({
               reference: tx.reference,
               amount: data.amount!,
-              currency: selectedItem?.currency || "GHS",
+              currency: selectedItem?.currency,
               donorName: data.name
             });
             setSubmitting(false);

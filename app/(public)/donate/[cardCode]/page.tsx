@@ -33,18 +33,10 @@ export default async function DonatePage({ params }: DonatePageProps) {
     }
     
     const categories = (eventEntity.categories || []).map((cat: any) => ({
-      id: cat.id,
-      name: cat.name,
-      color: cat.color,
-      displayOrder: cat.displayOrder,
+      ...cat,
       items: (cat.donationItems || []).map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        icon: item.icon,
-        color: item.color,
+        ...item,
         targetAmount: item.targetAmount ? item.targetAmount.toString() : undefined,
-        currency: item.currency || "GHS",
-        displayOrder: item.displayOrder,
       })),
     }));
 

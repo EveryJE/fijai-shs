@@ -131,7 +131,7 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
                     key={`item-combobox-${category}`}
                     options={selectedCategory?.items.map(it => ({ 
                         value: it.id, 
-                        label: `${it.icon ? it.icon + ' ' : ''}${it.name}${it.targetAmount ? ` (${it.currency || 'GHS'} ${Number(it.targetAmount).toFixed(2)})` : ''}` 
+                        label: `${it.icon ? it.icon + ' ' : ''}${it.name}${it.targetAmount ? ` (${it.currency} ${Number(it.targetAmount).toFixed(2)})` : ''}` 
                     })) || []}
                     value={item}
                     onChange={setItem}
@@ -160,7 +160,7 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
                     className="text-[10px] font-black uppercase tracking-widest mb-2 font-black"
                     style={{ color: selectedItem.color || selectedCategory?.color || "#730303" }}
                 >
-                    Designated Amount ({selectedItem.currency || 'GHS'})
+                    Designated Amount ({selectedItem.currency})
                 </p>
                 <div className="flex items-center gap-3">
                    <GoogleFormInput 
