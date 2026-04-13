@@ -20,6 +20,16 @@ export const getDigitalCardByCardCode = cache(async (cardCode: string | undefine
                         include: {
                             donationItems: {
                                 orderBy: { displayOrder: "asc" },
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    icon: true,
+                                    color: true,
+                                    targetAmount: true,
+                                    currency: true,
+                                    displayOrder: true,
+                                    categoryId: true,
+                                }
                             },
                         },
                     },
@@ -46,6 +56,16 @@ export const getContactPersonByUniqueCode = cache(async (uniqueCode: string | un
                         include: {
                             donationItems: {
                                 orderBy: { displayOrder: "asc" },
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    icon: true,
+                                    color: true,
+                                    targetAmount: true,
+                                    currency: true,
+                                    displayOrder: true,
+                                    categoryId: true,
+                                }
                             },
                         },
                     },
