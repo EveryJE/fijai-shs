@@ -157,7 +157,6 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
             />
           <div className="p-4 md:p-6">
            
-<pre>{JSON.stringify(categories, null, 2)}</pre>
             <DonateForm
               categories={categories}
               onSubmit={handleDonate}

@@ -257,7 +257,7 @@ export const DonateForm: React.FC<DonateFormProps> = ({ categories, onSubmit, su
             className="" 
             disabled={submitting}
         >
-            {submitting ? 'Regsitering Impact...' : 'Commit Institutional Contribution'}
+            {submitting ? 'Registering Impact...' : 'Commit Institutional Contribution'}
         </Button>
       </div>
 
