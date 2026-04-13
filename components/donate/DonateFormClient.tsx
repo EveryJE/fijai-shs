@@ -106,7 +106,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
           amount: data.amount,
           donorName: data.name,
           phone: data.phone,
-          currency: selectedItem?.currency,
+          currency: selectedItem?.currency || "GHS",
           digitalCardId: digitalCard?.id,
           contactPersonId: contactPerson?.id,
           donationItemId: data.item,
@@ -121,7 +121,7 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
             setSuccessData({
               reference: tx.reference,
               amount: data.amount!,
-              currency: selectedItem?.currency,
+              currency: selectedItem?.currency || "GHS",
               donorName: data.name
             });
             setSubmitting(false);
