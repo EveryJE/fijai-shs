@@ -30,7 +30,7 @@ export const navMain: NavItem[] = [
         title: "Members",
         url: "/dashboard/participants",
         icon: Users,
-        roles: ["admin", "rsvp"],
+        roles: ["admin"],
         items: [
             {
                 title: "Member Registry",

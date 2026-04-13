@@ -135,11 +135,13 @@ export async function updateUserRecord({
     id,
     fullName,
     email,
+    roles,
     classYear,
 }: {
     id: string;
     fullName: string;
     email: string;
+    roles?: string[];
     classYear?: string;
 }) {
     const normalizedEmail = email.toLowerCase();
@@ -165,6 +167,7 @@ export async function updateUserRecord({
                 fullName,
                 email: normalizedEmail,
                 classYear,
+                ...(roles ? { roles: { set: roles } } : {}),
             }
         });
 

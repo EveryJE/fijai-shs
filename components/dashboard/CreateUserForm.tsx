@@ -57,7 +57,7 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
       if (isAdmin) allRoles.push("admin");
 
       const result = isEdit
-        ? await updateUserRecord({ id: profile.id, email, fullName, classYear: classYear || undefined })
+        ? await updateUserRecord({ id: profile.id, email, fullName, roles: allRoles, classYear: classYear || undefined })
         : await createUserRecord({ email, fullName, roles: allRoles, eventId, classYear: classYear || undefined });
 
       if (result.success) {
@@ -171,19 +171,17 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
           <div className="space-y-4">
             <div className="space-y-3">
               <Label className="text-sm font-semibold text-primary">Primary Role Type</Label>
-              {isEdit && <p className="text-[10px] text-muted-foreground italic -mt-2">Roles are fixed upon institutional entry and cannot be modified here.</p>}
               <div className="grid grid-cols-2 gap-3">
                 {ROLES.map(role => (
                   <label key={role.value} className={cn(
                     "flex items-center gap-2 p-3 rounded border transition-all",
                     roles.includes(role.value) ? "bg-primary/5 border-primary shadow-sm" : "bg-muted/30 border-transparent",
-                    isEdit ? "opacity-60 cursor-not-allowed" : "cursor-pointer hover:bg-muted/50"
+                    isEdit ? "opacity-60 " : "cursor-pointer hover:bg-muted/50"
                   )}>
                     <input
                       type="checkbox"
                       value={role.value}
                       checked={roles.includes(role.value)}
-                      disabled={isEdit}
                       onChange={e => {
                         if (e.target.checked) setRoles([...roles, role.value]);
                         else setRoles(roles.filter(r => r !== role.value));
@@ -196,7 +194,7 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
               </div>
             </div>
 
-            <div className={cn("p-4 bg-primary/5 rounded border border-primary/10 flex items-center justify-between", isEdit && "opacity-60 cursor-not-allowed")}>
+            <div className={cn("p-4 bg-primary/5 rounded border border-primary/10 flex items-center justify-between")}>
               <div className="space-y-0.5">
                 <Label className="text-[11px] font-black uppercase tracking-widest text-[#730303]">Grant Admin Access</Label>
                 <p className="text-[10px] text-muted-foreground leading-tight max-w-[200px]">Enables management of events, users, and overall system configuration.</p>
@@ -210,7 +208,6 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
                     type="checkbox"
                     className="sr-only peer"
                     checked={isAdmin}
-                    disabled={isEdit}
                     onChange={(e) => setIsAdmin(e.target.checked)}
                   />
                   <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
