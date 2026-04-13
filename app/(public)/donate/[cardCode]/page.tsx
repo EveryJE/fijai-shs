@@ -37,6 +37,7 @@ export default async function DonatePage({ params }: DonatePageProps) {
       items: (cat.donationItems || []).map((item: any) => ({
         ...item,
         targetAmount: item.targetAmount ? item.targetAmount.toString() : undefined,
+        currency: item.currency || "GHS",
       })),
     }));
 
