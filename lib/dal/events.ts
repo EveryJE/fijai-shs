@@ -36,6 +36,13 @@ export const getEventWithCategories = cache(async (eventId: string) => {
                     },
                 },
             },
+            contactPersons: {
+                orderBy: { createdAt: "asc" },
+                include: {
+                    profile: true
+                }
+            },
+            digitalCards: true,
         },
     });
 });

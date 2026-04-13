@@ -49,13 +49,8 @@ export default async function Home() {
         classYear: cp.classYear || cp.profile?.classYear || undefined,
     }));
 
-    // Fetch total revenue from all donations for this event
-    const donationAgg = await prisma.donation.aggregate({
-        _sum: { amount: true },
-        where: { eventId: event.id, status: "paid" }
-    });
-    
-    const totalRevenue = Number(donationAgg._sum?.amount || 0);
+    // Calculate total revenue from pre-fetched donations
+    const totalRevenue = event.donations.reduce((sum, d: any) => sum + (Number(d.netAmount) || 0), 0);
 
     return (
       <DonateFormClient

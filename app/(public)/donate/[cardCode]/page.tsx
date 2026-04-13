@@ -1,10 +1,8 @@
-
 import { notFound } from "next/navigation";
 import { getDigitalCardByCardCode, getContactPersonByUniqueCode, getDonationsByDigitalCard, getDonationsByContactPerson } from "@/lib/dal/donations";
+import { getEventWithCategories } from "@/lib/dal/events";
 import { DonateFormClient } from "@/components/donate/DonateFormClient";
 import { type RSVP } from "@/components/donate/RSVPList";
-import { prisma } from "@/lib/prisma";
-
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -19,7 +17,6 @@ export default async function DonatePage({ params }: DonatePageProps) {
         notFound();
     }
 
-    // Try finding a digital card first, then an RSVP contact person
     const digitalCard = await getDigitalCardByCardCode(cardCode);
     const contactPerson = !digitalCard ? await getContactPersonByUniqueCode(cardCode) : null;
 
@@ -27,7 +24,13 @@ export default async function DonatePage({ params }: DonatePageProps) {
         notFound();
     }
 
-    const eventEntity = digitalCard?.event || contactPerson?.event;
+    const eventId = digitalCard?.eventId || contactPerson?.eventId;
+    if (!eventId) {
+        notFound();
+    }
+
+    // Reuse the exact same DAL function as the admin side for consistency
+    const eventEntity = await getEventWithCategories(eventId);
     if (!eventEntity) {
         notFound();
     }
@@ -64,7 +67,7 @@ export default async function DonatePage({ params }: DonatePageProps) {
       <DonateFormClient
         digitalCard={digitalCard || undefined}
         contactPerson={contactPerson || undefined}
-        event={eventEntity}
+        event={eventEntity as any}
         categories={categories}
         rsvps={rsvps}
         totalRevenue={totalRevenue}
