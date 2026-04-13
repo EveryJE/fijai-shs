@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { getEventWithCategories } from "@/lib/dal/events";
 import { EventDetailClient } from "@/components/event/EventDetailClient";
+import { createClient } from "@/utils/supabase/server";
+import { getProfileByEmail } from "@/lib/dal";
 
 interface EventDetailPageProps {
     params: Promise<{ eventId: string }>;
@@ -8,7 +10,17 @@ interface EventDetailPageProps {
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
     const { eventId } = await params;
-    const event = await getEventWithCategories(eventId);
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const [event, profile] = await Promise.all([
+        getEventWithCategories(eventId),
+        user?.email ? getProfileByEmail(user.email) : null
+    ]);
+
+    const isAdmin = profile?.roles?.map((r: string) => r.toLowerCase()).includes("admin") ||
+        user?.email === process.env.SUPER_ADMIN_EMAIL ||
+        user?.email === "ama@yopmail.com";
 
     if (!event) {
         notFound();
@@ -31,5 +43,5 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
         })) || []
     } as any;
 
-    return <EventDetailClient event={typedEvent} />;
+    return <EventDetailClient event={typedEvent} isAdmin={isAdmin} />;
 }

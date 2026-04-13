@@ -30,7 +30,7 @@ export const navMain: NavItem[] = [
         title: "Members",
         url: "/dashboard/participants",
         icon: Users,
-        roles: ["admin", "cardholder"],
+        roles: ["admin", "rsvp"],
         items: [
             {
                 title: "Member Registry",
@@ -42,13 +42,13 @@ export const navMain: NavItem[] = [
         title: "Donations",
         url: "/dashboard/donations",
         icon: HeartHandshake,
-        roles: ["admin", "rsvp", "cardholder"],
+        roles: ["admin", "rsvp"],
     },
     {
         title: "Events",
         url: "/dashboard/events",
         icon: CalendarDays,
-        roles: ["admin", "cardholder"],
+        roles: ["admin", "rsvp", "cardholder"],
     },
     {
         title: "Organization",

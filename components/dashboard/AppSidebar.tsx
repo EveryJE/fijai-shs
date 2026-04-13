@@ -37,9 +37,19 @@ export function AppSidebar({
   }
 }) {
   const filteredNavMain = navMain.filter((item) => {
-    if (!item.roles) return true
-    return item.roles.some((role) => user.roles.includes(role))
-  })
+    if (!item.roles) return true;
+    const userRoles = user.roles.map(r => r.toLowerCase());
+    const requiredRoles = item.roles.map(r => r.toLowerCase());
+    const hasAccess = requiredRoles.some((role) => userRoles.includes(role));
+    
+    // If parent has access, filter children by roles as well
+    if (hasAccess && item.items) {
+      // (Optional: Implement child-level filtering if roles are added to sub-items)
+      // For now, parent access means all children shown unless sub-roles added later
+    }
+    
+    return hasAccess;
+  });
 
   const logoColor = organization.primaryColor || "#730303";
 

@@ -90,7 +90,7 @@ const COLORS = [
     "#06B6D4", // Cyan
 ];
 
-export function EventDetailClient({ event }: { readonly event: Event }) {
+export function EventDetailClient({ event, isAdmin }: { readonly event: Event; readonly isAdmin?: boolean }) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [activeTab, setActiveTab] = useState("overview");
@@ -360,10 +360,12 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                     <LayoutGrid className="h-5 w-5 text-primary" />
                                     <CardTitle className="text-xl">Categories & Items</CardTitle>
                                 </div>
-                                <Button onClick={() => openCategorySheet()}>
-                                    <Plus className="mr-2 h-4 w-4" />
-                                    Add Category
-                                </Button>
+                                {isAdmin && (
+                                    <Button onClick={() => openCategorySheet()}>
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Add Category
+                                    </Button>
+                                )}
                             </div>
                             <CardDescription>
                                 Manage donation categories and items for this event.
@@ -374,10 +376,12 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                 <div className="text-center py-12">
                                     <LayoutGrid className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
                                     <p className="text-muted-foreground mb-4">No categories created yet.</p>
-                                    <Button onClick={() => openCategorySheet()}>
-                                        <Plus className="mr-2 h-4 w-4" />
-                                        Create First Category
-                                    </Button>
+                                    {isAdmin && (
+                                        <Button onClick={() => openCategorySheet()}>
+                                            <Plus className="mr-2 h-4 w-4" />
+                                            Create First Category
+                                        </Button>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="space-y-8">
@@ -398,28 +402,32 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                                     </Badge>
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => openItemSheet(category.id)}
-                                                    >
-                                                        <Plus className="h-4 w-4 mr-1" />
-                                                        Add Item
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => openCategorySheet(category)}
-                                                    >
-                                                        <Pencil className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => openDeleteDialog("category", category.id, category.name)}
-                                                    >
-                                                        <Trash2 className="h-4 w-4 text-destructive" />
-                                                    </Button>
+                                                    {isAdmin && (
+                                                        <>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => openItemSheet(category.id)}
+                                                            >
+                                                                <Plus className="h-4 w-4 mr-1" />
+                                                                Add Item
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => openCategorySheet(category)}
+                                                            >
+                                                                <Pencil className="h-4 w-4" />
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => openDeleteDialog("category", category.id, category.name)}
+                                                            >
+                                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                                            </Button>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div className="p-4">
@@ -448,20 +456,24 @@ export function EventDetailClient({ event }: { readonly event: Event }) {
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex items-center gap-1">
-                                                                    <Button
-                                                                        variant="ghost"
-                                                                        size="icon-sm"
-                                                                        onClick={() => openItemSheet(category.id, item)}
-                                                                    >
-                                                                        <Pencil className="h-3 w-3" />
-                                                                    </Button>
-                                                                    <Button
-                                                                        variant="ghost"
-                                                                        size="icon-sm"
-                                                                        onClick={() => openDeleteDialog("item", item.id, item.name)}
-                                                                    >
-                                                                        <Trash2 className="h-3 w-3 text-destructive" />
-                                                                    </Button>
+                                                                    {isAdmin && (
+                                                                        <>
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="icon-sm"
+                                                                                onClick={() => openItemSheet(category.id, item)}
+                                                                            >
+                                                                                <Pencil className="h-3 w-3" />
+                                                                            </Button>
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="icon-sm"
+                                                                                onClick={() => openDeleteDialog("item", item.id, item.name)}
+                                                                            >
+                                                                                <Trash2 className="h-3 w-3 text-destructive" />
+                                                                            </Button>
+                                                                        </>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         ))}
