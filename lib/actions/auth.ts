@@ -20,15 +20,16 @@ export async function createUserRecord({
     eventId: string;
     classYear?: string;
 }) {
+    const normalizedEmail = email.toLowerCase();
     try {
         const supabaseAdmin = createAdminClient();
         
         // 0. Pre-check: Does this email already have an institutional profile?
-        const existingProfile = await prisma.profile.findUnique({ where: { email } });
+        const existingProfile = await prisma.profile.findUnique({ where: { email: normalizedEmail } });
         if (existingProfile) {
             return { 
                 success: false, 
-                error: `An institutional record already exists for ${email}. To avoid duplicate identity records, please use the update feature instead.` 
+                error: `An institutional record already exists for ${normalizedEmail}. To avoid duplicate identity records, please use the update feature instead.` 
             };
         }
 
@@ -53,14 +54,14 @@ export async function createUserRecord({
 
         // 2. Create or Update Profile in Prisma
         const profile = await prisma.profile.upsert({
-            where: { email },
+            where: { email: normalizedEmail },
             update: {
                 fullName,
                 roles: { set: roles },
             },
             create: {
                 id: existingAuthUser.id, // Match Supabase ID
-                email,
+                email: normalizedEmail,
                 fullName,
                 roles,
             },
@@ -70,7 +71,7 @@ export async function createUserRecord({
         if (!event) return { success: false, error: "Reference event not found" };
 
         const domain = await getBaseUrl();
-        const loginLink = `${domain}/auth/welcome?email=${encodeURIComponent(email)}`;
+        const loginLink = `${domain}/auth/welcome?email=${encodeURIComponent(normalizedEmail)}`;
 
         // 3. Create RSVP or DigitalCard based on roles
         if (roles.includes("rsvp")) {
@@ -80,14 +81,14 @@ export async function createUserRecord({
                     eventId,
                     profileId: profile.id,
                     name: fullName,
-                    email,
+                    email: normalizedEmail,
                     classYear,
                     uniqueCode,
                 },
             });
 
             await sendContactPersonDetails({
-                email,
+                email: normalizedEmail,
                 name: fullName,
                 uniqueCode: contactPerson.uniqueCode,
                 eventTitle: event.title,
@@ -103,14 +104,14 @@ export async function createUserRecord({
                     eventId,
                     profileId: profile.id,
                     holderName: fullName,
-                    email,
+                    email: normalizedEmail,
                     classYear,
                     cardCode,
                 },
             });
 
             await sendDigitalCardDetails({
-                email,
+                email: normalizedEmail,
                 name: fullName,
                 cardCode: digitalCard.cardCode,
                 eventTitle: event.title,
@@ -141,11 +142,12 @@ export async function updateUserRecord({
     email: string;
     classYear?: string;
 }) {
+    const normalizedEmail = email.toLowerCase();
     try {
         // Check if email is updated and if it's already taken by another user
         const existing = await prisma.profile.findFirst({
             where: {
-                email,
+                email: normalizedEmail,
                 id: { not: id }
             }
         });
@@ -161,7 +163,7 @@ export async function updateUserRecord({
             where: { id },
             data: {
                 fullName,
-                email,
+                email: normalizedEmail,
                 classYear,
             }
         });

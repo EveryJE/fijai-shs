@@ -13,9 +13,10 @@ import { SearchIcon, FilterIcon } from "lucide-react";
 interface MemberTableClientProps {
     profiles: any[];
     events: any[];
+    isAdmin?: boolean;
 }
 
-export function MemberTableClient({ profiles, events }: MemberTableClientProps) {
+export function MemberTableClient({ profiles, events, isAdmin }: MemberTableClientProps) {
     const [statusTab, setStatusTab] = useState("active");
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("all");
@@ -89,13 +90,13 @@ export function MemberTableClient({ profiles, events }: MemberTableClientProps) 
                             <TableHead className="font-bold uppercase text-[11px] ">Email Identifier</TableHead>
                             <TableHead className="font-bold uppercase text-[11px] ">Institutional Roles</TableHead>
                             <TableHead className="font-bold uppercase text-[11px] ">Onboarded</TableHead>
-                            <TableHead className="text-right pr-6 font-bold uppercase text-[11px] ">Actions</TableHead>
+                            {isAdmin && <TableHead className="text-right pr-6 font-bold uppercase text-[11px] ">Actions</TableHead>}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {filteredProfiles.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={5} className="h-48 text-center">
+                                <TableCell colSpan={isAdmin ? 5 : 4} className="h-48 text-center">
                                     <div className="flex flex-col items-center justify-center space-y-2 opacity-60">
                                         <SearchIcon className="h-8 w-8 text-muted-foreground mb-2" />
                                         <p className="text-sm font-medium">No matching institutional records found.</p>
@@ -134,9 +135,11 @@ export function MemberTableClient({ profiles, events }: MemberTableClientProps) 
                                     <TableCell className="text-muted-foreground text-[11px] ">
                                         {format(new Date(profile.createdAt), "MMM d, yyyy")}
                                     </TableCell>
-                                    <TableCell className="text-right pr-6">
-                                        <MemberRowActions profile={profile} events={events} />
-                                    </TableCell>
+                                    {isAdmin && (
+                                        <TableCell className="text-right pr-6">
+                                            <MemberRowActions profile={profile} events={events} />
+                                        </TableCell>
+                                    )}
                                 </TableRow>
                             ))
                         )}

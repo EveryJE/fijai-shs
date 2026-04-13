@@ -1,14 +1,21 @@
-import { getAllProfiles, getAllEvents } from "@/lib/dal";
+import { getAllProfiles, getAllEvents, getProfileByEmail } from "@/lib/dal";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { UsersIcon, ShieldCheckIcon } from "lucide-react";
 import { MemberTableClient } from "@/components/dashboard/MemberTableClient";
 import { CreateUserForm } from "@/components/dashboard/CreateUserForm";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function ParticipantsPage() {
-    const [profiles, events] = await Promise.all([
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const [profiles, events, profile] = await Promise.all([
         getAllProfiles(),
         getAllEvents(),
+        user?.email ? getProfileByEmail(user.email) : null
     ]);
+
+    const isAdmin = profile?.roles?.includes("admin") || user?.email === process.env.SUPER_ADMIN_EMAIL || user?.email === "ama@yopmail.com";
 
     return (
         <div className=" max-w-7xl p-6 lg:p-10 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
@@ -19,14 +26,16 @@ export default async function ParticipantsPage() {
                             <ShieldCheckIcon className="h-6 w-6" />
                         </div>
                         <h1 className="text-4xl font-bold uppercase  text-[#730303] ">
-                            Institutional Access
+                            {isAdmin ? "Institutional Access" : "Institutional Registry"}
                         </h1>
                     </div>
                     <p className="text-muted-foreground mt-2 text-sm font-normal">
-                        Establish official alumni participation roles and system identities.
+                        {isAdmin
+                            ? "Establish official alumni participation roles and system identities."
+                            : "Registry of official alumni participation roles and system identities."}
                     </p>
                 </div>
-                <CreateUserForm events={events} />
+                {isAdmin && <CreateUserForm events={events} />}
             </div>
 
             <Card className=" overflow-hidden bg-white text-black/90 gap-y-0 group border-none ">
@@ -45,7 +54,7 @@ export default async function ParticipantsPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <MemberTableClient profiles={profiles} events={events} />
+                    <MemberTableClient profiles={profiles} events={events} isAdmin={isAdmin} />
                 </CardContent>
             </Card>
         </div>

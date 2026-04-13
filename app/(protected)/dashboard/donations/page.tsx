@@ -6,24 +6,34 @@ import { Card, CardContent } from "@/components/ui/card";
 import { DonationsClient } from "@/components/dashboard/DonationsClient";
 
 import { createClient } from "@/utils/supabase/server";
+import { getProfileByEmail } from "@/lib/dal";
 
 export default async function DonationsPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    const [paystackDonations, manualDonations, breakdown, events] = await Promise.all([
+    const [paystackDonations, manualDonations, breakdown, events, profile] = await Promise.all([
         getDonationsByMethod("paystack", 100),
         getDonationsByMethod("manual", 100),
         getDonationBreakdown(),
         getAllEvents(),
+        user?.email ? getProfileByEmail(user.email) : null
     ]);
+
+    const isAdmin = profile?.roles?.map((r: string) => r.toLowerCase()).includes("admin") ||
+        user?.email === process.env.SUPER_ADMIN_EMAIL ||
+        user?.email === "ama@yopmail.com";
 
     return (
         <div className="max-w-7xl p-6 lg:p-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-black ">Donations</h1>
-                <p className="text-sm text-muted-foreground mt-1">Manage all contributions — both online payments and cash donations.</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                    {isAdmin
+                        ? "Manage all contributions — both online payments and cash donations."
+                        : "View contributions and institutional funding status."}
+                </p>
             </div>
 
             {/* Summary Cards */}
@@ -50,17 +60,19 @@ export default async function DonationsPage() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="">
-                    <CardContent className="p-4 flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-amber-50 border border-amber-100">
-                            <HandCoinsIcon className="h-4 w-4 text-amber-600" />
-                        </div>
-                        <div>
-                            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">Manual ({breakdown.manualCount})</p>
-                            <p className="text-lg font-black ">{formatAmount(breakdown.manualTotal)}</p>
-                        </div>
-                    </CardContent>
-                </Card>
+                {isAdmin && (
+                    <Card className="">
+                        <CardContent className="p-4 flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-amber-50 border border-amber-100">
+                                <HandCoinsIcon className="h-4 w-4 text-amber-600" />
+                            </div>
+                            <div>
+                                <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">Manual ({breakdown.manualCount})</p>
+                                <p className="text-lg font-black ">{formatAmount(breakdown.manualTotal)}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
             </div>
 
             {/* Tabbed Donations Table */}
@@ -69,6 +81,7 @@ export default async function DonationsPage() {
                 manualDonations={manualDonations}
                 events={events}
                 currentUserId={user?.id}
+                isAdmin={isAdmin}
             />
         </div>
     );

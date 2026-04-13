@@ -21,23 +21,29 @@ export default async function ProtectedLayout(props: {
     if (!user) redirect("/auth/login");
 
 
-    // Fetch profile and organization
-    const profile = await getProfileByEmail(user.email!);
+    // Fetch profile and organization with normalized email
+    const email = user.email?.toLowerCase();
+    const profile = email ? await getProfileByEmail(email) : null;
     const organization = await getOrganization();
 
     // Grant super admin if email matches a hardcoded value or env variable (for dev/admin override)
     const isSuperAdmin = [
         "ama@yopmail.com", // replace with your email
-        process.env.SUPER_ADMIN_EMAIL,
-    ].includes(user.email);
+        process.env.SUPER_ADMIN_EMAIL?.toLowerCase(),
+    ].includes(email);
 
+
+    // Collect roles from multiple sources
+    const profileRoles = Array.isArray(profile?.roles) ? profile?.roles : [];
+    const metaRoles = Array.isArray(user.user_metadata?.roles) ? user.user_metadata.roles : [];
+    const allRoles = Array.from(new Set([...profileRoles, ...metaRoles])).map(r => r.toLowerCase());
 
     const sidebarUser = {
         id: user.id || "",
         name: profile?.fullName || user.user_metadata?.full_name || user.email?.split("@")[0] || "User",
         email: user.email || "",
         avatar: profile?.avatarUrl,
-        roles: isSuperAdmin ? ["admin", "rsvp", "cardholder"] : Array.isArray(profile?.roles) ? profile.roles : [],
+        roles: isSuperAdmin ? ["admin", "rsvp", "cardholder"] : allRoles,
         superAdmin: isSuperAdmin,
     };
 

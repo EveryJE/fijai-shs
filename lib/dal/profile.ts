@@ -6,8 +6,13 @@ export const getProfileById = cache(async (id: string) => {
 });
 
 export const getProfileByEmail = cache(async (email: string) => {
-    return prisma.profile.findUnique({
-        where: { email },
+    return prisma.profile.findFirst({
+        where: {
+            email: {
+                equals: email,
+                mode: 'insensitive',
+            },
+        },
         include: {
             contactPersons: true,
             digitalCards: true,

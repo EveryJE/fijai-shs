@@ -23,8 +23,8 @@ export const ALL_ROLES: Role[] = [
  */
 export function hasPermission(user: UserPermissions, required: Role | Role[]): boolean {
     if (user.superAdmin) return true;
-    const requiredRoles = Array.isArray(required) ? required : [required];
-    return user.roles.some((role) => requiredRoles.includes(role));
+    const requiredRoles = (Array.isArray(required) ? required : [required]).map(r => r.toLowerCase());
+    return user.roles.some((role) => requiredRoles.includes(role.toLowerCase()));
 }
 
 /**

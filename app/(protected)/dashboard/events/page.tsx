@@ -9,9 +9,21 @@ import { EventActions } from "@/components/dashboard/EventActions";
 import { CalendarDaysIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
+import { getProfileByEmail } from "@/lib/dal";
 
 export default async function EventsPage() {
-    const events = await getAllEvents();
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const [events, profile] = await Promise.all([
+        getAllEvents(),
+        user?.email ? getProfileByEmail(user.email) : null
+    ]);
+
+    const isAdmin = profile?.roles?.map((r: string) => r.toLowerCase()).includes("admin") ||
+        user?.email === process.env.SUPER_ADMIN_EMAIL ||
+        user?.email === "ama@yopmail.com";
 
     return (
         <div className="max-w-7xl p-6 lg:p-10">
@@ -19,10 +31,12 @@ export default async function EventsPage() {
                 <div>
                     <h1 className="text-3xl font-bold ">Events Management</h1>
                     <p className="text-muted-foreground mt-1">
-                        Create and manage your school events, RSVPs, and Digital Cards.
+                        {isAdmin
+                            ? "Create and manage your school events, RSVPs, and Digital Cards."
+                            : "View school events, RSVPs, and Digital Card status."}
                     </p>
                 </div>
-                <EventSheet />
+                {isAdmin && <EventSheet />}
             </div>
 
             <div className="grid gap-6">
@@ -42,14 +56,14 @@ export default async function EventsPage() {
                                     <TableHead>Status</TableHead>
                                     <TableHead>Start Date</TableHead>
                                     <TableHead>End Date</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
+                                    {isAdmin && <TableHead className="text-right">Actions</TableHead>}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {events.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
-                                            No events created yet. Use the button above to start.
+                                        <TableCell colSpan={isAdmin ? 5 : 4} className="h-32 text-center text-muted-foreground">
+                                            No events created yet.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
@@ -74,9 +88,11 @@ export default async function EventsPage() {
                                                     ? format(new Date(event.endDate), "MMM d, yyyy HH:mm")
                                                     : "Not set"}
                                             </TableCell>
-                                            <TableCell className="text-right">
-                                                <EventActions event={event} />
-                                            </TableCell>
+                                            {isAdmin && (
+                                                <TableCell className="text-right">
+                                                    <EventActions event={event} />
+                                                </TableCell>
+                                            )}
                                         </EventRow>
                                     ))
                                 )}

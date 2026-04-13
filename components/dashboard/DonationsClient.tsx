@@ -62,9 +62,10 @@ interface DonationsClientProps {
     manualDonations: Donation[];
     events: { id: string; title: string }[];
     currentUserId?: string;
+    isAdmin?: boolean;
 }
 
-export function DonationsClient({ paystackDonations, manualDonations, events, currentUserId }: DonationsClientProps) {
+export function DonationsClient({ paystackDonations, manualDonations, events, currentUserId, isAdmin }: DonationsClientProps) {
     const [activeTab, setActiveTab] = useState<"all" | "paystack" | "manual">("all");
     const [sheetOpen, setSheetOpen] = useState(false);
     const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
@@ -262,14 +263,16 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                                     Print PDF
                                 </Button>
                             </div>
-                            <Button
-                                size="sm"
-                                onClick={() => { setSelectedDonation(null); setSheetOpen(true); }}
-                                className="h-8 text-[11px] font-bold uppercase  shadow-sm"
-                            >
-                                <PlusIcon className="h-3.5 w-3.5 mr-1" />
-                                Add Manual Donation
-                            </Button>
+                            {isAdmin && (
+                                <Button
+                                    size="sm"
+                                    onClick={() => { setSelectedDonation(null); setSheetOpen(true); }}
+                                    className="h-8 text-[11px] font-bold uppercase  shadow-sm"
+                                >
+                                    <PlusIcon className="h-3.5 w-3.5 mr-1" />
+                                    Add Manual Donation
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </CardHeader>
@@ -294,7 +297,7 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                                     <TableHead>Method</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead>Date</TableHead>
-                                    {(activeTab === "manual" || activeTab === "all") && (
+                                    {isAdmin && (activeTab === "manual" || activeTab === "all") && (
                                         <TableHead className="text-right w-[100px] actions-header">Actions</TableHead>
                                     )}
                                 </TableRow>
@@ -360,7 +363,7 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                                                 )}
                                             </div>
                                         </TableCell>
-                                        {(activeTab === "manual" || activeTab === "all") && (
+                                        {isAdmin && (activeTab === "manual" || activeTab === "all") && (
                                             <TableCell className="text-right actions-cell">
                                                 {d.paymentMethod === "manual" ? (
                                                     <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
