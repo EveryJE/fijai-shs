@@ -60,7 +60,7 @@ export const getRecentTransactions = cache(async (limit = 10) => {
         orderBy: { createdAt: "desc" },
         include: {
             contactPerson: true,
-            digitalCard: true,
+            digitalCard: { select: { cardCode: true, holderName: true } },
             donationItem: true,
             event: true
         }
@@ -85,7 +85,7 @@ export const getDonationsByMethod = cache(async (method: "paystack" | "manual", 
         orderBy: { createdAt: "desc" },
         include: {
             contactPerson: true,
-            digitalCard: true,
+            digitalCard: { select: { cardCode: true, holderName: true } },
             donationItem: true,
             event: true
         }

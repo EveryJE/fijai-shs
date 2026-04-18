@@ -51,7 +51,7 @@ interface Donation {
     event?: { id: string; title: string } | null;
     donationItem?: { name: string } | null;
     contactPerson?: { name: string } | null;
-    digitalCard?: { cardCode: string } | null;
+    digitalCard?: { cardCode: string; holderName?: string } | null;
     metadata?: any;
     momentFileUrl?: string | null;
     momentCaption?: string | null;
@@ -341,7 +341,9 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                                                     ? d.contactPerson.name
                                                     : d.digitalCard?.holderName
                                                         ? d.digitalCard.holderName
-                                                        : "—"}
+                                                        : d.digitalCard?.cardCode
+                                                            ? d.digitalCard.cardCode
+                                                            : "—"}
                                             </span>
                                         </TableCell>
                                         <TableCell>
