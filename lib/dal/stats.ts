@@ -144,7 +144,7 @@ export const getMonthlyRevenue = cache(async () => {
     for (let i = 5; i >= 0; i--) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const nextD = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
-        
+
         const sum = await prisma.donation.aggregate({
             _sum: { netAmount: true },
             where: {
