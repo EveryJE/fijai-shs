@@ -294,6 +294,7 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                                     <TableHead>Donor</TableHead>
                                     <TableHead>Amount</TableHead>
                                     <TableHead>Event</TableHead>
+                                    <TableHead>Referee</TableHead>
                                     <TableHead>Method</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead>Date</TableHead>
@@ -332,6 +333,15 @@ export function DonationsClient({ paystackDonations, manualDonations, events, cu
                                         <TableCell>
                                             <span className="text-xs font-semibold truncate max-w-[150px] block opacity-70">
                                                 {d.event?.title || "—"}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="text-xs font-semibold truncate max-w-[120px] block opacity-70">
+                                                {d.contactPerson?.name
+                                                    ? d.contactPerson.name
+                                                    : d.digitalCard?.holderName
+                                                        ? d.digitalCard.holderName
+                                                        : "—"}
                                             </span>
                                         </TableCell>
                                         <TableCell>
