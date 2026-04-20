@@ -99,7 +99,7 @@ export async function createUserRecord({
             });
         }
 
-        if (roles.includes("cardholder")) {
+        if (roles.includes("cardholder") || roles.includes("rsvp") || roles.includes("admin")) {
             const cardCode = `FJS-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
             const digitalCard = await prisma.digitalCard.create({
                 data: {

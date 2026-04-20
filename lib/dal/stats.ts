@@ -8,7 +8,11 @@ export const getOrgStats = cache(async () => {
             where: { roles: { has: "rsvp" } }
         }),
         prisma.profile.count({
-            where: { roles: { has: "cardholder" } }
+            where: {
+                digitalCards: {
+                    some: {}
+                }
+            }
         }),
         prisma.donation.aggregate({
             _sum: {
@@ -111,15 +115,15 @@ export const getActiveEvents = cache(async () => {
 });
 
 export const getMostImpactUser = cache(async () => {
-    // Group donations by userId and find the one with the highest sum
-    const topDonor = await prisma.donation.groupBy({
-        by: ['userId'],
+    // Find the digital card with the highest fundraising impact
+    const topImpact = await prisma.donation.groupBy({
+        by: ['digitalCardId'],
         _sum: {
             netAmount: true
         },
         where: {
             status: "paid",
-            userId: { not: null }
+            digitalCardId: { not: null }
         },
         orderBy: {
             _sum: {
@@ -129,11 +133,14 @@ export const getMostImpactUser = cache(async () => {
         take: 1
     });
 
-    if (!topDonor.length || !topDonor[0].userId) return null;
+    if (!topImpact.length || !topImpact[0].digitalCardId) return null;
 
-    return prisma.profile.findUnique({
-        where: { id: topDonor[0].userId }
+    const card = await prisma.digitalCard.findUnique({
+        where: { id: topImpact[0].digitalCardId },
+        include: { profile: true }
     });
+
+    return card?.profile || null;
 });
 
 export const getMonthlyRevenue = cache(async () => {
