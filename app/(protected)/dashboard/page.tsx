@@ -27,12 +27,15 @@ import { CategoryPieChart } from "@/components/dashboard/CategoryPieChart";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { format } from "date-fns";
 
+import { redirect } from "next/navigation";
+
 export default async function DashboardPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
+    const profile = user?.email ? await getProfileByEmail(user.email) : null;
+
     const [
-        profile,
         stats,
         topDonor,
         revenueData,
@@ -41,7 +44,6 @@ export default async function DashboardPage() {
         donationBreakdown,
         categoryData
     ] = await Promise.all([
-        user?.email ? getProfileByEmail(user.email) : null,
         getOrgStats(),
         getMostImpactUser(),
         getMonthlyRevenue(),

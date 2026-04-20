@@ -18,7 +18,7 @@ export function useAuth() {
                 password,
             });
             if (error) throw error;
-            router.push("/dashboard");
+            router.push("/dashboard/profile");
         } finally {
             setLoading(false);
         }
