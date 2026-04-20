@@ -114,8 +114,10 @@ export const getActiveEvents = cache(async () => {
     });
 });
 
-export const getMostImpactUser = cache(async () => {
-    // 1. Get impact by Digital Card & RSVP
+/**
+ * Shared utility to aggregate fundraising impact across RSVPs and Digital Cards
+ */
+const getRankedContributionImpact = cache(async () => {
     const [cardImpact, rsvpImpact] = await Promise.all([
         prisma.donation.groupBy({
             by: ['digitalCardId'],
@@ -129,48 +131,55 @@ export const getMostImpactUser = cache(async () => {
         })
     ]);
 
-    // 2. Fetch all unique profile IDs involved
     const cardIds = cardImpact.map(i => i.digitalCardId!).filter(Boolean);
     const rsvpIds = rsvpImpact.map(i => i.contactPersonId!).filter(Boolean);
 
     const [cards, rsvps] = await Promise.all([
-        prisma.digitalCard.findMany({ where: { id: { in: cardIds } }, select: { id: true, profileId: true } }),
-        prisma.contactPerson.findMany({ where: { id: { in: rsvpIds } }, select: { id: true, profileId: true } })
+        prisma.digitalCard.findMany({ 
+            where: { id: { in: cardIds } }, 
+            select: { id: true, profileId: true, profile: { select: { fullName: true } } } 
+        }),
+        prisma.contactPerson.findMany({ 
+            where: { id: { in: rsvpIds } }, 
+            select: { id: true, profileId: true, profile: { select: { fullName: true } } } 
+        })
     ]);
 
-    // 3. Aggregate total netAmount per ProfileId
-    const profileTotals = new Map<string, number>();
+    const profileImpactMap = new Map<string, { name: string, total: number }>();
 
     cardImpact.forEach(impact => {
-        const profileId = cards.find(c => c.id === impact.digitalCardId)?.profileId;
-        if (profileId) {
-            profileTotals.set(profileId, (profileTotals.get(profileId) || 0) + Number(impact._sum.netAmount || 0));
+        const card = cards.find(c => c.id === impact.digitalCardId);
+        if (card?.profileId) {
+            const current = profileImpactMap.get(card.profileId) || { name: card.profile?.fullName || "Anonymous", total: 0 };
+            profileImpactMap.set(card.profileId, { ...current, total: current.total + Number(impact._sum.netAmount || 0) });
         }
     });
 
     rsvpImpact.forEach(impact => {
-        const profileId = rsvps.find(r => r.id === impact.contactPersonId)?.profileId;
-        if (profileId) {
-            profileTotals.set(profileId, (profileTotals.get(profileId) || 0) + Number(impact._sum.netAmount || 0));
+        const rsvp = rsvps.find(r => r.id === impact.contactPersonId);
+        if (rsvp?.profileId) {
+            const current = profileImpactMap.get(rsvp.profileId) || { name: rsvp.profile?.fullName || "Anonymous", total: 0 };
+            profileImpactMap.set(rsvp.profileId, { ...current, total: current.total + Number(impact._sum.netAmount || 0) });
         }
     });
 
-    // 4. Find the profileId with the highest total
-    let topProfileId: string | null = null;
-    let maxAmount = -1;
+    return Array.from(profileImpactMap.entries())
+        .map(([id, data]) => ({ id, name: data.name, amount: data.total }))
+        .sort((a, b) => b.amount - a.amount);
+});
 
-    for (const [pid, total] of profileTotals.entries()) {
-        if (total > maxAmount) {
-            maxAmount = total;
-            topProfileId = pid;
-        }
-    }
-
-    if (!topProfileId) return null;
+export const getMostImpactUser = cache(async () => {
+    const ranked = await getRankedContributionImpact();
+    if (!ranked.length) return null;
 
     return prisma.profile.findUnique({
-        where: { id: topProfileId }
+        where: { id: ranked[0].id }
     });
+});
+
+export const getDigitalCardImpact = cache(async (limit = 10) => {
+    const ranked = await getRankedContributionImpact();
+    return ranked.slice(0, limit).map(r => ({ name: r.name, amount: r.amount }));
 });
 
 export const getMonthlyRevenue = cache(async () => {
@@ -207,52 +216,6 @@ export const getActiveEvent = cache(async () => {
         where: { status: "active" },
         orderBy: { createdAt: "desc" }
     });
-});
-
-export const getDigitalCardImpact = cache(async (limit = 10) => {
-    // 1. Get impact by Digital Card
-    const cardImpact = await prisma.donation.groupBy({
-        by: ['digitalCardId'],
-        _sum: { netAmount: true },
-        where: { status: "paid", digitalCardId: { not: null } }
-    });
-
-    // 2. Get impact by Contact Person (RSVP)
-    const rsvpImpact = await prisma.donation.groupBy({
-        by: ['contactPersonId'],
-        _sum: { netAmount: true },
-        where: { status: "paid", contactPersonId: { not: null } }
-    });
-
-    // 3. Fetch referee details (Profiles)
-    const cardIds = cardImpact.map(i => i.digitalCardId!).filter(Boolean);
-    const rsvpIds = rsvpImpact.map(i => i.contactPersonId!).filter(Boolean);
-
-    const [cards, rsvps] = await Promise.all([
-        prisma.digitalCard.findMany({ where: { id: { in: cardIds } }, select: { id: true, profileId: true, profile: { select: { fullName: true } } } }),
-        prisma.contactPerson.findMany({ where: { id: { in: rsvpIds } }, select: { id: true, profileId: true, profile: { select: { fullName: true } } } })
-    ]);
-
-    // 4. Aggregate by Profile Name in a Map
-    const resultsMap = new Map<string, number>();
-
-    cardImpact.forEach(impact => {
-        const card = cards.find(c => c.id === impact.digitalCardId);
-        const name = card?.profile?.fullName || "Anonymous Ref";
-        resultsMap.set(name, (resultsMap.get(name) || 0) + Number(impact._sum.netAmount || 0));
-    });
-
-    rsvpImpact.forEach(impact => {
-        const rsvp = rsvps.find(r => r.id === impact.contactPersonId);
-        const name = rsvp?.profile?.fullName || "Anonymous Ref";
-        resultsMap.set(name, (resultsMap.get(name) || 0) + Number(impact._sum.netAmount || 0));
-    });
-
-    // 5. Convert to array, sort, and limit
-    return Array.from(resultsMap.entries())
-        .map(([name, amount]) => ({ name, amount }))
-        .sort((a, b) => b.amount - a.amount)
-        .slice(0, limit);
 });
 
 export const getDonationByItemCategory = cache(async () => {
