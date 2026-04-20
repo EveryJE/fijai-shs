@@ -85,13 +85,16 @@ export const getRecentTransactions = cache(async (limit = 10) => {
         userId: tx.userId,
         paidAt: tx.paidAt,
         createdAt: tx.createdAt,
+        metadata: tx.metadata,
+        momentFileUrl: tx.momentFileUrl,
+        momentCaption: tx.momentCaption,
         donationItem: tx.donationItem ? {
             id: tx.donationItem.id,
             name: tx.donationItem.name,
             targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
         } : null,
-        event: tx.event,
-        contactPerson: tx.contactPerson,
+        event: tx.event ? { id: tx.event.id, title: tx.event.title } : null,
+        contactPerson: tx.contactPerson ? { name: tx.contactPerson.name } : null,
         digitalCard: tx.digitalCard
     }));
 });
@@ -124,13 +127,16 @@ export const getDonationsByMethod = cache(async (method: "paystack" | "manual", 
         userId: tx.userId,
         paidAt: tx.paidAt,
         createdAt: tx.createdAt,
+        metadata: tx.metadata,
+        momentFileUrl: tx.momentFileUrl,
+        momentCaption: tx.momentCaption,
         donationItem: tx.donationItem ? {
             id: tx.donationItem.id,
             name: tx.donationItem.name,
             targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
         } : null,
-        event: tx.event ? { title: tx.event.title } : null,
-        contactPerson: tx.contactPerson,
+        event: tx.event ? { id: tx.event.id, title: tx.event.title } : null,
+        contactPerson: tx.contactPerson ? { name: tx.contactPerson.name } : null,
         digitalCard: tx.digitalCard
     }));
 });
