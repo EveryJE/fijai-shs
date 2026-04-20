@@ -35,7 +35,7 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
   const [fullName, setFullName] = useState(profile?.fullName ?? "");
   const [eventId, setEventId] = useState("");
   const [classYear, setClassYear] = useState(profile?.classYear ?? "");
-  const [roles, setRoles] = useState<string[]>(profile?.roles ?? []);
+  const [roles, setRoles] = useState<string[]>(profile?.roles.filter(r => r !== "admin") ?? []);
   const [isAdmin, setIsAdmin] = useState(profile?.roles.includes("admin") ?? false);
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
@@ -91,10 +91,13 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
     try {
       const allRoles = [...roles];
       if (isAdmin) allRoles.push("admin");
+      
+      // Safety check: remove any duplicates
+      const uniqueRoles = Array.from(new Set(allRoles));
 
       const result = isEdit
-        ? await updateUserRecord({ id: profile.id, email, fullName, roles: allRoles, classYear: classYear || undefined })
-        : await createUserRecord({ email, fullName, roles: allRoles, eventId, classYear: classYear || undefined });
+        ? await updateUserRecord({ id: profile.id, email, fullName, roles: uniqueRoles, classYear: classYear || undefined })
+        : await createUserRecord({ email, fullName, roles: uniqueRoles, eventId, classYear: classYear || undefined });
 
       if (result.success) {
         toast.success(isEdit ? "Identity record updated successfully" : "Participant record created successfully");

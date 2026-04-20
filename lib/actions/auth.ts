@@ -58,12 +58,14 @@ export async function createUserRecord({
             update: {
                 fullName,
                 roles: { set: roles },
+                classYear,
             },
             create: {
                 id: existingAuthUser.id, // Match Supabase ID
                 email: normalizedEmail,
                 fullName,
                 roles,
+                classYear,
             },
         });
 
