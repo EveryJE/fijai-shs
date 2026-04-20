@@ -115,32 +115,62 @@ export const getActiveEvents = cache(async () => {
 });
 
 export const getMostImpactUser = cache(async () => {
-    // Find the digital card with the highest fundraising impact
-    const topImpact = await prisma.donation.groupBy({
-        by: ['digitalCardId'],
-        _sum: {
-            netAmount: true
-        },
-        where: {
-            status: "paid",
-            digitalCardId: { not: null }
-        },
-        orderBy: {
-            _sum: {
-                netAmount: "desc"
-            }
-        },
-        take: 1
+    // 1. Get impact by Digital Card & RSVP
+    const [cardImpact, rsvpImpact] = await Promise.all([
+        prisma.donation.groupBy({
+            by: ['digitalCardId'],
+            _sum: { netAmount: true },
+            where: { status: "paid", digitalCardId: { not: null } }
+        }),
+        prisma.donation.groupBy({
+            by: ['contactPersonId'],
+            _sum: { netAmount: true },
+            where: { status: "paid", contactPersonId: { not: null } }
+        })
+    ]);
+
+    // 2. Fetch all unique profile IDs involved
+    const cardIds = cardImpact.map(i => i.digitalCardId!).filter(Boolean);
+    const rsvpIds = rsvpImpact.map(i => i.contactPersonId!).filter(Boolean);
+
+    const [cards, rsvps] = await Promise.all([
+        prisma.digitalCard.findMany({ where: { id: { in: cardIds } }, select: { id: true, profileId: true } }),
+        prisma.contactPerson.findMany({ where: { id: { in: rsvpIds } }, select: { id: true, profileId: true } })
+    ]);
+
+    // 3. Aggregate total netAmount per ProfileId
+    const profileTotals = new Map<string, number>();
+
+    cardImpact.forEach(impact => {
+        const profileId = cards.find(c => c.id === impact.digitalCardId)?.profileId;
+        if (profileId) {
+            profileTotals.set(profileId, (profileTotals.get(profileId) || 0) + Number(impact._sum.netAmount || 0));
+        }
     });
 
-    if (!topImpact.length || !topImpact[0].digitalCardId) return null;
-
-    const card = await prisma.digitalCard.findUnique({
-        where: { id: topImpact[0].digitalCardId },
-        include: { profile: true }
+    rsvpImpact.forEach(impact => {
+        const profileId = rsvps.find(r => r.id === impact.contactPersonId)?.profileId;
+        if (profileId) {
+            profileTotals.set(profileId, (profileTotals.get(profileId) || 0) + Number(impact._sum.netAmount || 0));
+        }
     });
 
-    return card?.profile || null;
+    // 4. Find the profileId with the highest total
+    let topProfileId: string | null = null;
+    let maxAmount = -1;
+
+    for (const [pid, total] of profileTotals.entries()) {
+        if (total > maxAmount) {
+            maxAmount = total;
+            topProfileId = pid;
+        }
+    }
+
+    if (!topProfileId) return null;
+
+    return prisma.profile.findUnique({
+        where: { id: topProfileId }
+    });
 });
 
 export const getMonthlyRevenue = cache(async () => {
@@ -179,40 +209,50 @@ export const getActiveEvent = cache(async () => {
     });
 });
 
-export const getDigitalCardImpact = cache(async (limit = 5) => {
-    const impact = await prisma.donation.groupBy({
+export const getDigitalCardImpact = cache(async (limit = 10) => {
+    // 1. Get impact by Digital Card
+    const cardImpact = await prisma.donation.groupBy({
         by: ['digitalCardId'],
-        _sum: {
-            netAmount: true
-        },
-        where: {
-            status: "paid",
-            digitalCardId: { not: null }
-        },
-        orderBy: {
-            _sum: {
-                netAmount: "desc"
-            }
-        },
-        take: limit
+        _sum: { netAmount: true },
+        where: { status: "paid", digitalCardId: { not: null } }
     });
 
-    // Fetch card details for these impacts
-    const cardIds = impact.map(i => i.digitalCardId!).filter(Boolean);
-    const cards = await prisma.digitalCard.findMany({
-        where: { id: { in: cardIds } },
-        include: {
-            profile: true
-        }
+    // 2. Get impact by Contact Person (RSVP)
+    const rsvpImpact = await prisma.donation.groupBy({
+        by: ['contactPersonId'],
+        _sum: { netAmount: true },
+        where: { status: "paid", contactPersonId: { not: null } }
     });
 
-    return impact.map(i => {
-        const card = cards.find(c => c.id === i.digitalCardId);
-        return {
-            name: card?.profile?.fullName || card?.cardCode || "Unknown",
-            amount: Number(i._sum?.netAmount || 0)
-        };
+    // 3. Fetch referee details (Profiles)
+    const cardIds = cardImpact.map(i => i.digitalCardId!).filter(Boolean);
+    const rsvpIds = rsvpImpact.map(i => i.contactPersonId!).filter(Boolean);
+
+    const [cards, rsvps] = await Promise.all([
+        prisma.digitalCard.findMany({ where: { id: { in: cardIds } }, select: { id: true, profileId: true, profile: { select: { fullName: true } } } }),
+        prisma.contactPerson.findMany({ where: { id: { in: rsvpIds } }, select: { id: true, profileId: true, profile: { select: { fullName: true } } } })
+    ]);
+
+    // 4. Aggregate by Profile Name in a Map
+    const resultsMap = new Map<string, number>();
+
+    cardImpact.forEach(impact => {
+        const card = cards.find(c => c.id === impact.digitalCardId);
+        const name = card?.profile?.fullName || "Anonymous Ref";
+        resultsMap.set(name, (resultsMap.get(name) || 0) + Number(impact._sum.netAmount || 0));
     });
+
+    rsvpImpact.forEach(impact => {
+        const rsvp = rsvps.find(r => r.id === impact.contactPersonId);
+        const name = rsvp?.profile?.fullName || "Anonymous Ref";
+        resultsMap.set(name, (resultsMap.get(name) || 0) + Number(impact._sum.netAmount || 0));
+    });
+
+    // 5. Convert to array, sort, and limit
+    return Array.from(resultsMap.entries())
+        .map(([name, amount]) => ({ name, amount }))
+        .sort((a, b) => b.amount - a.amount)
+        .slice(0, limit);
 });
 
 export const getDonationByItemCategory = cache(async () => {
