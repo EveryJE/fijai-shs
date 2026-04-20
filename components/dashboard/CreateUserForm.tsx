@@ -6,8 +6,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { createUserRecord, updateUserRecord } from "@/lib/actions/auth";
-import { UserPlusIcon, UsersIcon, Edit3Icon } from "lucide-react";
+import { createUserRecord, updateUserRecord, sendPasswordResetAction, resendInvitationEmail } from "@/lib/actions/auth";
+import { UserPlusIcon, UsersIcon, Edit3Icon, MailIcon, KeyIcon, RefreshCwIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "@/lib/utils";
 
@@ -38,8 +38,44 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
   const [roles, setRoles] = useState<string[]>(profile?.roles ?? []);
   const [isAdmin, setIsAdmin] = useState(profile?.roles.includes("admin") ?? false);
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
 
   const isEdit = !!profile;
+
+  const handleSendReset = async () => {
+    if (!email) return toast.error("Email is required");
+    setResetLoading(true);
+    try {
+      const result = await sendPasswordResetAction(email);
+      if (result.success) {
+        toast.success("Password reset link has been dispatched to the member's email.");
+      } else {
+        toast.error(result.error || "Failed to send reset link");
+      }
+    } catch (err) {
+      toast.error("Failed to initiate password reset.");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  const handleResendInvitation = async () => {
+    if (!profile?.id) return;
+    setResendLoading(true);
+    try {
+      const result = await resendInvitationEmail(profile.id);
+      if (result.success) {
+        toast.success("Identity credentials and event details have been resent.");
+      } else {
+        toast.error(result.error || "Failed to resend credentials");
+      }
+    } catch (err) {
+      toast.error("Failed to resend invitation.");
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   const handleAction = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,6 +253,36 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
           </div>
 
           <div className="pt-6 border-t flex flex-col gap-4">
+            {isEdit && (
+              <div className="space-y-3 mb-2">
+                <Label className="text-[11px] font-black uppercase tracking-widest text-primary/60">Maintenance & Recovery</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-tight h-10 border-dashed border-primary/20 hover:border-primary/50 hover:bg-primary/5"
+                    disabled={resendLoading || loading}
+                    onClick={handleResendInvitation}
+                  >
+                    {resendLoading ? <RefreshCwIcon className="h-3 w-3 animate-spin" /> : <MailIcon className="h-3 w-3 text-primary" />}
+                    Resend Credentials
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-tight h-10 border-dashed border-primary/20 hover:border-primary/50 hover:bg-primary/5"
+                    disabled={resetLoading || loading}
+                    onClick={handleSendReset}
+                  >
+                    {resetLoading ? <RefreshCwIcon className="h-3 w-3 animate-spin" /> : <KeyIcon className="h-3 w-3 text-amber-600" />}
+                    Reset Password
+                  </Button>
+                </div>
+                <p className="text-[9px] text-muted-foreground italic">Use these actions if the member has lost access or needs to re-establish their identity.</p>
+              </div>
+            )}
             {!isEdit && (
               <div className="bg-emerald-50 p-3 rounded border border-emerald-100">
                 <p className="text-[10px] text-emerald-800 leading-relaxed font-medium">
@@ -224,7 +290,7 @@ export function CreateUserForm({ events, profile }: { events: Event[], profile?:
                 </p>
               </div>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading || resetLoading || resendLoading}>
               {loading ? (isEdit ? "Refining Identity..." : "Establishing Identity...") : (isEdit ? "Confirm Modifications" : "Commit Record")}
             </Button>
           </div>

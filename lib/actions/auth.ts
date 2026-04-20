@@ -267,5 +267,26 @@ export async function resendInvitationEmail(profileId: string) {
     }
 }
 
+export async function sendPasswordResetAction(email: string) {
+    try {
+        const supabaseAdmin = createAdminClient();
+        const domain = await getBaseUrl();
+        
+        const { error } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
+            redirectTo: `${domain}/auth/reset-password`,
+        });
+
+        if (error) return { success: false, error: error.message };
+        
+        return { success: true };
+    } catch (error) {
+        console.error("Error in sendPasswordResetAction:", error);
+        return { 
+            success: false, 
+            error: error instanceof Error ? error.message : "An unexpected error occurred while sending the reset link." 
+        };
+    }
+}
+
 // Keep inviteUser as alias for compatibility if needed, but we'll switch to createUserRecord
 export const inviteUser = createUserRecord;
