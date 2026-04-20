@@ -3,6 +3,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,12 +27,26 @@ function ResetPasswordContent() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 
-    // Check for required params
+    // Check for required params and session
     useEffect(() => {
         const accessToken = searchParams.get("access_token");
         const type = searchParams.get("type");
-        if (!accessToken || type !== "recovery") {
-            setError("This password reset link is invalid or has expired.");
+        const errorParam = searchParams.get("error_description") || searchParams.get("error");
+        
+        if (errorParam) {
+            setError(errorParam.replace(/\+/g, ' '));
+        } else {
+            // Check if we have params OR if we are likely coming from /auth/callback (which establishes a session)
+            // If neither, we show the expiration error.
+            if (!accessToken && type !== "recovery") {
+                // We'll also check if the user is actually authenticated
+                const supabase = createClient();
+                supabase.auth.getSession().then(({ data: { session } }) => {
+                    if (!session) {
+                        setError("This password reset link is invalid or has expired.");
+                    }
+                });
+            }
         }
     }, [searchParams]);
 
@@ -50,12 +65,22 @@ function ResetPasswordContent() {
             await updatePassword(password);
             setSuccess(true);
             toast.success("Password updated successfully");
-            router.push("/dashboard");
+            setTimeout(() => router.push("/dashboard"), 1500);
         } catch (err) {
-            setError(
-                err instanceof Error ? err.message : "Failed to update password. The link may be invalid or expired."
-            );
+            const msg = err instanceof Error ? err.message : "Failed to update password. The link may be invalid or expired.";
+            setError(msg);
+            toast.error(msg);
         }
+    };
+
+    const handlePasswordChange = (val: string) => {
+        setPassword(val);
+        if (error) setError(null);
+    };
+
+    const handleConfirmChange = (val: string) => {
+        setConfirm(val);
+        if (error) setError(null);
     };
 
     return (
@@ -67,12 +92,16 @@ function ResetPasswordContent() {
                 </CardHeader>
                 <CardContent>
                     {error && (
-                        <div className="mb-4 text-red-600 text-center text-sm font-medium">{error}</div>
+                        <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded text-red-600 text-center text-xs font-medium">
+                            {error}
+                        </div>
                     )}
                     {success ? (
-                        <div className="text-green-600 text-center font-medium">Password updated! Redirecting…</div>
-                    ) : null}
-                    {!success && (
+                        <div className="text-green-600 text-center font-medium bg-green-50 p-4 rounded border border-green-100">
+                            ✓ Password updated! <br/>
+                            <span className="text-sm opacity-80 font-normal">Redirecting you to dashboard...</span>
+                        </div>
+                    ) : (
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="password">New Password</Label>
@@ -83,7 +112,7 @@ function ResetPasswordContent() {
                                     required
                                     minLength={8}
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) => handlePasswordChange(e.target.value)}
                                 />
                             </div>
                             <div className="space-y-2">
@@ -95,13 +124,13 @@ function ResetPasswordContent() {
                                     required
                                     minLength={8}
                                     value={confirm}
-                                    onChange={(e) => setConfirm(e.target.value)}
+                                    onChange={(e) => handleConfirmChange(e.target.value)}
                                 />
                             </div>
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={loading || !!error}
+                                disabled={loading}
                             >
                                 {loading ? "Updating…" : "Update Password"}
                             </Button>
