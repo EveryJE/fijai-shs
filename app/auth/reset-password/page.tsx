@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 
+export default function ResetPasswordPage() {  // ← Added this line
     const { loading, updatePassword } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -60,12 +61,8 @@ import { toast } from "sonner";
         <div style={{ backgroundImage: "url('/donate-bg.svg')" }} className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
             <Card className="w-full max-w-md">
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">
-                        Set New Password
-                    </CardTitle>
-                    <CardDescription>
-                        Choose a strong password for your account.
-                    </CardDescription>
+                    <CardTitle className="text-2xl">Set New Password</CardTitle>
+                    <CardDescription>Choose a strong password for your account.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     {error && (
@@ -73,7 +70,8 @@ import { toast } from "sonner";
                     )}
                     {success ? (
                         <div className="text-green-600 text-center font-medium">Password updated! Redirecting…</div>
-                    ) : (
+                    ) : null}
+                    {!success && (
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="password">New Password</Label>

@@ -4,7 +4,7 @@ import { Poppins, Outfit, Montserrat, Geist, Manrope, Playfair_Display, Bungee_S
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
-import { useSupabaseRecoveryRedirect } from "@/lib/hooks/useSupabaseRecoveryRedirect";
+import { SupabaseRecoveryRedirector } from "@/components/SupabaseRecoveryRedirector";
 import React from "react";
 
 export const metadata: Metadata = {
@@ -35,10 +35,6 @@ export const metadata: Metadata = {
   },
 };
 
-function SupabaseRecoveryRedirector() {
-  useSupabaseRecoveryRedirect();
-  return null;
-}
 
 export default function RootLayout({
   children,
