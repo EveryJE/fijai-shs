@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Poppins, Outfit, Montserrat, Geist, Manrope, Playfair_Display, Bungee_Spice, Playwrite_US_Trad_Guides, Monoton } from "next/font/google";
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
+import { useSupabaseRecoveryRedirect } from "@/lib/hooks/useSupabaseRecoveryRedirect";
+import React from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -32,17 +35,20 @@ export const metadata: Metadata = {
   },
 };
 
+function SupabaseRecoveryRedirector() {
+  useSupabaseRecoveryRedirect();
+  return null;
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-      <html
-      lang="en"
-      suppressHydrationWarning
-    >
+    <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className="min-h-full font-geist flex flex-col ">
+        <SupabaseRecoveryRedirector />
         <TooltipProvider>
           {children}
         </TooltipProvider>
