@@ -18,6 +18,8 @@ interface MemberTableClientProps {
 
 export function MemberTableClient({ profiles, events, isAdmin }: MemberTableClientProps) {
     const [statusTab, setStatusTab] = useState("active");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("all");
 
@@ -39,6 +41,17 @@ export function MemberTableClient({ profiles, events, isAdmin }: MemberTableClie
             return matchesStatus && matchesSearch && matchesRole;
         });
     }, [profiles, search, roleFilter, statusTab]);
+
+    // Reset to page 1 when filters change
+    useMemo(() => {
+        setCurrentPage(1);
+    }, [search, roleFilter, statusTab]);
+
+    const totalPages = Math.ceil(filteredProfiles.length / itemsPerPage);
+    const paginatedProfiles = useMemo(() => {
+        const start = (currentPage - 1) * itemsPerPage;
+        return filteredProfiles.slice(start, start + itemsPerPage);
+    }, [filteredProfiles, currentPage]);
 
     return (
         <div className="space-y-4 animate-in fade-in duration-500">
@@ -94,7 +107,7 @@ export function MemberTableClient({ profiles, events, isAdmin }: MemberTableClie
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {filteredProfiles.length === 0 ? (
+                        {paginatedProfiles.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={isAdmin ? 5 : 4} className="h-48 text-center">
                                     <div className="flex flex-col items-center justify-center space-y-2 opacity-60">
@@ -105,7 +118,7 @@ export function MemberTableClient({ profiles, events, isAdmin }: MemberTableClie
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            filteredProfiles.map((profile: any) => (
+                            paginatedProfiles.map((profile: any) => (
                                 <TableRow key={profile.id} className={cn(
                                     "group transition-colors hover:bg-muted/30",
                                     !profile.isActive && "opacity-60 grayscale-[0.5]"
@@ -145,6 +158,47 @@ export function MemberTableClient({ profiles, events, isAdmin }: MemberTableClie
                         )}
                     </TableBody>
                 </Table>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-between px-6 py-4 bg-muted/5 border-t">
+                        <div className="text-[10px] font-bold uppercase text-muted-foreground">
+                            Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredProfiles.length)} of {filteredProfiles.length} records
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                disabled={currentPage === 1}
+                                className="px-3 py-1 text-[10px] font-black uppercase border rounded bg-white hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Previous
+                            </button>
+                            <div className="flex items-center gap-1">
+                                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                    <button
+                                        key={page}
+                                        onClick={() => setCurrentPage(page)}
+                                        className={cn(
+                                            "w-7 h-7 flex items-center justify-center text-[10px] font-black rounded border transition-all",
+                                            currentPage === page
+                                                ? "bg-[#730303] text-white border-[#730303] shadow-sm"
+                                                : "bg-white text-muted-foreground hover:bg-muted"
+                                        )}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
+                            </div>
+                            <button
+                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                disabled={currentPage === totalPages}
+                                className="px-3 py-1 text-[10px] font-black uppercase border rounded bg-white hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
