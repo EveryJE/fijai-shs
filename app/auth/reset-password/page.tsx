@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 
-export default function ResetPasswordPage() {  // ← Added this line
+function ResetPasswordContent() {
     const { loading, updatePassword } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -109,5 +110,22 @@ export default function ResetPasswordPage() {  // ← Added this line
                 </CardContent>
             </Card>
         </div>
+    );
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+                <Card className="w-full max-w-md">
+                    <CardHeader className="text-center">
+                        <CardTitle className="text-2xl">Loading...</CardTitle>
+                        <CardDescription>Please wait while we prepare the page.</CardDescription>
+                    </CardHeader>
+                </Card>
+            </div>
+        }>
+            <ResetPasswordContent />
+        </Suspense>
     );
 }

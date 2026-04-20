@@ -8,6 +8,7 @@ import { SupabaseRecoveryRedirector } from "@/components/SupabaseRecoveryRedirec
 import React from "react";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://fosa96.com"),
   title: {
     default: "Fosa96 Fundraising",
     template: "%s | Fosa96",
