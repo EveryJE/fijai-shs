@@ -88,9 +88,25 @@ export function ImpactTabContent({ donations, digitalCard, rsvp, profile }: Impa
                 <a href={shareLink} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 bg-muted hover:bg-muted/80 transition-all rounded-md border flex items-center justify-center text-sm font-medium text-foreground">
                   Open Page →
                 </a>
-                <a href={`https://wa.me/?text=${encodeURIComponent('Support the Fijai SHS Fundraiser! Donate through my link here: ' + shareLink)}`} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 bg-emerald-600 hover:bg-emerald-700  transition-all rounded-md flex items-center justify-center text-sm font-semibold text-white">
-                  Share on WhatsApp
-                </a>
+                <Button
+                  className="flex-1 h-9 bg-primary hover:bg-primary/90 transition-all rounded-md flex items-center justify-center text-sm font-semibold text-white"
+                  onClick={async () => {
+                    const title = "Support the Fijai SHS Fundraiser!";
+                    const text = `Donate through my link here: ${shareLink}`;
+                    try {
+                      if (navigator.share) {
+                        await navigator.share({ title, text, url: shareLink });
+                      } else {
+                        await navigator.clipboard.writeText(shareLink);
+                        toast.success("Link copied to clipboard! Spread the impact.");
+                      }
+                    } catch (error) {
+                      toast.error("Could not share the link.");
+                    }
+                  }}
+                >
+                  <Share2Icon className="mr-2 h-4 w-4" /> Share
+                </Button>
               </div>
             </CardContent>
           </Card>

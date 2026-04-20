@@ -72,7 +72,7 @@ export default async function ProfilePage() {
                 </div>
             </div>
 
-            <Tabs defaultValue="general" className="space-y-10">
+            <Tabs defaultValue={(isRSVP || isCardholder) ? "impact" : "general"} className="space-y-10">
                 <TabsList variant="institutional" className="p-1">
                     <TabsTrigger value="general" className="px-10 py-2.5 font-black uppercase tracking-[2px] text-[10px]">
                         <UserCircleIcon className="mr-2 h-4 w-4" />

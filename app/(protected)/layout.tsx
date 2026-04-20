@@ -53,7 +53,10 @@ export default async function ProtectedLayout(props: {
     if (params?.slug && Array.isArray(params.slug)) {
         pathname += "/" + params.slug.join("/");
     }
-    // Remove server-side permission redirect; use client RouteGuard instead
+    // Redirect non-admins to profile if they land on /dashboard
+    if (!isSuperAdmin && !allRoles.includes("admin") && pathname === "/dashboard") {
+        redirect("/dashboard/profile");
+    }
 
     return (
         <SidebarProvider>
