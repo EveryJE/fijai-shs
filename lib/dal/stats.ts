@@ -71,14 +71,25 @@ export const getRecentTransactions = cache(async (limit = 10) => {
     });
 
     return transactions.map(tx => ({
-        ...tx,
-        amount: Number(tx.amount),
+        id: tx.id,
+        reference: tx.reference,
+        amount: Number(tx.amount || 0),
         netAmount: Number(tx.netAmount || 0),
         fees: Number(tx.fees || 0),
+        currency: tx.currency,
+        status: tx.status,
+        paymentMethod: tx.paymentMethod,
+        donorName: tx.donorName,
+        donorEmail: tx.donorEmail,
+        createdAt: tx.createdAt,
         donationItem: tx.donationItem ? {
-            ...tx.donationItem,
+            id: tx.donationItem.id,
+            name: tx.donationItem.name,
             targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
-        } : null
+        } : null,
+        event: tx.event,
+        contactPerson: tx.contactPerson,
+        digitalCard: tx.digitalCard
     }));
 });
 
@@ -96,14 +107,25 @@ export const getDonationsByMethod = cache(async (method: "paystack" | "manual", 
     });
 
     return donations.map(tx => ({
-        ...tx,
+        id: tx.id,
+        reference: tx.reference,
         amount: Number(tx.amount),
         netAmount: Number(tx.netAmount || 0),
         fees: Number(tx.fees || 0),
+        currency: tx.currency,
+        status: tx.status,
+        paymentMethod: tx.paymentMethod,
+        donorName: tx.donorName,
+        donorEmail: tx.donorEmail,
+        createdAt: tx.createdAt,
         donationItem: tx.donationItem ? {
-            ...tx.donationItem,
+            id: tx.donationItem.id,
+            name: tx.donationItem.name,
             targetAmount: tx.donationItem.targetAmount ? Number(tx.donationItem.targetAmount) : null
-        } : null
+        } : null,
+        event: tx.event ? { title: tx.event.title } : null,
+        contactPerson: tx.contactPerson,
+        digitalCard: tx.digitalCard
     }));
 });
 

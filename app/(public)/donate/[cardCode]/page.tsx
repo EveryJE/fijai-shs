@@ -36,9 +36,15 @@ export default async function DonatePage({ params }: DonatePageProps) {
     }
     
     const categories = (eventEntity.categories || []).map((cat: any) => ({
-      ...cat,
+      id: cat.id,
+      name: cat.name,
+      color: cat.color,
+      displayOrder: cat.displayOrder,
       items: (cat.donationItems || []).map((item: any) => ({
-        ...item,
+        id: item.id,
+        name: item.name,
+        icon: item.icon,
+        color: item.color,
         targetAmount: item.targetAmount ? item.targetAmount.toString() : undefined,
         currency: item.currency || "GHS",
       })),
@@ -67,7 +73,13 @@ export default async function DonatePage({ params }: DonatePageProps) {
       <DonateFormClient
         digitalCard={digitalCard || undefined}
         contactPerson={contactPerson || undefined}
-        event={eventEntity as any}
+        event={{
+          id: eventEntity.id,
+          title: eventEntity.title,
+          description: eventEntity.description,
+          startDate: eventEntity.startDate,
+          endDate: eventEntity.endDate,
+        }}
         categories={categories}
         rsvps={rsvps}
         totalRevenue={totalRevenue}

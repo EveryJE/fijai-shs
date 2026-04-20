@@ -26,9 +26,15 @@ export default async function Home() {
     }
     
     const categories = (event.categories || []).map((cat: any) => ({
-      ...cat,
+      id: cat.id,
+      name: cat.name,
+      color: cat.color,
+      displayOrder: cat.displayOrder,
       items: (cat.donationItems || []).map((item: any) => ({
-        ...item,
+        id: item.id,
+        name: item.name,
+        icon: item.icon,
+        color: item.color,
         targetAmount: item.targetAmount ? item.targetAmount.toString() : undefined,
         currency: item.currency || "GHS",
       })),
@@ -54,7 +60,13 @@ export default async function Home() {
 
     return (
       <DonateFormClient
-        event={event as any}
+        event={{
+          id: event.id,
+          title: event.title,
+          description: event.description,
+          startDate: event.startDate,
+          endDate: event.endDate
+        }}
         categories={categories}
         rsvps={rsvps}
         totalRevenue={totalRevenue}
