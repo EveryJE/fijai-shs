@@ -4,6 +4,7 @@ import { render } from "@react-email/render";
 import { sendMail } from "@/lib/mail";
 import DigitalCardEmail from "@/emails/digital-card";
 import ContactPersonEmail from "@/emails/contact-person";
+import PasswordResetEmail from "@/emails/password-reset";
 import { getBaseUrl } from "../server-utils";
 
 
@@ -74,6 +75,33 @@ export async function sendContactPersonDetails(contact: {
     await sendMail({
         to: contact.email,
         subject: `Institutional Role: Contact Person for ${contact.eventTitle}`,
+        //@ts-ignore
+        html,
+    });
+}
+
+/**
+ * Send a password reset OTP to a user.
+ */
+export async function sendPasswordResetEmail({
+    email,
+    fullName,
+    token,
+}: {
+    email: string;
+    fullName: string;
+    token: string;
+}) {
+    const html = await render(
+        PasswordResetEmail({
+            fullName,
+            token,
+        })
+    );
+
+    await sendMail({
+        to: email,
+        subject: "Reset Your Fijai SHS Alumni Password",
         //@ts-ignore
         html,
     });

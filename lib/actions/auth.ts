@@ -1,9 +1,11 @@
 "use server";
 
+
 import { prisma } from "@/lib/prisma";
 import { createAdminClient } from "@/utils/supabase/admin";
+import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-import { sendContactPersonDetails, sendDigitalCardDetails } from "./emails";
+import { sendContactPersonDetails, sendDigitalCardDetails, sendPasswordResetEmail } from "./emails";
 import { getBaseUrl } from "../server-utils";
 
 
@@ -271,22 +273,131 @@ export async function resendInvitationEmail(profileId: string) {
 
 export async function sendPasswordResetAction(email: string) {
     try {
-        const supabaseAdmin = createAdminClient();
-        const domain = await getBaseUrl();
-        
-        const { error } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
-            redirectTo: `${domain}/auth/reset-password`,
+        const normalizedEmail = email.toLowerCase();
+        const profile = await prisma.profile.findUnique({
+            where: { email: normalizedEmail }
         });
 
-        if (error) return { success: false, error: error.message };
+        if (!profile) {
+            return { success: true }; 
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); 
+        // Save OTP to database
+        await prisma.passwordResetToken.create({
+            data: {
+                email: normalizedEmail,
+                token: otp,
+                expiresAt,
+            }
+        });
+
+        // Send email
+        await sendPasswordResetEmail({
+            email: normalizedEmail,
+            fullName: profile.fullName || "Member",
+            token: otp,
+        });
         
         return { success: true };
     } catch (error) {
         console.error("Error in sendPasswordResetAction:", error);
         return { 
             success: false, 
-            error: error instanceof Error ? error.message : "An unexpected error occurred while sending the reset link." 
+            error: error instanceof Error ? error.message : "An unexpected error occurred while sending the recovery code." 
         };
+    }
+}
+
+export async function verifyPasswordResetOTP(email: string, otp: string) {
+    try {
+        const normalizedEmail = email.toLowerCase();
+        const resetToken = await prisma.passwordResetToken.findFirst({
+            where: {
+                email: normalizedEmail,
+                token: otp,
+                expiresAt: { gt: new Date() }
+            },
+            orderBy: { createdAt: "desc" }
+        });
+
+        if (!resetToken) {
+            return { success: false, error: "Invalid or expired recovery code." };
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error in verifyPasswordResetOTP:", error);
+        return { success: false, error: "Verification failed." };
+    }
+}
+
+export async function resetPasswordWithOTP({
+    email,
+    otp,
+    newPassword
+}: {
+    email: string;
+    otp: string;
+    newPassword: string;
+}) {
+    try {
+        const normalizedEmail = email.toLowerCase();
+        
+        // 1. Verify OTP again for security
+        const resetToken = await prisma.passwordResetToken.findFirst({
+            where: {
+                email: normalizedEmail,
+                token: otp,
+                expiresAt: { gt: new Date() }
+            },
+            orderBy: { createdAt: "desc" }
+        });
+
+        if (!resetToken) {
+            return { success: false, error: "Invalid or expired session. Please start over." };
+        }
+
+        // 2. Find Profile to get ID
+        const profile = await prisma.profile.findUnique({
+            where: { email: normalizedEmail }
+        });
+
+        if (!profile) return { success: false, error: "Account not found." };
+
+        // 3. Update password in Supabase Auth via Admin
+        const supabaseAdmin = createAdminClient();
+        const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+            profile.id,
+            { password: newPassword }
+        );
+
+        if (updateError) return { success: false, error: updateError.message };
+
+        // 4. Delete the token so it can't be used again
+        await prisma.passwordResetToken.delete({
+            where: { id: resetToken.id }
+        });
+
+        // 5. Automatically authorize the user (sign in)
+        const supabase = await createClient();
+        const { error: loginError } = await supabase.auth.signInWithPassword({
+            email: normalizedEmail,
+            password: newPassword,
+        });
+
+        if (loginError) {
+            console.error("Auth error after reset:", loginError);
+            // We still return success: true because the password WAS reset, 
+            // but the user might need to log in manually if auto-login fails.
+            return { success: true, autoLoginFailed: true };
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error in resetPasswordWithOTP:", error);
+        return { success: false, error: "Failed to reset password." };
     }
 }
 

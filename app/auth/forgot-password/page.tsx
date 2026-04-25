@@ -3,7 +3,6 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,24 +15,52 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 
+import { sendPasswordResetAction, verifyPasswordResetOTP } from "@/lib/actions/auth";
+import { useRouter } from "next/navigation";
+
 function ForgotPasswordContent() {
-    const { loading, sendRecoveryOtp } = useAuth();
+    const router = useRouter();
     const searchParams = useSearchParams();
     const expired = searchParams.get("expired");
 
     const [email, setEmail] = useState("");
-    const [sent, setSent] = useState(false);
+    const [otp, setOtp] = useState("");
+    const [step, setStep] = useState<"email" | "otp">("email");
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSendEmail = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
         try {
-            await sendRecoveryOtp(email);
-            setSent(true);
-            toast.success("Recovery email sent");
+            const result = await sendPasswordResetAction(email);
+            if (result.success) {
+                setStep("otp");
+                toast.success("Recovery code sent to your email");
+            } else {
+                toast.error(result.error || "Failed to send code");
+            }
         } catch (err) {
-            toast.error(
-                err instanceof Error ? err.message : "Failed to send email"
-            );
+            toast.error("An unexpected error occurred");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerifyOtp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const result = await verifyPasswordResetOTP(email, otp);
+            if (result.success) {
+                // Redirect to reset password page with email and otp as params
+                router.push(`/auth/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`);
+            } else {
+                toast.error(result.error || "Invalid code");
+            }
+        } catch (err) {
+            toast.error("Verification failed");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -49,37 +76,20 @@ function ForgotPasswordContent() {
                 </div>
                 <CardTitle className="text-2xl">Reset Password</CardTitle>
                 <CardDescription>
-                    Enter your institutional email and we'll send you a recovery link.
+                    {step === "email" 
+                        ? "Enter your institutional email and we'll send you a recovery code." 
+                        : "Enter the 6-digit recovery code we sent to your email."}
                 </CardDescription>
                 {expired && (
                     <p className="mt-2 text-sm text-destructive font-medium bg-destructive/10 py-1 px-3 rounded-full inline-block">
-                        Reset link expired. Please request a new one.
+                        Session expired. Please request a new code.
                     </p>
                 )}
             </CardHeader>
 
             <CardContent>
-                {sent ? (
-                    <div className="space-y-6 text-center py-4">
-                        <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            We've dispatched a recovery link to{" "}
-                            <strong className="text-foreground">{email}</strong>. Please check your inbox and spam folder.
-                        </p>
-                        <Button
-                            variant="outline"
-                            className="w-full"
-                            onClick={() => setSent(false)}
-                        >
-                            Use a different email
-                        </Button>
-                    </div>
-                ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                {step === "email" ? (
+                    <form onSubmit={handleSendEmail} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="email">Email Identifier</Label>
                             <Input
@@ -97,12 +107,42 @@ function ForgotPasswordContent() {
                             className="w-full h-11 text-base font-semibold"
                             disabled={loading}
                         >
-                            {loading ? "Processing..." : "Send Recovery Link"}
+                            {loading ? "Processing..." : "Send Recovery Code"}
                         </Button>
+                    </form>
+                ) : (
+                    <form onSubmit={handleVerifyOtp} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="otp">Recovery Code</Label>
+                            <Input
+                                id="otp"
+                                type="text"
+                                placeholder="123456"
+                                required
+                                maxLength={6}
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                                className="h-12 text-center text-2xl tracking-[0.5em] font-bold"
+                            />
+                        </div>
+                        <Button
+                            type="submit"
+                            className="w-full h-11 text-base font-semibold"
+                            disabled={loading}
+                        >
+                            {loading ? "Verifying..." : "Verify Code"}
+                        </Button>
+                        <button
+                            type="button"
+                            onClick={() => setStep("email")}
+                            className="w-full text-xs text-muted-foreground hover:text-primary transition-colors"
+                        >
+                            Didn't get a code? Try again
+                        </button>
                     </form>
                 )}
 
-                {!sent && (
+                {step === "email" && (
                     <div className="mt-8 pt-6 border-t text-center">
                         <Link
                             href="/auth/login"

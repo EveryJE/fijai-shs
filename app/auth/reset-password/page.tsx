@@ -3,8 +3,6 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,8 +15,9 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 
+import { resetPasswordWithOTP } from "@/lib/actions/auth";
+
 function ResetPasswordContent() {
-    const { loading, updatePassword } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -26,32 +25,22 @@ function ResetPasswordContent() {
     const [confirm, setConfirm] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    // Check for required params and session
+    const email = searchParams.get("email");
+    const otp = searchParams.get("otp");
+
+    // Check for required params
     useEffect(() => {
-        const accessToken = searchParams.get("access_token");
-        const type = searchParams.get("type");
-        const errorParam = searchParams.get("error_description") || searchParams.get("error");
-        
-        if (errorParam) {
-            setError(errorParam.replace(/\+/g, ' '));
-        } else {
-            // Check if we have params OR if we are likely coming from /auth/callback (which establishes a session)
-            // If neither, we show the expiration error.
-            if (!accessToken && type !== "recovery") {
-                // We'll also check if the user is actually authenticated
-                const supabase = createClient();
-                supabase.auth.getSession().then(({ data: { session } }) => {
-                    if (!session) {
-                        setError("This password reset link is invalid or has expired.");
-                    }
-                });
-            }
+        if (!email || !otp) {
+            setError("Invalid session. Please start the password reset process again.");
         }
-    }, [searchParams]);
+    }, [email, otp]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!email || !otp) return;
+        
         setError(null);
         if (password.length < 8) {
             setError("Password must be at least 8 characters");
@@ -61,15 +50,29 @@ function ResetPasswordContent() {
             setError("Passwords do not match");
             return;
         }
+
+        setLoading(true);
         try {
-            await updatePassword(password);
-            setSuccess(true);
-            toast.success("Password updated successfully");
-            setTimeout(() => router.push("/dashboard"), 1500);
+            const result = await resetPasswordWithOTP({
+                email,
+                otp,
+                newPassword: password
+            });
+
+            if (result.success) {
+                setSuccess(true);
+                toast.success("Password updated successfully");
+                setTimeout(() => router.push("/dashboard"), 1500);
+            } else {
+                setError(result.error || "Failed to update password.");
+                toast.error(result.error || "Failed to update password.");
+            }
         } catch (err) {
-            const msg = err instanceof Error ? err.message : "Failed to update password. The link may be invalid or expired.";
+            const msg = "An unexpected error occurred.";
             setError(msg);
             toast.error(msg);
+        } finally {
+            setLoading(false);
         }
     };
 

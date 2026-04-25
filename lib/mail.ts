@@ -30,11 +30,16 @@ export async function sendMail({ to, subject, html, text }: SendMailOptions) {
     const fromName = process.env.SMTP_FROM_NAME || "Fijai SHS Alumni";
     const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
 
-    return transporter.sendMail({
-        from: `"${fromName}" <${fromEmail}>`,
-        to,
-        subject,
-        html,
-        text: text || html.replace(/<[^>]*>/g, ""),
-    });
+    try {
+        const info = await transporter.sendMail({
+            from: `"${fromName}" <${fromEmail}>`,
+            to,
+            subject,
+            html,
+            text: text || html.replace(/<[^>]*>/g, ""),
+        });
+        return info;
+    } catch (error) {
+        throw error;
+    }
 }

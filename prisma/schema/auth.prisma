@@ -1,0 +1,9 @@
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   // 6-digit OTP
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
