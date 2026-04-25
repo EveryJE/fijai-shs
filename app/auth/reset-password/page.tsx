@@ -62,7 +62,7 @@ function ResetPasswordContent() {
             if (result.success) {
                 setSuccess(true);
                 toast.success("Password updated successfully");
-                setTimeout(() => router.push("/dashboard"), 1500);
+                setTimeout(() => router.push("/dashboard/profile"), 1500);
             } else {
                 setError(result.error || "Failed to update password.");
                 toast.error(result.error || "Failed to update password.");
