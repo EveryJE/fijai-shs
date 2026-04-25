@@ -40,7 +40,7 @@ function ResetPasswordContent() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !otp) return;
-        
+
         setError(null);
         if (password.length < 8) {
             setError("Password must be at least 8 characters");
@@ -87,7 +87,7 @@ function ResetPasswordContent() {
     };
 
     return (
-        <div style={{ backgroundImage: "url('/donate-bg.svg')" }} className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+        <div style={{ backgroundImage: "url('/donate-bg.svg')" }} className="flex min-h-dvh items-center justify-center bg-muted/40 px-4">
             <Card className="w-full max-w-md border-none border-secondary-400">
                 <CardHeader className="text-center">
                     <div className="mx-auto mb-4 w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center p-2">
@@ -108,7 +108,7 @@ function ResetPasswordContent() {
                     )}
                     {success ? (
                         <div className="text-green-600 text-center font-medium bg-green-50 p-4 rounded border border-green-100">
-                            ✓ Password updated! <br/>
+                            ✓ Password updated! <br />
                             <span className="text-sm opacity-80 font-normal">Redirecting you to dashboard...</span>
                         </div>
                     ) : (
@@ -155,7 +155,7 @@ function ResetPasswordContent() {
 export default function ResetPasswordPage() {
     return (
         <Suspense fallback={
-            <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+            <div className="flex min-h-dvh items-center justify-center bg-muted/40 px-4">
                 <Card className="w-full max-w-md">
                     <CardHeader className="text-center">
                         <CardTitle className="text-2xl">Loading...</CardTitle>

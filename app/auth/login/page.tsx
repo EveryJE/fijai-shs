@@ -38,9 +38,9 @@ function LoginContent() {
     };
 
     return (
-        <div  style={{
-        backgroundImage: "url('/donate-bg.svg')",
-      }} className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+        <div style={{
+            backgroundImage: "url('/donate-bg.svg')",
+        }} className="flex min-h-dvh items-center justify-center bg-muted/40 px-4">
             <Card className="w-full max-w-md border-none border-secondary-400">
                 <CardHeader className="text-center">
                     <div className="mx-auto mb-4 w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center p-2">

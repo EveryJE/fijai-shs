@@ -10,7 +10,7 @@ import {
 
 export default function AuthCodeErrorPage() {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+        <div className="flex min-h-dvh items-center justify-center bg-muted/40 px-4">
             <Card className="w-full max-w-md text-center">
                 <CardHeader>
                     <CardTitle className="text-2xl">
@@ -21,7 +21,7 @@ export default function AuthCodeErrorPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Button 
+                    <Button
                         className="w-full"
                         render={
                             <Link href="/auth/login">Back to Login</Link>

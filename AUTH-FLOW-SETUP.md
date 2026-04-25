@@ -449,7 +449,7 @@ function redirectTo(request: Request, origin: string, path: string) {
 ```ts
 export default function AuthLayout({ children }: { readonly children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-background flex flex-col lg:flex-row font-poppins">
+    <div className="min-h-dvh bg-background flex flex-col lg:flex-row font-poppins">
       {/* Left: Africa map with rotating images */}
       <div className="relative w-full lg:w-1/2 h-65 lg:h-screen">
         <AfricaMap images={[...]} interval={9000} />

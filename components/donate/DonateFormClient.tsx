@@ -139,24 +139,24 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
 
   return (
     <div
-      className="bg-cover bg-primary/10 bg-center bg-no-repeat bg-fixed min-h-screen pb-12"
+      className="bg-cover bg-primary/10 bg-center bg-no-repeat bg-fixed min-h-dvh pb-12"
       style={{
         backgroundImage: "url('/donate-bg.svg')",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col lg:flex-row items-start justify-center gap-8 pt-4">
-        
+
         {/* Main Form Container - Preserving original max-w-3xl look */}
         <div className="max-w-3xl w-full bg-white/50 backdrop-blur-sm overflow-hidden shrink-0">
-          <div className="h-48 bg-[url('/school-gate.jpg')] bg-cover bg-center rounded-t-xl"/>
-           <DonateHeader
-              eventTitle={event.title}
-              eventDescription={event.description || "Establish your impact and contribute to the Fijai SHS Alumni Institutional Fund."}
-              digitalCodeUserName={digitalCard?.holderName || digitalCard?.alias || contactPerson?.name || 'General Fund'}
-              organizationName={organizationName}
-            />
+          <div className="h-48 bg-[url('/school-gate.jpg')] bg-cover bg-center rounded-t-xl" />
+          <DonateHeader
+            eventTitle={event.title}
+            eventDescription={event.description || "Establish your impact and contribute to the Fijai SHS Alumni Institutional Fund."}
+            digitalCodeUserName={digitalCard?.holderName || digitalCard?.alias || contactPerson?.name || 'General Fund'}
+            organizationName={organizationName}
+          />
           <div className="p-4 md:p-6">
-           
+
             <DonateForm
               categories={categories}
               onSubmit={handleDonate}
@@ -172,10 +172,10 @@ export const DonateFormClient: React.FC<DonateFormClientProps> = ({
 
         {/* RSVP Side Content - Peer to the form */}
         <div className="w-full md:w-[350px] sticky top-4">
-          <RSVPList 
+          <RSVPList
             id="rsvp-section"
-            rsvps={rsvps} 
-            organizationName={organizationName} 
+            rsvps={rsvps}
+            organizationName={organizationName}
           />
         </div>
 

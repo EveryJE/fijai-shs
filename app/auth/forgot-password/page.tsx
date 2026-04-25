@@ -76,8 +76,8 @@ function ForgotPasswordContent() {
                 </div>
                 <CardTitle className="text-2xl">Reset Password</CardTitle>
                 <CardDescription>
-                    {step === "email" 
-                        ? "Enter your institutional email and we'll send you a recovery code." 
+                    {step === "email"
+                        ? "Enter your institutional email and we'll send you a recovery code."
                         : "Enter the 6-digit recovery code we sent to your email."}
                 </CardDescription>
                 {expired && (
@@ -161,7 +161,7 @@ export default function ForgotPasswordPage() {
     return (
         <div style={{
             backgroundImage: "url('/donate-bg.svg')",
-        }} className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+        }} className="flex min-h-dvh items-center justify-center bg-muted/40 px-4">
             <Suspense fallback={<div>Loading...</div>}>
                 <ForgotPasswordContent />
             </Suspense>

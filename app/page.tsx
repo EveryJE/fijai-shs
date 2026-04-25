@@ -12,7 +12,7 @@ export default async function Home() {
 
     if (!activeEventSummary) {
         return (
-            <div className="flex items-center justify-center min-h-screen p-4 text-center">
+            <div className="flex items-center justify-center min-h-dvh p-4 text-center">
                 <p className="text-xl text-muted-foreground">No active campaigns at the moment. Please check back later!</p>
             </div>
         );
