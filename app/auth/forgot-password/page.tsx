@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,36 @@ function ForgotPasswordContent() {
     const [otp, setOtp] = useState("");
     const [step, setStep] = useState<"email" | "otp">("email");
     const [loading, setLoading] = useState(false);
+
+    // Auto-fill and verify if params are present
+    useEffect(() => {
+        const emailParam = searchParams.get("email");
+        const tokenParam = searchParams.get("token");
+
+        if (emailParam && tokenParam) {
+            setEmail(emailParam);
+            setOtp(tokenParam);
+            setStep("otp");
+            
+            // Auto-verify
+            const autoVerify = async () => {
+                setLoading(true);
+                try {
+                    const result = await verifyPasswordResetOTP(emailParam, tokenParam);
+                    if (result.success) {
+                        router.push(`/auth/reset-password?email=${encodeURIComponent(emailParam)}&otp=${encodeURIComponent(tokenParam)}`);
+                    } else {
+                        toast.error("Automatic verification failed. Please check the code manually.");
+                    }
+                } catch (err) {
+                    console.error("Auto-verify error:", err);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            autoVerify();
+        }
+    }, [searchParams, router]);
 
     const handleSendEmail = async (e: React.FormEvent) => {
         e.preventDefault();

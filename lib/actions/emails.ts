@@ -96,6 +96,7 @@ export async function sendPasswordResetEmail({
         PasswordResetEmail({
             fullName,
             token,
+            email,
         })
     );
 
