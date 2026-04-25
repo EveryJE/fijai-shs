@@ -25,102 +25,66 @@ export const PasswordResetEmail = ({
     token,
     email,
 }: PasswordResetEmailProps) => {
-    const baseUrl = "https://fosa96.vercel.app"; // This should ideally be dynamic
+    const baseUrl = "https://fosa96.vercel.app";
     const verifyUrl = `${baseUrl}/auth/forgot-password?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
 
     return (
         <Html>
             <Head />
-            <Preview>Reset your Fijai SHS Alumni password</Preview>
+            <Preview>Reset your password</Preview>
             <Body style={main}>
                 <Section style={mainTable}>
                     <Container style={container}>
                         {/* Pan-African Stripe */}
                         <Section style={{ width: "100%", height: "6px" }}>
                             <Row>
-                                <Column style={{ backgroundColor: "#c41e3a", height: "6px" }} />
-                                <Column style={{ backgroundColor: "#ffb800", height: "6px" }} />
-                                <Column style={{ backgroundColor: "#228b22", height: "6px" }} />
+                                <Column style={{ backgroundColor: "#730303", height: "6px" }} />
+                                <Column style={{ backgroundColor: "#DAA520", height: "6px" }} />
+                                <Column style={{ backgroundColor: "#730303", height: "6px" }} />
                             </Row>
                         </Section>
 
-                        {/* Logo Section */}
                         <Section style={logoSection}>
                             <Img
                                 src="https://fijai-shs.vercel.app/logo.png"
-                                alt="Fijai SHS Logo"
-                                width="100"
-                                height="100"
+                                alt="Logo"
+                                width="80"
+                                height="80"
                                 style={logo}
                             />
                         </Section>
 
-                        {/* Content Section */}
                         <Section style={contentSection}>
-                            <Heading style={h1}>Reset Your Password 🔐</Heading>
+                            <Heading style={h1}>Reset Password</Heading>
                             <Text style={text}>
                                 Hi <strong>{fullName}</strong>,
                             </Text>
                             <Text style={text}>
-                                We received a request to reset your password for your Fijai SHS Alumni account. Click the button below to verify automatically:
+                                Tap the button below to verify your identity and continue with your password reset:
                             </Text>
 
-                            {/* Magic Link Button */}
                             <Section style={buttonContainer}>
                                 <Link href={verifyUrl} style={button}>
-                                    Verify Automatically
+                                    Reset Password
                                 </Link>
                             </Section>
 
-                            <Text style={{ ...text, textAlign: "center" as const, marginTop: "32px" }}>
-                                Or enter this code manually on the reset page:
+                            <Text style={subText}>
+                                Or use this verification code:
                             </Text>
 
-                            {/* OTP Code Display */}
                             <Section style={otpContainer}>
                                 <Text style={otpText}>{token}</Text>
                             </Section>
 
-                            {/* Security Notice */}
-                            <Section style={securityNotice}>
-                                <Text style={securityText}>
-                                    ⚠️ This code expires in <strong>10 minutes</strong>. If you didn't request this, please ignore this email.
-                                </Text>
-                            </Section>
-
-                            <Section style={divider} />
-
-                            <Text style={footerText}>
-                                Choosing a strong password helps keep your account secure.
+                            <Text style={footerNote}>
+                                ⚠️ Expires in 10 minutes. If you didn't request this, you can safely ignore this email.
                             </Text>
-
-                            {/* Security Tips */}
-                            <Section style={securityTips}>
-                                <Text style={tipsTitle}>🛡️ Security Tips:</Text>
-                                <ul style={tipsList}>
-                                    <li>Choose a strong, unique password</li>
-                                    <li>Never share your password with anyone</li>
-                                    <li>Consider using a password manager</li>
-                                </ul>
-                            </Section>
                         </Section>
 
-                        {/* Footer Stripe */}
-                        <Section style={{ width: "100%", height: "4px" }}>
-                            <Row>
-                                <Column style={{ backgroundColor: "#c41e3a", height: "4px" }} />
-                                <Column style={{ backgroundColor: "#ffb800", height: "4px" }} />
-                                <Column style={{ backgroundColor: "#228b22", height: "4px" }} />
-                            </Row>
-                        </Section>
-
-                        {/* Footer Section */}
                         <Section style={footer}>
-                            <Text style={footerSubText}>
-                                Didn't request a password reset? You can safely ignore this email. Your password will remain unchanged.
-                            </Text>
                             <Text style={copyrightText}>
-                                © 2026 Fijai SHS Alumni Association. All rights reserved.
+                                © 2026 Fijai SHS Alumni.
                             </Text>
                         </Section>
                     </Container>
@@ -145,13 +109,13 @@ const container = {
     backgroundColor: "#ffffff",
     borderRadius: "12px",
     overflow: "hidden" as const,
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.07)",
-    maxWidth: "600px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
+    maxWidth: "480px",
     margin: "0 auto",
 };
 
 const logoSection = {
-    padding: "48px 48px 32px",
+    padding: "32px 32px 16px",
     textAlign: "center" as const,
 };
 
@@ -161,122 +125,78 @@ const logo = {
 };
 
 const contentSection = {
-    padding: "20px 48px 40px",
+    padding: "0 40px 40px",
+    textAlign: "center" as const,
 };
 
 const h1 = {
     color: "#1a1a1a",
-    margin: "0 0 16px",
-    fontSize: "28px",
+    margin: "0 0 24px",
+    fontSize: "24px",
     fontWeight: "700",
-    lineHeight: "1.3",
 };
 
 const text = {
     color: "#4a5568",
-    fontSize: "16px",
-    lineHeight: "1.6",
-    margin: "0 0 12px",
+    fontSize: "15px",
+    lineHeight: "1.5",
+    margin: "0 0 16px",
+};
+
+const subText = {
+    color: "#718096",
+    fontSize: "13px",
+    margin: "32px 0 8px",
 };
 
 const buttonContainer = {
-    textAlign: "center" as const,
-    margin: "32px 0",
+    margin: "24px 0",
 };
 
 const button = {
     backgroundColor: "#730303",
     borderRadius: "8px",
     color: "#fff",
-    fontSize: "16px",
+    fontSize: "15px",
     fontWeight: "600",
     textDecoration: "none",
     textAlign: "center" as const,
     display: "inline-block",
-    padding: "16px 32px",
+    padding: "14px 28px",
 };
 
 const otpContainer = {
-    backgroundColor: "#fffbeb",
-    border: "2px dashed #ffb800",
-    borderRadius: "12px",
-    padding: "24px",
-    margin: "16px 0 32px",
-    textAlign: "center" as const,
+    backgroundColor: "#f8fafc",
+    border: "1px solid #e2e8f0",
+    borderRadius: "8px",
+    padding: "16px",
+    margin: "0 0 32px",
 };
 
 const otpText = {
-    fontSize: "36px",
+    fontSize: "32px",
     fontWeight: "700",
-    letterSpacing: "8px",
+    letterSpacing: "6px",
     color: "#1a1a1a",
     margin: "0",
     fontFamily: '"Courier New", monospace',
 };
 
-const securityNotice = {
-    backgroundColor: "#fef2f2",
-    borderRadius: "8px",
-    padding: "16px",
-    marginBottom: "24px",
-};
-
-const securityText = {
-    color: "#991b1b",
-    fontSize: "14px",
+const footerNote = {
+    color: "#a0aec0",
+    fontSize: "12px",
     lineHeight: "1.5",
     margin: "0",
 };
 
-const divider = {
-    borderTop: "1px solid #e2e8f0",
-    margin: "32px 0",
-};
-
-const footerText = {
-    color: "#718096",
-    fontSize: "14px",
-    lineHeight: "1.6",
-    margin: "0",
-    textAlign: "center" as const,
-};
-
-const securityTips = {
-    marginTop: "32px",
-    backgroundColor: "#f7fafc",
-    borderRadius: "8px",
-    padding: "20px",
-};
-
-const tipsTitle = {
-    color: "#4a5568",
-    fontSize: "14px",
-    fontWeight: "600",
-    margin: "0 0 12px",
-};
-
-const tipsList = {
-    color: "#718096",
-    fontSize: "13px",
-    lineHeight: "1.8",
-    margin: "0",
-    paddingLeft: "20px",
-};
-
 const footer = {
-    padding: "32px 48px",
-    backgroundColor: "#f7fafc",
-};
-
-const footerSubText = {
-    color: "#a0aec0",
-    fontSize: "13px",
-    lineHeight: "1.6",
-    margin: "0 0 8px",
+    padding: "24px 40px",
+    backgroundColor: "#f8fafc",
+    textAlign: "center" as const,
 };
 
 const copyrightText = {
     color: "#cbd5e0",
-    fontSize: "12px",
+    fontSize: "11px",
     margin: "0",
 };
