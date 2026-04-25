@@ -85,10 +85,17 @@ function ResetPasswordContent() {
 
     return (
         <div style={{ backgroundImage: "url('/donate-bg.svg')" }} className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
-            <Card className="w-full max-w-md">
+            <Card className="w-full max-w-md border-none border-secondary-400">
                 <CardHeader className="text-center">
+                    <div className="mx-auto mb-4 w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center p-2">
+                        <img
+                            src="/logo.png"
+                            alt="Fijai SHS"
+                            className="w-16 h-16 object-contain"
+                        />
+                    </div>
                     <CardTitle className="text-2xl">Set New Password</CardTitle>
-                    <CardDescription>Choose a strong password for your account.</CardDescription>
+                    <CardDescription>Secure your institutional account with a new password.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     {error && (

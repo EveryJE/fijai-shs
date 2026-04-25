@@ -38,14 +38,21 @@ function ForgotPasswordContent() {
     };
 
     return (
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md border-none border-secondary-400">
             <CardHeader className="text-center">
+                <div className="mx-auto mb-4 w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center p-2">
+                    <img
+                        src="/logo.png"
+                        alt="Fijai SHS"
+                        className="w-16 h-16 object-contain"
+                    />
+                </div>
                 <CardTitle className="text-2xl">Reset Password</CardTitle>
                 <CardDescription>
-                    Enter your email and we'll send you a reset link.
+                    Enter your institutional email and we'll send you a recovery link.
                 </CardDescription>
                 {expired && (
-                    <p className="mt-2 text-sm text-destructive">
+                    <p className="mt-2 text-sm text-destructive font-medium bg-destructive/10 py-1 px-3 rounded-full inline-block">
                         Reset link expired. Please request a new one.
                     </p>
                 )}
@@ -53,49 +60,58 @@ function ForgotPasswordContent() {
 
             <CardContent>
                 {sent ? (
-                    <div className="space-y-4 text-center">
-                        <p className="text-sm text-muted-foreground">
-                            We sent a password reset link to{" "}
-                            <strong>{email}</strong>. Check your inbox.
+                    <div className="space-y-6 text-center py-4">
+                        <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                            We've dispatched a recovery link to{" "}
+                            <strong className="text-foreground">{email}</strong>. Please check your inbox and spam folder.
                         </p>
                         <Button
                             variant="outline"
+                            className="w-full"
                             onClick={() => setSent(false)}
                         >
-                            Try a different email
+                            Use a different email
                         </Button>
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">Email Identifier</Label>
                             <Input
                                 id="email"
                                 type="email"
-                                placeholder="you@example.com"
+                                placeholder="name@alumni.example"
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                className="h-11"
                             />
                         </div>
                         <Button
                             type="submit"
-                            className="w-full"
+                            className="w-full h-11 text-base font-semibold"
                             disabled={loading}
                         >
-                            {loading ? "Sending…" : "Send Reset Link"}
+                            {loading ? "Processing..." : "Send Recovery Link"}
                         </Button>
                     </form>
                 )}
 
-                <div className="mt-4 text-center">
-                    <Link
-                        href="/auth/login"
-                        className="text-sm text-muted-foreground hover:underline"
-                    >
-                        Back to login
-                    </Link>
-                </div>
+                {!sent && (
+                    <div className="mt-8 pt-6 border-t text-center">
+                        <Link
+                            href="/auth/login"
+                            className="text-sm text-[#730303] hover:underline font-medium"
+                        >
+                            Return to sign in
+                        </Link>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

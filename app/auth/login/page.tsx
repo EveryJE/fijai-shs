@@ -84,12 +84,6 @@ function LoginContent() {
                                 <Label htmlFor="password">
                                     Password
                                 </Label>
-                                <Link
-                                    href="/auth/forgot-password"
-                                    className="text-xs text-muted-foreground hover:underline"
-                                >
-                                    Forgot password?
-                                </Link>
                             </div>
                             <Input
                                 id="password"
@@ -110,6 +104,14 @@ function LoginContent() {
                         </Button>
                     </form>
                 </CardContent>
+                <div className="px-6 pb-6 text-center">
+                    <Link
+                        href="/auth/forgot-password"
+                        className="text-sm text-[#730303] hover:underline font-medium"
+                    >
+                        Forgot your password?
+                    </Link>
+                </div>
             </Card>
         </div>
     );
